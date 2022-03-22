@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  position: relative;
+}
+
+body {
+    background-image: radial-gradient(circle farthest-corner at center, #686e7a 0%, #2f617e 100%);
+  /*overflow: hidden;*/
+  }
+  
+  .loader {
+    position: absolute;
+    top: calc(50% - 32px);
+    left: calc(50% - 32px);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    perspective: 800px;
+  }
+  
+  .inner {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;  
+  }
+  
+  .inner.one {
+    left: 0%;
+    top: 0%;
+    animation: rotate-one 1s linear infinite;
+    border-bottom: 3px solid #ffa841;
+  }
+  
+  .inner.two {
+    right: 0%;
+    top: 0%;
+    animation: rotate-two 1s linear infinite;
+    border-right: 3px solid #ffa841;
+  }
+  
+  .inner.three {
+    right: 0%;
+    bottom: 0%;
+    animation: rotate-three 1s linear infinite;
+    border-top: 3px solid #ffa841;
+  }
+  
+  @keyframes rotate-one {
+    0% {
+      transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+    }
+    100% {
+      transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+    }
+  }
+  
+  @keyframes rotate-two {
+    0% {
+      transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+    }
+    100% {
+      transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+    }
+  }
+  
+  @keyframes rotate-three {
+    0% {
+      transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+    }
+    100% {
+      transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+    }
+  }
+
+/*::-webkit-scrollbar {*/
+/*  width: 12px;*/
+/*}*/
+
+/*::-webkit-scrollbar-track {*/
+/*  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
+/*  border-radius: 10px;*/
+/*}*/
+
+/*::-webkit-scrollbar-thumb {*/
+/*  border-radius: 10px;*/
+/*  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);*/
+/*}*/
+
+/*::-webkit-scrollbar {*/
+/*  display: none;*/
+/*}*/
+
+body::-webkit-scrollbar {
+  width: 1em;
+}
+
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+/*Animate notification*/
+.notification-enter {
+  opacity: 0.01;
+  transform: scale(0);
+}
+
+.notification-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 300ms ease-in;
+}
+
+.notification-exit{
+  opacity: 1;
+}
+
+.notification-exit-active  {
+  transform: scale(0.6);
+  opacity: 0;
+  transition: all 600ms
+}
+

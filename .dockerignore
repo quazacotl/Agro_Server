@@ -1,0 +1,9 @@
+node_modules
+.idea
+.git
+client/node_modules
+client/src
+client/public
+instantclient_21_3
+Dockerfile
+docker-compose.yml
