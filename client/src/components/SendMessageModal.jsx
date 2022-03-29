@@ -5,10 +5,13 @@ import useMongoService from "../services/useMongoService";
 import {BsFillCheckCircleFill} from "react-icons/bs"
 import {IconContext} from "react-icons";
 import useOutlookService from "../services/useOutlookService";
+import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
 
 const SendMessageModal = observer(() => {
     const {sendMessage} = useOutlookService()
-    const {getActNames} = useMongoService()
+    const {getActNames, closeRequest} = useMongoService()
+    const {updateAfterRequestEdit} = useUpdateAfterEdit()
+
 
     const formState = useLocalObservable(() => ({
         messageText: '',
@@ -96,9 +99,7 @@ const SendMessageModal = observer(() => {
         Store.setIsShowSendMessageModal(false)
         const body = setMessageBody()
         try {
-            const res = await sendMessage(body)
-            Store.setNotificationText(res.data.message)
-            Store.showNotification()
+            await sendMessage(body)
         } catch (e) {
             Store.setNotificationText('Не удалось отправить сообщение')
             Store.showNotification()
@@ -143,7 +144,7 @@ const SendMessageModal = observer(() => {
             style={{top: Store.offsetY}}
         >
             <div className={'w-[600px] min-h-[400px] p-4 m-auto rounded-xl border border-amber-400 bg-gray-50'}>
-                <h2 className={'text-lg text-sky-600 ml-3'}>Адресат: {Store.currentRequest.SentFromName}</h2>
+                <h2 className={'text-lg text-sky-600 ml-3'}>Адресат: {Store.currentRequest.SentFromName ? Store.currentRequest.SentFromName : <span className={'text-red-600'}>Не выбран адресат!</span>}</h2>
                 <textarea
                     placeholder={'Текст сообщения'}
                     className={'w-full h-2/3 min-h-[200px] mt-3 text-lg resize-none shadow-form-sh focus:outline-none p-3 rounded-xl border border-blue-400'}

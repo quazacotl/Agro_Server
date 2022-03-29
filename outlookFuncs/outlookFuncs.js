@@ -49,7 +49,6 @@ export async function findLastMessages() {
 
     try {
         const res = await ews.run('FindItem', ewsArgs)
-        console.log(res)
         res.ResponseMessages.FindItemResponseMessage.RootFolder.Items.Message.forEach(item => {
             const ids = {
                 id: item.ItemId.attributes.Id,

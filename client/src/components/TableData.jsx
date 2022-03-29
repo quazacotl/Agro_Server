@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef} from "react"
+import {useCallback, useMemo} from "react"
 import { useTable, useBlockLayout } from 'react-table'
 import Store from "../state/Store";
 import { observer } from "mobx-react-lite"
@@ -6,6 +6,7 @@ import {FixedSizeList} from "react-window";
 import ErrorPage from "./ErrorPage";
 import Loading from "./Loading";
 import {dateFromIsoToLocal, getClassesForRow} from "../funcs/funcs";
+import reactStringReplace from 'react-string-replace'
 
 
 const TableData = observer(() => {
@@ -32,23 +33,41 @@ const TableData = observer(() => {
             {
                 Header: 'Техника',
                 accessor: 'NODE_NAME',
-                width: 410
+                width: 415
 
             },
             {
                 Header: 'Рег номер',
                 accessor: 'REG_NOM',
-                width: 210
+                width: 210,
+                Cell: ({value}) => {
+                    if (Store.inputReg) {
+                        value = reactStringReplace(value, Store.inputReg, (match, i) => <span key={i} className={'bg-cyan-300'}>{Store.inputReg}</span>)
+                    }
+                    return value
+                }
             },
             {
                 Header: 'VIN',
                 accessor: 'ATTR_VALUE',
-                width: 230
+                width: 230,
+                Cell: ({value}) => {
+                    if (Store.inputVin) {
+                        value = reactStringReplace(value, Store.inputVin, (match, i) => <span key={i} className={'bg-cyan-300'}>{Store.inputVin}</span>)
+                    }
+                    return value
+                }
             },
             {
                 Header: 'ID',
                 accessor: 'NAV_ID',
-                width: 110
+                width: 110,
+                Cell: ({value}) => {
+                    if (Store.inputId) {
+                        value = reactStringReplace(String(value), Store.inputId, (match, i) => <span key={i} className={'bg-cyan-300'}>{Store.inputId}</span>)
+                    }
+                    return value
+                }
             },
             {
                 Header: 'Последний пакет',
@@ -110,13 +129,13 @@ const TableData = observer(() => {
 //     }
 
 
-    const RenderRow = useCallback(
+    const RenderRow = observer(useCallback(
         ({ index, style }) => {
             const row = rows[index]
             prepareRow(row)
             return (
                 <div onContextMenu={(e) => onRightClick(e, row.values)}
-                    className={getClassesForRow(row.values.LAST_DATE)}
+                    className={getClassesForRow(row, Store.currentVehicle)}
                     {...row.getRowProps({
                         style,
                     })}
@@ -132,13 +151,13 @@ const TableData = observer(() => {
             )
         },
         [prepareRow, rows]
-    )
+    ))
 
     const SearchPlaceholder = () => {
         return (
             <>
-                <h2 className={'mt-10 text-indigo-200 text-center text-5xl'}>Введите номер для поиска</h2>
-                <img className={'m-auto w-[350px] mt-9'} src="./search2.png" alt="search"/>
+                <h2 className={'mt-20 text-indigo-200 text-center text-5xl'}>Введите номер для поиска</h2>
+                <img className={'m-auto w-[150px] mt-9'} src="./search2.png" alt="search"/>
             </>
         )
     }
@@ -146,7 +165,7 @@ const TableData = observer(() => {
     const NotFoundPlaceholder = () => {
         return (
             <>
-                <h2 className={'mt-10 text-indigo-200 text-center text-5xl'}>Ничего не найдено</h2>
+                <h2 className={'mt-20 text-indigo-200 text-center text-5xl'}>Ничего не найдено</h2>
                 <img className={'m-auto w-[350px] mt-9'} src="./not found.png" alt="search"/>
             </>
         )
@@ -164,7 +183,7 @@ const TableData = observer(() => {
                         height={630}
                         itemCount={rows.length}
                         itemSize={35}
-                        width={totalColumnsWidth +17}
+                        width={totalColumnsWidth +12}
                     >
                         {RenderRow}
                     </FixedSizeList>)

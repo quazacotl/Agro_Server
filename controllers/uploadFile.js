@@ -1,4 +1,4 @@
-import RequestModel from "../models/request.js";
+import RequestModel from "../models/request.js"
 
 export const uploadAct = async function (req, res) {
     try {

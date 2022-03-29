@@ -7,14 +7,12 @@ import {regions} from "../interfaces/interfaces";
 import PreviousRequests from "./PreviousRequests";
 import BubbleContext from "./BubbleContext";
 import {dateFromIsoToLocal} from "../funcs/funcs";
-import useOutlookService from "../services/useOutlookService";
 
 
 
 const RequestCreationModal = observer(() => {
 
     const {writeNewRequest, getAllUnexecutedRequests, getRequestsByRegNom} = useMongoService(false)
-    const {getLastMails} = useOutlookService()
 
 
     useEffect(() => {
@@ -31,7 +29,8 @@ const RequestCreationModal = observer(() => {
             Store.setLastMails([])
             Store.setReqChosenMail(null)
             Store.setReqChosenComment('')
-            Store.setReqChosenRegion('')
+            Store.setReqChosenExecutor(null)
+            Store.setReqChosenRegion(null)
             Store.setPreviousRequestsData([])
             Store.setCurrentVehicle(null)
         }
@@ -126,11 +125,11 @@ const RequestCreationModal = observer(() => {
             <div className={'flex flex-col gap-2'}>
                 <label className={'text-xl'} htmlFor="region">Область</label>
                 <select
-                    defaultValue={'DEFAULT'}
+                    defaultValue={Store.reqChosenRegion ? Store.reqChosenRegion : 'DEFAULT'}
                     className={'rounded-lg shadow-md py-1 shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
                     name="region"
                     id="region"
-                    onChange={setReqChosenRegion}
+                    onChange={(e) => setReqChosenRegion(e)}
                 >
                     <option disabled value="DEFAULT"> -- выбрать область -- </option>
                     {Store.currentRegions.map(item => (
@@ -141,9 +140,10 @@ const RequestCreationModal = observer(() => {
         )
     }
 
+
     return (
-        <div onClick={hideModal} className={'absolute top-0 left-0 w-screen h-screen flex bg-neutral-700/50'}>
-            <div className={'flex min-w-[900px] m-auto p-6 bg-gray-100 rounded-xl'}>
+        <div onMouseDown={hideModal} className={'absolute top-0 left-0 w-screen h-screen flex bg-neutral-700/50'}>
+            <div className={'flex min-w-[900px] m-auto p-6 bg-blue-50 rounded-xl'}>
                 <div className={'flex flex-col'}>
                     {Store.vehiclePageLocation ? <CurrentVehicle/> : null}
                     <div className="flex gap-16 text-stone-900 w-full mt-5">

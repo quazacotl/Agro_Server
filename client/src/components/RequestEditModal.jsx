@@ -5,6 +5,7 @@ import { observer } from "mobx-react-lite"
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
+import {DateTime} from "luxon";
 
 
 
@@ -12,10 +13,6 @@ import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
 const RequestEditModal = observer(() => {
     const {updateAfterRequestEdit} = useUpdateAfterEdit()
     const {editRequest} = useMongoService(false)
-
-
-    const [startDate, setStartDate] = useState(null);
-
 
     useEffect(() => {
         (async () => {
@@ -43,6 +40,29 @@ const RequestEditModal = observer(() => {
         })
     }
 
+    const onChangeDate = (date) => {
+        Store.setCurrentRequest({
+            ...Store.currentRequest,
+            PlannedDate: date
+        })
+    }
+
+    const onReset = (e) => {
+        e.preventDefault()
+        Store.setCurrentRequest({
+            ...Store.currentRequest,
+            PlannedDate: null
+        })
+    }
+
+    const onSetDate = (e, date) => {
+        e.preventDefault()
+        Store.setCurrentRequest({
+            ...Store.currentRequest,
+            PlannedDate: date
+        })
+    }
+
     // Сохранить изменённую заявку
     const editMongoRequest = async (e) => {
         e.preventDefault()
@@ -52,7 +72,7 @@ const RequestEditModal = observer(() => {
             Description: Store.currentRequest.Description,
             RequestType: Store.currentRequest.RequestType,
             Region: Store.currentRequest.Region,
-            PlannedDate: startDate ? startDate : null,
+            PlannedDate: Store.currentRequest.PlannedDate,
         }
         await editRequest(editedRequest)
         Store.setShowEditRequestModal(false)
@@ -86,7 +106,7 @@ const RequestEditModal = observer(() => {
             className={'absolute left-0 w-screen h-screen flex bg-neutral-700/50'}
             style={{top: Store.offsetY}}
         >
-            <div className={'flex  m-auto p-6 bg-gray-100 rounded-xl'}>
+            <div className={'flex m-auto p-6 bg-blue-50 rounded-xl'}>
                 <div className={'flex flex-col'}>
                     {Store.currentRequest.VehicleId ? <CurrentVehicle/> : null}
                         <form className="flex flex-col">
@@ -144,15 +164,33 @@ const RequestEditModal = observer(() => {
                                     <h2 className={'text-xl'}>Дата исполнения</h2>
                                     <DatePicker
                                         className={'rounded-lg shadow-md py-1 shadow-stone-700 w-full text-md border-stone-300 focus:outline-amber-200'}
-                                        selected={startDate}
-                                        onChange={(date) => setStartDate(date)}
-                                        showTimeSelect
-                                        dateFormat="dd.MM.yy, hh:mm"
-                                        timeIntervals={60}
-                                        timeFormat="HH:mm"
+                                        selected={Store.currentRequest.PlannedDate ? new Date(Store.currentRequest.PlannedDate) : ''}
+                                        onChange={(date) => {onChangeDate(date)}}
+                                        dateFormat="dd.MM.yy"
+                                        locale="ru-Ru"
                                         tabIndex={-1}
                                         placeholderText="Выбрать дату"
                                     />
+                                    <div className={'flex items-center mt-2'}>
+                                        <button
+                                            className={' w-20 px-1 py-0.5 mr-3 rounded bg-orange-400 text-sm text-white active:bg-orange-600 shadow-form-sh'}
+                                            onClick={(e) => onSetDate(e, DateTime.now().toJSDate())}
+                                        >
+                                            Сегодня
+                                        </button>
+                                        <button
+                                            className={'w-20 px-1 py-0.5 mr-3 rounded bg-orange-400 text-sm text-white active:bg-orange-600 shadow-form-sh'}
+                                            onClick={(e) => onSetDate(e, DateTime.now().plus({days: 1}).toJSDate())}
+                                        >
+                                            Завтра
+                                        </button>
+                                        <button
+                                            className={'w-20 px-1 py-0.5 rounded bg-orange-400 text-sm text-white active:bg-orange-600 shadow-form-sh'}
+                                            onClick={(e) => onReset(e)}
+                                        >
+                                            Сбросить
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 

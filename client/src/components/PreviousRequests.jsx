@@ -111,7 +111,7 @@ const PreviousRequests = observer(() => {
     return (
         <div className={'flex flex-col mt-4'}>
             <h2 className={'text-center text-slate-900 text-xl'}>Прошлые заявки по этой технике</h2>
-            <div  className="table-auto mt-2 rounded-t-xl table-fixed position:relative border-collapse mx-auto border-hidden shadow-xl shadow-around bg-gray-100 shadow-md mt-2 shadow-stone-700" {...getTableProps()}>
+            <div  className="table-auto mt-2 rounded-xl overflow-hidden table-fixed position:relative border-collapse mx-auto border-hidden shadow-xl shadow-around bg-gray-100 shadow-md mt-2 shadow-stone-700" {...getTableProps()}>
                 <div className="bg-amber-200/80 rounded-t-xl text-center text-slate-900 text-lg py-1">
                     {// Loop over the header rows
                         headerGroups.map((headerGroup, i) => (

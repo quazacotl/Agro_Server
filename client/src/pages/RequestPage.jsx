@@ -7,6 +7,7 @@ import CheckVehicleStatusModal from "../components/CheckVehicleStatusModal";
 import RequestEditModal from "../components/RequestEditModal";
 import AddFileModal from "../components/AddFileModal";
 import SendMessageModal from "../components/SendMessageModal";
+import AddCarlistModal from "../components/AddCarlistModal";
 
 
 const RequestPage = observer(() => {
@@ -26,6 +27,7 @@ const RequestPage = observer(() => {
             {Store.isShowEditRequestModal ? <RequestEditModal/> : null}
             {Store.showAddFileModal ? <AddFileModal/> : null}
             {Store.isShowSendMessageModal ? <SendMessageModal/> : null}
+            {Store.isShowCarlistModal ? <AddCarlistModal/> : null}
         </div>
     )
     

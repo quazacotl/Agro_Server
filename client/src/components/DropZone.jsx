@@ -74,7 +74,7 @@ const MyDropzone = observer((props) => {
 
 
     const classesObj = {
-        wrapperClasses: !isDisabled(actType, dropType) ? 'w-40 h-28 flex flex-col p-1 mt-2 border border-dashed rounded-lg border-amber-400 bg-gray-50 cursor-pointer' : 'w-40 h-28 flex flex-col p-1 mt-2 border border-dashed rounded-lg border-amber-400 bg-gray-50 cursor-no-drop',
+        wrapperClasses: !isDisabled(actType, dropType) ? 'w-40 h-28 flex flex-col p-1 mt-2 border border-dashed rounded-lg border-amber-400 bg-white cursor-pointer' : 'w-40 h-28 flex flex-col p-1 mt-2 border border-dashed rounded-lg border-amber-400 bg-white cursor-no-drop',
         inputClasses: !isDisabled(actType, dropType) ? "text-xl m-auto w-10 h-10 text-green-500"  : "text-xl m-auto w-10 h-10 text-gray-500"
     }
 

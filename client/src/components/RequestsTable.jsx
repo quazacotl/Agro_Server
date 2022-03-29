@@ -1,10 +1,12 @@
-import {useCallback, useMemo} from "react"
+import {useCallback, useMemo, useState} from "react"
 import {useBlockLayout, useTable} from 'react-table'
+import useOracleService from "../services/useOracleService";
 import Store from "../state/Store";
 import { observer } from "mobx-react-lite"
 import {DateTime} from "luxon";
 import {FixedSizeList} from "react-window";
 import {dateFromIsoToLocal} from '../funcs/funcs'
+import reactStringReplace from 'react-string-replace'
 
 
 // Классы для окрашивания ячеек с планируемой датой
@@ -21,6 +23,10 @@ const getClassesForDate = (cell) => {
 }
 
 const RequestsTable = observer(() => {
+    const {getVehiclesByRegNum} = useOracleService()
+    const [contextLoading, setContextLoading] = useState(false)
+
+
     const data = useMemo(() => Store.requestsData, [Store.requestsData])
 
     const columns = useMemo(
@@ -28,7 +34,7 @@ const RequestsTable = observer(() => {
             {
                 Header: 'Хозяйство',
                 accessor: 'ObjName',
-                width: 180
+                width: 190
             },
             {
                 Header: 'База',
@@ -38,7 +44,7 @@ const RequestsTable = observer(() => {
             {
                 Header: 'Техника',
                 accessor: 'VehicleType',
-                width: 170
+                width: 175
             },
             {
                 Header: 'Регион',
@@ -48,7 +54,13 @@ const RequestsTable = observer(() => {
             {
                 Header: 'Рег номер',
                 accessor: 'VehicleRegNum',
-                width: 160
+                width: 160,
+                Cell: ({value}) => {
+                    if (Store.searchInputValue > 2) {
+                        value = reactStringReplace(value, Store.searchInputValue, (match, i) => <span key={i} className={'bg-cyan-300'}>{Store.searchInputValue}</span>)
+                    }
+                    return value
+                }
             },
             {
                 Header: 'ID',
@@ -63,7 +75,7 @@ const RequestsTable = observer(() => {
             {
                 Header: 'Комментарий',
                 accessor: 'Description',
-                width: 310
+                width: 330
             },
             {
                 Header: 'Создана',
@@ -73,8 +85,8 @@ const RequestsTable = observer(() => {
             {
                 Header: 'План',
                 accessor: 'PlannedDate',
-                Cell: ({value}) => value ? dateFromIsoToLocal(value) : null,
-                width: 130
+                Cell: ({value}) => value ? DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT) : null,
+                width: 90
             },
             {
                 Header: 'Закрыта',
@@ -88,7 +100,7 @@ const RequestsTable = observer(() => {
             {
                 Header: 'Исполнил',
                 accessor: 'Executor',
-                width: 120
+                width: 130
             },
             {
                 Header: 'Закрыл',
@@ -188,6 +200,18 @@ const RequestsTable = observer(() => {
                 Store.setIsBubbleContextShow(true)
                 Store.setBubbleContextText(text2)
                 break
+            case 'ObjName':
+                if (e.target.innerText.length > 20) {
+                    Store.setBubbleContextText(e.target.innerText);
+                    Store.setIsBubbleContextShow(true)
+                }
+                break
+            case 'VehicleType':
+                if (e.target.innerText.length > 18) {
+                    Store.setBubbleContextText(e.target.innerText);
+                    Store.setIsBubbleContextShow(true)
+                }
+                break
         }
     }
 
@@ -198,16 +222,62 @@ const RequestsTable = observer(() => {
         }
     }
 
-    const RenderRow = useCallback(
+    const getRowClasses = (currentRequest, row) => {
+        let baseClasses = 'text-center break-all line-clamp-1 text-sm cursor-pointer last:rounded-b-xl'
+        if (currentRequest && currentRequest._id === row.values._id && Store.showContextMenu) {
+            baseClasses = `${baseClasses} bg-amber-300`
+        } else if (row.values.ExecuteDate) {
+            baseClasses = `${baseClasses} bg-green-300`
+        }
+        return `${baseClasses} bg-gray-50`
+    }
+
+    const onCheckStatus = async (e, rowValues) => {
+        e.preventDefault()
+        Store.setCurrentRequest(rowValues)
+        if (Store.currentRequest.VehicleRegNum) {
+            Store.setIsCheckStatusModalShow(true)
+            Store.setCheckStatusLoading(true)
+            try {
+                const res = await getVehiclesByRegNum(Store.currentRequest.VehicleRegNum)
+                Store.setCheckStatusLoading(false)
+                if (res.length === 0) {
+                    Store.setContextMenu(false);
+                    Store.setIsCheckStatusModalShow(false)
+                    Store.setNotificationText('Не удалось найти техники с заданным номером')
+                    Store.showNotification()
+                } else {
+                    Store.setFoundVehiclesByRegNom(res)
+                    Store.setContextMenu(false);
+                }
+            }
+            catch (e) {
+                setContextLoading(false)
+                Store.setContextMenu(false);
+                Store.setNotificationText('База данных не отвечает')
+                Store.showNotification()
+            }
+        }
+        else {
+            Store.setContextMenu(false);
+            Store.setNotificationText('Это не техника! ъуъ!')
+            Store.showNotification()
+        }
+
+    }
+
+    const RenderRow = observer(useCallback(
         ({ index, style }) => {
             const row = rows[index]
             prepareRow(row)
             return (
                 <div
+                    onDoubleClick={e => onCheckStatus(e, row.values)}
                     onContextMenu={e => onRightClick(e, row.values)}
+
                      {...row.getRowProps({
                          style,
-                         className: row.values.ExecuteDate ? 'text-center line-clamp-1 last:rounded-b-xl text-sm cursor-pointer hover:text-amber-500 bg-green-200' : 'text-center hover:text-amber-500 last:rounded-b-xl text-sm bg-gray-50 line-clamp-1 cursor-pointer'
+                         className: getRowClasses(Store.currentRequest, row)
                      })}
                 >
                     {row.cells.map((cell, i) => {
@@ -227,7 +297,7 @@ const RequestsTable = observer(() => {
             )
         },
         [prepareRow, rows]
-    )
+    ))
 
     const RowsView = observer(() => {
         return (
@@ -236,7 +306,7 @@ const RequestsTable = observer(() => {
                     height={660}
                     itemCount={rows.length}
                     itemSize={33}
-                    width={totalColumnsWidth +17}
+                    width={totalColumnsWidth +12}
                 >
                     {RenderRow}
                 </FixedSizeList>
@@ -254,6 +324,7 @@ const RequestsTable = observer(() => {
         await Store.setContextMenu(true)
     }
 
+
     const setSelectedText = () => {
         Store.setSelectedText(window.getSelection().toString())
     }
@@ -265,14 +336,14 @@ const RequestsTable = observer(() => {
     return (
         <div
             onMouseUp={setSelectedText}
-            className="request-table overflow-hidden selection:bg-cyan-200 position:relative border-collapse mx-auto my-5 border-hidden rounded-xl w-[1857px]"
+            className="request-table overflow-hidden selection:bg-cyan-200 position:relative border-collapse mx-auto my-5 border-hidden rounded-l-xl rounded-tr-xl w-[1857px]"
             {...getTableProps()}
         >
             <div className="bg-indigo-200 text-center text-black text-lg py-1">
             {// Loop over the header rows
                 headerGroups.map(headerGroup => (
                     // Apply the header row propsS
-                    <div  {...headerGroup.getHeaderGroupProps()}>
+                    <div {...headerGroup.getHeaderGroupProps()}>
                         {// Loop over the headers in each row
                             headerGroup.headers.map(column => (
                                 // Apply the header cell props

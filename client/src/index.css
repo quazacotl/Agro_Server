@@ -8,7 +8,6 @@
 
 body {
     background-image: radial-gradient(circle farthest-corner at center, #686e7a 0%, #2f617e 100%);
-  /*overflow: hidden;*/
   }
   
   .loader {
@@ -77,36 +76,22 @@ body {
     }
   }
 
-/*::-webkit-scrollbar {*/
-/*  width: 12px;*/
-/*}*/
-
-/*::-webkit-scrollbar-track {*/
-/*  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
-/*  border-radius: 10px;*/
-/*}*/
-
-/*::-webkit-scrollbar-thumb {*/
-/*  border-radius: 10px;*/
-/*  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);*/
-/*}*/
-
-/*::-webkit-scrollbar {*/
-/*  display: none;*/
-/*}*/
-
-body::-webkit-scrollbar {
-  width: 1em;
+::-webkit-scrollbar {
+  width: 12px;
 }
 
-body::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
 }
 
-body::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
   background-color: darkgrey;
-  outline: 1px solid slategrey;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
+
+
 
 /*Animate notification*/
 .notification-enter {

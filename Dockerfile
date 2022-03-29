@@ -17,7 +17,12 @@ RUN apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade && apt-get i
     wget https://download.oracle.com/otn_software/linux/instantclient/215000/oracle-instantclient-basic-21.5.0.0.0-1.el8.x86_64.rpm && \
     alien -i --scripts oracle-instantclient*.rpm && \
     rm -f oracle-instantclient21.5*.rpm && apt-get -y autoremove && apt-get -y clean && \
-      npm ci
+    apt-get install -y locales && \
+      npm ci \
+
+RUN sed -i -e \
+  's/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/' /etc/locale.gen \
+   && locale-gen
 
 ENV LANG ru_RU.UTF-8
 ENV LANGUAGE ru_RU:ru

@@ -201,7 +201,7 @@ export const getRequestsByRegNom = async function (req, res) {
 
 export const getAllExecutors = async function (req, res) {
     try {
-        const requests = await ExecutorModel.find({ _id: {$nin: ['61e17dc4749a917e0a0a62f1', '61e17e04749a917e0a0a62f2', '61e17e80749a917e0a0a62f3', '61e17e93749a917e0a0a62f4']}}).select('name')
+        const requests = await ExecutorModel.find({ _id: {$nin: ['61e17dc4749a917e0a0a62f1', '61e17e04749a917e0a0a62f2', '61e17e80749a917e0a0a62f3', '61e17e93749a917e0a0a62f4']}}).sort({name: 'asc'}).select('name')
         res.status(200).json(requests)
     }
     catch (e) {
@@ -346,9 +346,7 @@ export const getTare = async function (req, res) {
 
 export const searchRequests = async function (req, res) {
     try {
-        const requests = await RequestModel.find({VehicleRegNum: {'$regex': Number(req.body.regNum.trim())}}).sort(({ _id: -1 })).limit(15)
-        console.log(requests)
-
+        const requests = await RequestModel.find({VehicleRegNum: {$regex: req.body.regNum.trim()}}).sort(({ _id: -1 })).limit(15)
         res.status(200).json(requests)
     }
     catch (e) {

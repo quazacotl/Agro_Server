@@ -1,6 +1,7 @@
 import {regions} from "../interfaces/interfaces";
 import Store from "../state/Store";
 import useMongoService from "../services/useMongoService";
+import {sortRequest} from "../funcs/funcs";
 
 
 const useUpdateAfterEdit = () => {
@@ -24,69 +25,39 @@ const useUpdateAfterEdit = () => {
         getVorRegUnexecutedRequests,
     } = useMongoService(false)
 
+    const makeRequest = async (generalRequestFn, partialRequestFn) => {
+        if (Store.isShowUnexecuted) {
+            const res = await generalRequestFn()
+            Store.setRequestsData(res)
+            sortRequest(Store.sortBy)
+        } else {
+            const res = await partialRequestFn()
+            Store.setRequestsData(res)
+            sortRequest(Store.sortBy)
+        }
+    }
+
     const updateAfterRequestEdit = () => {
         switch (Store.currentRegionSelected) {
-            case regions.all: {
-                Store.isShowUnexecuted ?
-                    getAllRequests().then(data => Store.setRequestsData(data)) :
-                    getAllUnexecutedRequests().then(data => Store.setRequestsData(data))
-            }
+            case regions.all: makeRequest(getAllRequests, getAllUnexecutedRequests)
                 break
-            case regions.kur: {
-                Store.isShowUnexecuted ?
-                    getKurRequests().then(data => Store.setRequestsData(data)) :
-                    getKurUnexecutedRequests().then(data => Store.setRequestsData(data))
-            }
+            case regions.kur: makeRequest(getKurRequests, getKurUnexecutedRequests)
                 break
-            case regions.vor: {
-                Store.isShowUnexecuted ?
-                    getVorRequests().then(data => Store.setRequestsData(data)) :
-                    getVorUnexecutedRequests().then(data => Store.setRequestsData(data))
-            }
+            case regions.vor: makeRequest(getVorRequests, getVorUnexecutedRequests)
                 break
-            case regions.ore: {
-                Store.isShowUnexecuted ?
-                    getOreRequests().then(data => Store.setRequestsData(data)) :
-                    getOreUnexecutedRequests().then(data => Store.setRequestsData(data))
-            }
+            case regions.ore: makeRequest(getOreRequests, getOreUnexecutedRequests)
                 break
-            case regions.tul: {
-                Store.isShowUnexecuted ?
-                    getTulRequests().then(data => Store.setRequestsData(data)) :
-                    getTulUnexecutedRequests().then(data => Store.setRequestsData(data))
-            }
+            case regions.tul: makeRequest(getTulRequests, getTulUnexecutedRequests)
                 break
-            case regions.bel: {
-                Store.isShowUnexecuted ?
-                    getBelRequests().then(data => Store.setRequestsData(data)) :
-                    getBelUnexecutedRequests().then(data => Store.setRequestsData(data))
-            }
+            case regions.bel: makeRequest(getBelRequests, getBelUnexecutedRequests)
                 break
-            case regions.lip: {
-                Store.isShowUnexecuted ?
-                    getLipRequests().then(data => Store.setRequestsData(data)) :
-                    getLipUnexecutedRequests().then(data => Store.setRequestsData(data))
-            }
+            case regions.lip: makeRequest(getLipRequests, getLipUnexecutedRequests)
                 break
-            case regions.orereg: {
-                Store.isShowUnexecuted ?
-                    getOreRegRequests().then(data => Store.setRequestsData(data)) :
-                    getOreRegUnexecutedRequests().then(data => {
-                        Store.setRequestsData(data)
-                    })
-            }
+            case regions.orereg: makeRequest(getOreRegRequests, getOreRegUnexecutedRequests)
                 break
-            case regions.vorreg: {
-                Store.isShowUnexecuted ?
-                    getVorRegRequests().then(data => Store.setRequestsData(data)) :
-                    getVorRegUnexecutedRequests().then(data => Store.setRequestsData(data))
-            }
+            case regions.vorreg: makeRequest(getVorRegRequests, getVorRegUnexecutedRequests)
                 break
-            default: {
-                Store.isShowUnexecuted ?
-                    getAllRequests().then(data => Store.setRequestsData(data)) :
-                    getAllUnexecutedRequests().then(data => Store.setRequestsData(data))
-            }
+            default: makeRequest(getAllRequests, getAllUnexecutedRequests)
         }
     }
 

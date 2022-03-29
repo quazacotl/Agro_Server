@@ -1,9 +1,10 @@
 import Store from "../state/Store";
 import {useState} from "react";
-import {MdContentCopy, MdCreate, MdOutlineGpsFixed} from "react-icons/md";
+import {MdContentCopy, MdCreate, MdListAlt, MdOutlineGpsFixed} from "react-icons/md";
 import {IconContext} from "react-icons";
 import {FaGoogle, FaYandex} from "react-icons/fa";
 import {calculatePosition} from "../funcs/funcs";
+import copy from 'copy-to-clipboard'
 
 
 const ContextMenu = (props) => {
@@ -16,7 +17,7 @@ const ContextMenu = (props) => {
 
     const copyYaCoords = async () => {
         const coordString = `http://maps.yandex.ru/?text=${Store.currentVehicle.LAST_LAT},${Store.currentVehicle.LAST_LON}&1=map`
-        await navigator.clipboard.writeText(coordString)
+        copy(coordString)
         Store.setContextMenu(false)
         Store.setNotificationText('Координаты yandex скопированы')
         Store.showNotification()
@@ -24,19 +25,25 @@ const ContextMenu = (props) => {
 
     const copyGooCoords = async () => {
         const coordString = `http://maps.google.com/?q=${Store.currentVehicle.LAST_LAT},${Store.currentVehicle.LAST_LON}`
-        await navigator.clipboard.writeText(coordString)
         Store.setContextMenu(false)
+        copy(coordString)
         Store.setNotificationText('Координаты google скопированы')
         Store.showNotification()
     }
 
     const copyText = async () => {
         if (Store.selectedText.length > 0) {
-            await navigator.clipboard.writeText(Store.selectedText);
+            copy(Store.selectedText)
             Store.setContextMenu(false)
             Store.setNotificationText('Скопировано')
             Store.showNotification()
         }
+    }
+
+    const onAddCarlist = async () => {
+        document.body.style.overflow = 'hidden';
+        Store.setContextMenu(false)
+        Store.setIsShowCarlistModal(true)
     }
 
     const CopyContextMenuItem = () => {
@@ -97,6 +104,15 @@ const ContextMenu = (props) => {
                 Заявка
             </li>
             {Store.selectedText.length > 0 ? <CopyContextMenuItem/> : null}
+            <li
+                onClick={onAddCarlist}
+                className={'px-4 py-1 flex items-center border-b border-b-amber-300 hover:bg-blue-50  cursor-pointer'}
+            >
+                <IconContext.Provider value={{className: 'text-green-500 text-xl mr-3'}}>
+                    <MdListAlt/>
+                </IconContext.Provider>
+                Carlist
+            </li>
             <li
                 onMouseEnter={() => handleHover(true)}
                 onMouseLeave={() => handleHover(false)}

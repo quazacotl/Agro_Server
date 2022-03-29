@@ -2,37 +2,37 @@ import Store from "../state/Store";
 import useOracleService from "../services/useOracleService";
 import useMongoService from "../services/useMongoService";
 import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Loading from "./Loading";
 import { observer } from "mobx-react-lite"
-import {toJS} from 'mobx'
+import copy from 'copy-to-clipboard'
 import {
     MdFlaky,
     MdOutgoingMail,
-    MdSort,
     MdSms,
     MdOutlineEdit,
     MdAttachFile,
     MdOutlineDelete,
-    MdOutlineClose, MdContentCopy
+    MdOutlineClose, MdContentCopy, MdListAlt
 } from "react-icons/md"
 import {IconContext} from "react-icons";
-import log from "tailwindcss/lib/util/log";
 import {calculatePosition} from "../funcs/funcs";
 
 
 
 const RequestContextMenu = observer((props) => {
-    const [contextLoading, setContextLoading] = useState(false)
-    const [isShowAddMenu, setIsShowAddMenu] = useState(false)
 
-    const {getVehiclesByRegNum} = useOracleService()
+    useEffect(() => {
+        if (Store.isShowEditRequestModal )
+        return () => Store.setCurrentRequest(null)
+    }, [])
+
     const {closeRequest, deleteRequest} = useMongoService()
     const {updateAfterRequestEdit} = useUpdateAfterEdit()
 
     const copyText = async () => {
         if (Store.selectedText.length > 0) {
-            await navigator.clipboard.writeText(Store.selectedText);
+            copy(Store.selectedText)
             Store.setContextMenu(false)
             Store.setNotificationText('Скопировано')
             Store.showNotification()
@@ -48,36 +48,6 @@ const RequestContextMenu = observer((props) => {
             Store.showNotification();
         } catch (e) {
             console.log(e)
-        }
-    }
-
-    const onCheckStatus = async () => {
-        if (Store.currentRequest.VehicleRegNum) {
-            setContextLoading(true)
-            try {
-                const res = await getVehiclesByRegNum(Store.currentRequest.VehicleRegNum)
-                setContextLoading(false)
-                if (res.length === 0) {
-                    Store.setContextMenu(false);
-                    Store.setNotificationText('Не удалось найти техники с заданным номером')
-                    Store.showNotification()
-                } else {
-                    Store.setFoundVehiclesByRegNom(res)
-                    Store.setContextMenu(false);
-                    Store.setIsCheckStatusModalShow(true)
-                }
-            }
-            catch (e) {
-                setContextLoading(false)
-                Store.setContextMenu(false);
-                Store.setNotificationText('База данных не отвечает')
-                Store.showNotification()
-            }
-        }
-        else {
-            Store.setContextMenu(false);
-            Store.setNotificationText('Это не техника! ъуъ!')
-            Store.showNotification()
         }
     }
 
@@ -99,46 +69,41 @@ const RequestContextMenu = observer((props) => {
         Store.setShowAddFileModal(true)
     }
 
-    const onSendMessage = async () => {
-        await closeRequest({id: Store.currentRequest._id, Auditor: Store.currentUser})
-        updateAfterRequestEdit()
+    const onAddCarlist = async () => {
+        document.body.style.overflow = 'hidden';
         Store.setContextMenu(false)
-        Store.setIsShowSendMessageModal(true)
+        Store.setIsShowCarlistModal(true)
+    }
+
+    const onSendMessage = async () => {
+        if (Store.currentRequest.SentFromName) {
+            Store.setContextMenu(false)
+            Store.setIsShowSendMessageModal(true)
+            await closeRequest({id: Store.currentRequest._id, Auditor: Store.currentUser})
+            updateAfterRequestEdit()
+        } else {
+            Store.setContextMenu(false)
+            Store.setNotificationText('Не указан адресат в заявке')
+            Store.showNotification()
+        }
+
     }
 
     const onTextSms = async () => {
         if (Store.currentRequest.VehicleRegNum) {
-            await navigator.clipboard.writeText(`${Store.currentRequest.BaseName} ${Store.currentRequest.VehicleType} ${Store.currentRequest.VehicleRegNum} ${Store.currentRequest.Description}`);
+            copy(`${Store.currentRequest.BaseName} ${Store.currentRequest.VehicleType} ${Store.currentRequest.VehicleRegNum} ${Store.currentRequest.Description}`)
             Store.setContextMenu(false)
             Store.setNotificationText('Скопировано')
             Store.showNotification()
         } else {
-            await navigator.clipboard.writeText(`${Store.currentRequest.Description}`);
             Store.setContextMenu(false)
+            copy(`${Store.currentRequest.Description}`)
             Store.setNotificationText('Скопировано')
             Store.showNotification()
         }
 
     }
 
-
-    const handleHover = (bool) => {
-        setIsShowAddMenu(bool)
-    }
-
-    const onSort = (sortType) => {
-        Store.setContextMenu(false)
-        let newRequestData = toJS(Store.requestsData)
-        newRequestData = newRequestData.sort((a, b) => (a[sortType]===null)-(b[sortType]===null) || +(a[sortType]>b[sortType])||-(a[sortType]<b[sortType]))
-        Store.setRequestsData(newRequestData)
-    }
-
-    const onSortByDate = () => {
-        Store.setContextMenu(false)
-        let newRequestData = toJS(Store.requestsData)
-        newRequestData = newRequestData.sort((a, b) =>  new Date(b.CreateDate) - new Date(a.CreateDate))
-        Store.setRequestsData(newRequestData)
-    }
 
     const CopyContextMenuItem = () => {
         return (
@@ -154,46 +119,40 @@ const RequestContextMenu = observer((props) => {
         )
     }
 
-    const RightSortMenu = observer(() => {
+    const CloseRequestMenuItem = () => {
         return (
-            <ul className={'absolute w-40 rounded-xl text-md border border-amber-300 left-full top-0 bg-white'}>
-                <li
-                    className={'px-4 py-1 flex items-center border-b border-b-amber-300 hover:rounded-t-xl hover:bg-blue-50 cursor-pointer'}
-                    onClick={onSortByDate}
-                >
+            <li
+                onClick={onCloseRequest}
+                className={'px-4 py-1 flex items-center border-b border-b-amber-300 hover:bg-blue-50 cursor-pointer'}
 
-                    По дате
-                </li>
-                <li
-                    className={'px-4 py-1 border-b border-b-amber-300 hover:bg-blue-50 cursor-pointer'}
-                    onClick={() => onSort('ObjName')}
-                >
-                    По хозяйству
-                </li>
-                <li
-                    className={'px-4 py-1 hover:rounded-b-xl hover:bg-blue-50 cursor-pointer'}
-                    onClick={() => onSort('RequestType')}
-                >
-                    По типу заявки
-                </li>
-            </ul>
+            >
+                <IconContext.Provider value={{className: 'text-green-500 text-xl mr-3'}}>
+                    <MdOutlineClose/>
+                </IconContext.Provider>
+                Закрыть заявку
+            </li>
         )
-    })
+    }
+
+    const AddCarlistMenuItem = () => {
+        return (
+            <li
+                onClick={onAddCarlist}
+                className={'px-4 py-1 flex items-center border-b border-b-amber-300 hover:bg-blue-50  cursor-pointer'}
+            >
+                <IconContext.Provider value={{className: 'text-green-500 text-xl mr-3'}}>
+                    <MdListAlt/>
+                </IconContext.Provider>
+                Carlist
+            </li>
+        )
+    }
 
     const ContextMenuView = observer(() => {
         return (
             <>
                 <li
                     className={'px-4 py-1 flex items-center border-b border-b-amber-300 hover:bg-blue-50 hover:rounded-t-xl cursor-pointer'}
-                    onClick={onCheckStatus}
-                >
-                    <IconContext.Provider value={{className: 'text-green-500 text-xl mr-3'}}>
-                        <MdFlaky/>
-                    </IconContext.Provider>
-                    Проверить статус
-                </li>
-                <li
-                    className={'px-4 py-1 flex items-center border-b border-b-amber-300 hover:bg-blue-50 cursor-pointer'}
                     onClick={onSendMessage}
                 >
                     <IconContext.Provider value={{className: 'text-green-500 text-xl mr-3'}}>
@@ -210,19 +169,8 @@ const RequestContextMenu = observer((props) => {
                     </IconContext.Provider>
                     Текст смс
                 </li>
-                <li
-                    className={'px-4 py-1 flex items-center relative hover:bg-blue-50 border-b border-b-amber-300 cursor-pointer'}
-                    onMouseEnter={() => handleHover(true)}
-                    onMouseLeave={() => handleHover(false)}
-                >
-                    <IconContext.Provider value={{className: 'text-green-500 text-xl mr-3'}}>
-                        <MdSort/>
-                    </IconContext.Provider>
-                    Сортировать <span className={'ml-auto text-lg text-amber-500'}>&gt;</span>
-                    {isShowAddMenu ? <RightSortMenu/> : null}
-                </li>
 
-                {Store.selectedText.length > 0 ? <CopyContextMenuItem/> : null}
+                {Store.currentRequest.VehicleRegNum ? <AddCarlistMenuItem/> : null}
                 <li
                     className={'px-4 py-1 flex items-center border-b border-b-amber-300 hover:bg-blue-50  cursor-pointer'}
                     onClick={onEdit}
@@ -241,24 +189,16 @@ const RequestContextMenu = observer((props) => {
                     </IconContext.Provider>
                     Прикрепить файл
                 </li>
+                {Store.selectedText.length > 0 ? <CopyContextMenuItem/> : null}
+                {!Store.currentRequest.isExecuted ? <CloseRequestMenuItem/> : null}
                 <li
-                    className={'px-4 py-1 flex items-center border-b border-b-amber-300 hover:bg-blue-50 cursor-pointer'}
                     onClick={onDelete}
+                    className={'px-4 py-1 flex items-center hover:bg-blue-50 hover:rounded-b-xl cursor-pointer'}
                 >
                     <IconContext.Provider value={{className: 'text-green-500 text-xl mr-3'}}>
                         <MdOutlineDelete/>
                     </IconContext.Provider>
                     Удалить заявку
-                </li>
-
-                <li
-                    onClick={onCloseRequest}
-                    className={'px-4 py-1 flex items-center hover:bg-blue-50 hover:rounded-b-xl cursor-pointer'}
-                >
-                    <IconContext.Provider value={{className: 'text-green-500 text-xl mr-3'}}>
-                        <MdOutlineClose/>
-                    </IconContext.Provider>
-                    Закрыть заявку
                 </li>
             </>
         )
@@ -270,7 +210,7 @@ const RequestContextMenu = observer((props) => {
             className={'absolute w-64 text-md min-h-[200px] rounded-xl bg-white border border-amber-300'}
             style={calculatePosition(props.posX, props.posY, 256, 302)}
         >
-            {contextLoading ? <Loading/> : <ContextMenuView/>}
+            <ContextMenuView/>
         </ul>
     );
 })

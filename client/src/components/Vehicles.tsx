@@ -4,6 +4,7 @@ import TableData from './TableData'
 import { observer } from "mobx-react-lite"
 import Store from "../state/Store";
 import ContextMenu from "./ContextMenu";
+import AddCarlistModal from "./AddCarlistModal";
 
 const VehiclesPage = observer (() => {
     const {getVehiclesByRegNum, getVehiclesByVin, getVehiclesById } = useOracleService()
@@ -27,6 +28,7 @@ const VehiclesPage = observer (() => {
         <>
             <TableData/>
             {Store.showContextMenu ? <ContextMenu posX={Store.mouseX} posY={Store.mouseY}/> : null}
+            {Store.isShowCarlistModal ? <AddCarlistModal/> : null}
         </>
     );
 });

@@ -24,6 +24,7 @@ const MailView = observer(() => {
 
 
     const setReqChosenMail = (value) => {
+        console.log(Store.reqChosenRegion)
         Store.setReqChosenMail({
             changeKey: value.changeKey,
             id: value.id,
@@ -50,7 +51,7 @@ const MailView = observer(() => {
             {
                 Header: 'Тема',
                 accessor: 'subject',
-                width: 300
+                width: 305
             },
             {
                 Header: 'Адрес почты',
@@ -122,7 +123,7 @@ const MailView = observer(() => {
                     height={245}
                     itemCount={rows.length}
                     itemSize={35}
-                    width={totalColumnsWidth + 15}
+                    width={totalColumnsWidth }
                 >
                     {RenderRow}
                 </FixedSizeList>
@@ -132,7 +133,7 @@ const MailView = observer(() => {
 
     const ErrorMessages = () => {
         return (
-            <div className={'flex flex-col h-[245px] items-center justify-center'}>
+            <div className={'flex flex-col'}>
                 <img src="/icons8-error-cloud-96.png" alt="error-message"/>
                 <h2 className={'text-center text-lg text-black'}>Не удалось загрузить письма</h2>
             </div>
@@ -144,8 +145,8 @@ const MailView = observer(() => {
     const view = !(Store.mailsLoading || Store.mailsError)  ? <LoadedMessages/> : null
 
     return (
-        <div  className="table-auto rounded-t-xl table-fixed position:relative border-collapse mx-auto border-hidden  shadow-xl shadow-around bg-gray-100 shadow-md mt-2 shadow-stone-700" {...getTableProps()}>
-            <div className="bg-amber-200/80 rounded-t-xl text-center text-slate-900 text-lg py-1">
+        <div  className="table-auto rounded-xl overflow-hidden table-fixed position:relative border-collapse mx-auto border-hidden  shadow-xl shadow-around bg-gray-100 shadow-md mt-2 shadow-stone-700" {...getTableProps()}>
+            <div className="bg-amber-200/80 text-center text-slate-900 text-lg py-1">
             {// Loop over the header rows
                 headerGroups.map((headerGroup, i) => (
                     // Apply the header row propsS
@@ -161,9 +162,12 @@ const MailView = observer(() => {
                     </div>
                 ))}
             </div>
-            {loadingView}
-            {errView}
-            {view}
+            <div className={'h-[245px] relative'}>
+                {loadingView}
+                {errView}
+                {view}
+            </div>
+
         </div>
     )})
 

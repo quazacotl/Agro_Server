@@ -44,7 +44,11 @@ class Store {
     offsetY = 0
     isShowEditRequestModal = false
     isShowSendMessageModal = false
+    isShowCarlistModal = false
     foundVehiclesByRegNom = []
+    sortBy = 'date'
+    checkStatusLoading = false
+    searchInputValue = ''
 
 
     constructor() {
@@ -272,10 +276,26 @@ class Store {
         this.isShowSendMessageModal = bool
     }
 
+    setIsShowCarlistModal = bool => {
+        this.isShowCarlistModal = bool
+    }
+
 
     // Список поиска техники из контекстного меню заявок для проверки статуса
     setFoundVehiclesByRegNom = data => {
         this.foundVehiclesByRegNom = data
+    }
+
+    setSortBy = sortType => {
+        this.sortBy = sortType
+    }
+
+    setCheckStatusLoading = bool => {
+        this.checkStatusLoading = bool
+    }
+
+    setSearchInputValue = value => {
+        this.searchInputValue = value
     }
 }
 
