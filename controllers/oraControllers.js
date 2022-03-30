@@ -1,4 +1,4 @@
-import oraConnection from '../connections/oraConnection.js'
+import {oraConnection} from "../server.js";
 
 const baseString = `SELECT ABS.BUD_AGRO_OBJS_V.OBJ_NAME, ABS.AGRO_BASES_V.BASES_NAME, 
   ABS.AGRO_TREES_V.NODE_NAME, ABS.AGRO_TRANSPORT_V.REG_NOM, TD.ATTR_VALUE, 
@@ -18,7 +18,7 @@ FROM
 
 export const getVehiclesByRegNum = async function (req, res) {
     try {
-        const requests = await oraConnection(`${baseString} WHERE 
+        const requests = await oraConnection.execute(`${baseString} WHERE 
   ABS.AGRO_TRANSPORT_V.REG_NOM LIKE '%${req.body.regNum.trim()}%' ORDER BY 
    ABS.AGRO_NAV_TRANSP_V.NAV_ID asc nulls last, ABS.BUD_AGRO_OBJS_V.OBJ_NAME ASC`)
         res.status(200).json(requests.rows)
@@ -30,7 +30,7 @@ export const getVehiclesByRegNum = async function (req, res) {
 
 export const getVehiclesById = async function (req, res) {
     try {
-        const requests = await oraConnection(`${baseString} WHERE 
+        const requests = await oraConnection.execute(`${baseString} WHERE 
   ABS.AGRO_NAV_TRANSP_V.NAV_ID LIKE '%${req.body.id.trim()}%' ORDER BY ABS.BUD_AGRO_OBJS_V.OBJ_NAME ASC`)
         res.status(200).json(requests.rows)
     }
@@ -41,7 +41,7 @@ export const getVehiclesById = async function (req, res) {
 
 export const getVehiclesByVin = async function (req, res) {
     try {
-        const requests = await oraConnection(`${baseString} WHERE 
+        const requests = await oraConnection.execute(`${baseString} WHERE 
   TD.ATTR_VALUE LIKE '%${req.body.vin.trim()}%' ORDER BY 
    ABS.AGRO_NAV_TRANSP_V.NAV_ID asc nulls last, ABS.BUD_AGRO_OBJS_V.OBJ_NAME ASC`)
         res.status(200).json(requests.rows)

@@ -37,9 +37,23 @@ mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`, () => {
     console.log('Mongoose connected...')
 });
 
-
 if (process.env.NODE_ENV === 'development') {
     oracledb.initOracleClient({libDir: process.env.ORACLE_CLIENT_PATH});
+}
+
+export let oraConnection;
+
+try {
+    oraConnection = await oracledb.getConnection( {
+        user          : process.env.ORACLE_LOGIN,
+        password      : process.env.ORACLE_PASS,
+        connectString : process.env.ORACLE_CONNECT_STRING
+    });
+    console.log('OracleBD connected...')
+
+
+} catch (err) {
+    console.error(err);
 }
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
