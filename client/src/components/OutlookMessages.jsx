@@ -24,7 +24,6 @@ const MailView = observer(() => {
 
 
     const setReqChosenMail = (value) => {
-        console.log(Store.reqChosenRegion)
         Store.setReqChosenMail({
             changeKey: value.changeKey,
             id: value.id,

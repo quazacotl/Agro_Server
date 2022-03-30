@@ -239,12 +239,26 @@ export const getCurrentUsers = async function (req, res) {
     }
 }
 
+const getExecutors = async (executorsList) => {
+    if (executorsList) {
+        let Executor = [];
+        for (const item of executorsList) {
+            const execId = await ExecutorModel.findOne({name: item}).select('_id')
+            console.log(execId)
+            Executor.push(execId)
+        }
+        return Executor
+    }
+    return null
+}
+
 export const writeNewRequest = async function (req, res) {
+
     try {
+        const Executor = await getExecutors(req.body.Executor)
         const Region = await RegionModel.findOne({name: req.body.Region}).select('_id')
         const RequestType = await RequestTypes.findOne({description: req.body.RequestType}).select('_id')
         const Creator = await UserModel.findOne({name: req.body.Creator}).select('_id')
-        const Executor = await ExecutorModel.findOne({name: req.body.Executor}).select('_id')
         const request = new RequestModel({
             ...req.body,
             CreateDate: DateTime.now().toISO(),
@@ -263,7 +277,8 @@ export const writeNewRequest = async function (req, res) {
 
 export const editRequest = async function (req, res) {
     try {
-        const Executor = await ExecutorModel.findOne({name: req.body.Executor}).select('_id')
+        const Executor = await getExecutors(req.body.Executor)
+        console.log('executors: ' + Executor)
         const RequestType = await RequestTypes.findOne({description: req.body.RequestType}).select('_id')
         await RequestModel.findOneAndUpdate({_id: req.body.id}, {
             Description: req.body.Description,

@@ -24,7 +24,6 @@ const getClassesForDate = (cell) => {
 
 const RequestsTable = observer(() => {
     const {getVehiclesByRegNum} = useOracleService()
-    const [contextLoading, setContextLoading] = useState(false)
 
 
     const data = useMemo(() => Store.requestsData, [Store.requestsData])
@@ -100,7 +99,8 @@ const RequestsTable = observer(() => {
             {
                 Header: 'Исполнил',
                 accessor: 'Executor',
-                width: 130
+                width: 130,
+                Cell: ({value}) => value && value.length > 1 ? `+ ${value[0]}` : value
             },
             {
                 Header: 'Закрыл',
@@ -194,9 +194,19 @@ const RequestsTable = observer(() => {
                 Store.setBubbleContextText(text1)
                 break
             case 'Executor':
+                const executorText = () => {
+                    if (cell.row.values.Executor && cell.row.values.Executor.length > 1) {
+                        let text = "Исполнители: "
+                        cell.row.values.Executor.forEach(item => {
+                            text = `${text}\n\t${item}`
+                        })
+                        return text
+                    }
+                    return ''
+                }
                 const text2 = cell.row.values.Auditor ?
                     `Создал:  ${cell.row.values.Creator}\nЗакрыл:  ${cell.row.values.Auditor}` :
-                    `Создал:  ${cell.row.values.Creator}`
+                    `Создал:  ${cell.row.values.Creator}\n${executorText()}`
                 Store.setIsBubbleContextShow(true)
                 Store.setBubbleContextText(text2)
                 break
@@ -252,7 +262,6 @@ const RequestsTable = observer(() => {
                 }
             }
             catch (e) {
-                setContextLoading(false)
                 Store.setContextMenu(false);
                 Store.setNotificationText('База данных не отвечает')
                 Store.showNotification()

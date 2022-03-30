@@ -8,16 +8,23 @@ const useMongoService = (loading = true) => {
 
     const transformRequestData = requestData => {
         const newData = requestData.map((item) => {
+            let executors = []
+            if (item.Executor) {
+                item.Executor.forEach(item => {
+                    executors.push(item.name)
+                })
+            }
+
             return (
                 {
                     ...item,
                     Creator: item.Creator ? item.Creator.name : null,
                     Auditor: item.Auditor ? item.Auditor.name : null,
-                    Executor: item.Executor ? item.Executor.name : null,
+                    Executor: item.Executor ? executors : null,
                     Region: item.Region ? item.Region.name : null,
                     RequestType: item.RequestType ? item.RequestType.description : null,
                 }
-            )
+            );
         })
         return newData
     }

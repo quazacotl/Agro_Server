@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import useMongoService from "../services/useMongoService";
 import Store from "../state/Store";
 import { observer } from "mobx-react-lite"
@@ -7,10 +7,13 @@ import {regions} from "../interfaces/interfaces";
 import PreviousRequests from "./PreviousRequests";
 import BubbleContext from "./BubbleContext";
 import {dateFromIsoToLocal} from "../funcs/funcs";
+import { HiPlus } from "react-icons/hi"
+import {IconContext} from "react-icons";
 
 
 
 const RequestCreationModal = observer(() => {
+    const [addExecutor, setAddExecutor] = useState(false)
 
     const {writeNewRequest, getAllUnexecutedRequests, getRequestsByRegNom} = useMongoService(false)
 
@@ -29,7 +32,7 @@ const RequestCreationModal = observer(() => {
             Store.setLastMails([])
             Store.setReqChosenMail(null)
             Store.setReqChosenComment('')
-            Store.setReqChosenExecutor(null)
+            Store.setReqChosenExecutors([])
             Store.setReqChosenRegion(null)
             Store.setPreviousRequestsData([])
             Store.setCurrentVehicle(null)
@@ -57,7 +60,6 @@ const RequestCreationModal = observer(() => {
                     break
                 default: Store.setReqChosenComment('')
             }
-
         }
     }
 
@@ -65,9 +67,19 @@ const RequestCreationModal = observer(() => {
         Store.setReqChosenRegion(e.target.value)
     }
 
-    const setReqChosenExecutor = (e) => {
-        Store.setReqChosenExecutor(e.target.value)
-
+    const setReqChosenExecutor = (e, number) => {
+        switch (Store.reqChosenExecutors.length) {
+            case 0:
+                Store.setReqChosenExecutors([e.target.value])
+                break
+            case 1:
+                if (number === 1) Store.setReqChosenExecutors([e.target.value])
+                else if (number === 2) Store.setReqChosenExecutors([Store.reqChosenExecutors[0], e.target.value])
+                break
+            case 2:
+                if (number === 1) Store.setReqChosenExecutors([e.target.value, Store.reqChosenExecutors[1]])
+                else if (number === 2) Store.setReqChosenExecutors([Store.reqChosenExecutors[0], e.target.value])
+        }
     }
 
     const setReqChosenComment = (e) => {
@@ -75,10 +87,16 @@ const RequestCreationModal = observer(() => {
     }
 
     const saveRequest = async () => {
+        let executors = []
+        if (Store.reqChosenExecutors) {
+            Store.reqChosenExecutors.forEach(item => {
+                executors.push(item)
+            })
+        }
         let newRequest = {
             isExecuted: false,
             Creator: Store.currentUser,
-            Executor: Store.reqChosenExecutor,
+            Executor: executors,
             Description: Store.reqChosenComment,
             SentFromName: Store.reqChosenMail ? Store.reqChosenMail.senderName : null,
             SentFromEmail: Store.reqChosenMail ? Store.reqChosenMail.senderEmail : null,
@@ -140,6 +158,27 @@ const RequestCreationModal = observer(() => {
         )
     }
 
+    const Executor2View = () => {
+        return (
+            <select
+                defaultValue={'DEFAULT'}
+                className={'w-full rounded-lg shadow-md py-1 mt-5 shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
+                name="executor2"
+                id="executor2"
+                onChange={e => setReqChosenExecutor(e, 2)}
+            >
+                <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
+                {Store.currentExecutors.map(item => (
+                    <option key={item._id} value={item.name}>{item.name}</option>
+                ))}
+            </select>
+        )
+    }
+
+    const onPlusExecutor = (e) => {
+        e.preventDefault()
+        setAddExecutor(true)
+    }
 
     return (
         <div onMouseDown={hideModal} className={'absolute top-0 left-0 w-screen h-screen flex bg-neutral-700/50'}>
@@ -149,19 +188,30 @@ const RequestCreationModal = observer(() => {
                     <div className="flex gap-16 text-stone-900 w-full mt-5">
                         <form className="flex flex-col gap-4">
                             <div className={'flex flex-col gap-2'}>
-                                <label className={'text-xl'} htmlFor="executor">Исполнитель</label>
-                                <select
-                                    defaultValue={'DEFAULT'}
-                                    className={'rounded-lg shadow-md py-1 shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
-                                    name="executor"
-                                    id="executor"
-                                    onChange={setReqChosenExecutor}
-                                >
-                                    <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
-                                    {Store.currentExecutors.map(item => (
-                                        <option key={item._id} value={item.name}>{item.name}</option>
-                                    ))}
-                                </select>
+                                <label className={'text-xl'} htmlFor="executor1">Исполнители</label>
+                                <div className={'flex justify-between items-center'}>
+                                    <select
+                                        defaultValue={'DEFAULT'}
+                                        className={'w-[80%] rounded-lg shadow-md py-1 shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
+                                        name="executor1"
+                                        id="executor1"
+                                        onChange={e => setReqChosenExecutor(e, 1)}
+                                    >
+                                        <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
+                                        {Store.currentExecutors.map(item => (
+                                            <option key={item._id} value={item.name}>{item.name}</option>
+                                        ))}
+                                    </select>
+                                    <button
+                                        onClick={onPlusExecutor}
+                                        disabled={addExecutor || Store.reqChosenExecutors.length === 0}
+                                        className={'w-[10%] h-full rounded-lg bg-white shadow-md shadow-stone-700 hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
+                                        <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
+                                            <HiPlus/>
+                                        </IconContext.Provider>
+                                    </button>
+                                </div>
+                                {addExecutor ? <Executor2View/> : null}
                             </div>
                             <div className={'flex flex-col gap-2'}>
                                 <label className={'text-xl'} htmlFor="type">Тип заявки</label>

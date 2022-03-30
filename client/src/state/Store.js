@@ -23,7 +23,7 @@ class Store {
     lastMails = []
     showRequestModal = false
     showAddFileModal = false
-    reqChosenExecutor = ''
+    reqChosenExecutors = []
     reqChosenType = ''
     reqChosenRegion = ''
     reqChosenComment = ''
@@ -195,8 +195,8 @@ class Store {
         this.reqChosenMail = data
     }
 
-    setReqChosenExecutor = data => {
-        this.reqChosenExecutor = data
+    setReqChosenExecutors = item => {
+        this.reqChosenExecutors = item
     }
 
     setReqPlannedDate = date => {

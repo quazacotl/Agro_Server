@@ -6,11 +6,15 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
 import {DateTime} from "luxon";
+import {IconContext} from "react-icons";
+import {HiMinus, HiPlus} from "react-icons/hi";
 
 
 
 
 const RequestEditModal = observer(() => {
+    const [isMultipleExecutors, setIsMultipleExecutors] = useState(false)
+
     const {updateAfterRequestEdit} = useUpdateAfterEdit()
     const {editRequest} = useMongoService(false)
 
@@ -63,6 +67,66 @@ const RequestEditModal = observer(() => {
         })
     }
 
+    const onMinusExecutor = (e) => {
+        e.preventDefault()
+        setIsMultipleExecutors(false)
+        Store.setCurrentRequest({
+            ...Store.currentRequest,
+            Executor: [Store.currentRequest.Executor[0]]
+        })
+    }
+
+    const onPlusExecutor = (e) => {
+        e.preventDefault()
+        setIsMultipleExecutors(true)
+    }
+
+    const onChangeExecutor = (e, number) => {
+        if (Store.currentRequest.Executor) {
+            switch (Store.currentRequest.Executor.length) {
+                case 0:
+                    Store.setCurrentRequest({
+                        ...Store.currentRequest,
+                        Executor: [e.target.value]
+                    });
+                    break;
+                case 1:
+                    if (number === 1) {
+                        Store.setCurrentRequest({
+                            ...Store.currentRequest,
+                            Executor: [e.target.value]
+                        })
+                    }
+                    else if (number === 2) {
+                        Store.setCurrentRequest({
+                            ...Store.currentRequest,
+                            Executor: [Store.currentRequest.Executor[0], e.target.value]
+                        })
+                    }
+                    break;
+                case 2:
+                    if (number === 1) {
+                        Store.setCurrentRequest({
+                            ...Store.currentRequest,
+                            Executor: [e.target.value, Store.currentRequest.Executor[1]]
+                        })
+                    }
+                    else if (number === 2) {
+                        Store.setCurrentRequest({
+                            ...Store.currentRequest,
+                            Executor: [Store.currentRequest.Executor[0], e.target.value]
+                        })
+                    }
+            }
+        } else {
+            Store.setCurrentRequest({
+                ...Store.currentRequest,
+                Executor: [e.target.value]
+            });
+        }
+
+    }
+
     // Сохранить изменённую заявку
     const editMongoRequest = async (e) => {
         e.preventDefault()
@@ -82,7 +146,7 @@ const RequestEditModal = observer(() => {
     }
 
     const CurrentVehicle = () => {
-        if (Store.currentRequest.VehicleId) {
+        if (Store.currentRequest && Store.currentRequest.VehicleId) {
             return (
                 <div className={'mb-6'}>
                     <h2 className={'text-xl text-center text'}>Выбранная техника</h2>
@@ -99,6 +163,32 @@ const RequestEditModal = observer(() => {
         }
     }
 
+    const Executor2View = observer(() => {
+        return (
+            <div className={'flex justify-between items-center mt-5'}>
+                <select
+                    defaultValue={Store.currentRequest.Executor && Store.currentRequest.Executor.length > 1 ? Store.currentRequest.Executor[1] : 'DEFAULT'}
+                    className={'w-[80%] rounded-lg shadow-md py-1  shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
+                    name="executor2"
+                    id="executor2"
+                    onChange={e => onChangeExecutor(e, 2)}
+                >
+                    <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
+                    {Store.currentExecutors.map(item => (
+                        <option key={item._id} value={item.name}>{item.name}</option>
+                    ))}
+                </select>
+                <button
+                    onClick={(e) => onMinusExecutor(e)}
+                    className={'w-[10%] h-full rounded-lg bg-white shadow-md shadow-stone-700 hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
+                    <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
+                        <HiMinus/>
+                    </IconContext.Provider>
+                </button>
+            </div>
+        )
+    })
+
 
     return (
         <div
@@ -108,24 +198,35 @@ const RequestEditModal = observer(() => {
         >
             <div className={'flex m-auto p-6 bg-blue-50 rounded-xl'}>
                 <div className={'flex flex-col'}>
-                    {Store.currentRequest.VehicleId ? <CurrentVehicle/> : null}
+                    {Store.currentRequest && Store.currentRequest.VehicleId ? <CurrentVehicle/> : null}
                         <form className="flex flex-col">
                             <div className={'flex justify-between gap-6'}>
                                 <div className={'flex flex-col w-[380px] gap-2'}>
                                     <label className={'text-xl'} htmlFor="executor">Исполнитель</label>
-                                    <select
-                                        defaultValue={Store.currentRequest.Executor}
-                                        className={'rounded-lg shadow-md py-1 shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
-                                        name="executor"
-                                        id="executor"
-                                        onChange={(e) => setRequestField(e, 'Executor')}
+                                    <div className={'flex justify-between items-center'}>
+                                        <select
+                                            defaultValue={Store.currentRequest.Executor && Store.currentRequest.Executor.length > 0 ? Store.currentRequest.Executor[0] : "DEFAULT"}
+                                            className={'w-[80%] rounded-lg shadow-md py-1 shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
+                                            name="executor"
+                                            id="executor"
+                                            onChange={e => onChangeExecutor(e, 1)}
 
-                                    >
-                                        <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
-                                        {Store.currentExecutors.map(item => (
-                                            <option key={item._id} value={item.name}>{item.name}</option>
-                                        ))}
-                                    </select>
+                                        >
+                                            <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
+                                            {Store.currentExecutors.map(item => (
+                                                <option key={item._id} value={item.name}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                        <button
+                                            onClick={(e) => onPlusExecutor(e)}
+                                            disabled={Store.currentRequest.Executor < 1 || isMultipleExecutors}
+                                            className={'w-[10%] h-full rounded-lg bg-white shadow-md shadow-stone-700 hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
+                                            <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
+                                                <HiPlus/>
+                                            </IconContext.Provider>
+                                        </button>
+                                    </div>
+                                    {isMultipleExecutors || (Store.currentRequest.Executor && Store.currentRequest.Executor.length > 1) ? <Executor2View/> : null}
                                 </div>
                                 <div className={'flex flex-col w-[380px] gap-2'}>
                                     <label className={'text-xl'} htmlFor="type">Тип заявки</label>
@@ -167,7 +268,6 @@ const RequestEditModal = observer(() => {
                                         selected={Store.currentRequest.PlannedDate ? new Date(Store.currentRequest.PlannedDate) : ''}
                                         onChange={(date) => {onChangeDate(date)}}
                                         dateFormat="dd.MM.yy"
-                                        locale="ru-Ru"
                                         tabIndex={-1}
                                         placeholderText="Выбрать дату"
                                     />

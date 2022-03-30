@@ -12,7 +12,7 @@ const RequestSchema = new Schema({
     VehicleId: Number,
     RequestType: {type: Types.ObjectId, ref: 'requesttype', autopopulate: true},
     Creator: {type: Types.ObjectId, ref: 'user', autopopulate: true},
-    Executor: {type: Types.ObjectId, ref: 'executor', autopopulate: true},
+    Executor: [{type: Types.ObjectId, ref: 'executor', autopopulate: true}],
     Auditor: {type: Types.ObjectId, ref: 'user', autopopulate: true},
     PlannedDate: Date,
     CreateDate: Date,
