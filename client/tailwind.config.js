@@ -9,7 +9,8 @@ module.exports = {
         'inner-notification': 'inset 0 0 5px 1px rgba(0, 0, 0, .8)',
         'around': '0 0 10px 10px rgb(234 88 12)',
         'input-focus': '0 0 10px 4px rgb(234 88 12)',
-        'form-sh': '3px 3px 5px 0 rgb(166, 166, 166)'
+        // 'form-sh': '3px 3px 5px 0 rgb(166, 166, 166)',
+        'form-sh': '3px 3px 5px 1px hsl(220deg 98% 87%)'
       },
       backgroundImage: {
         'vehicle-table': 'radial-gradient(circle farthest-corner at center, #686e7a 0%, #32627E 100%)',

@@ -12,6 +12,7 @@ import useMongoService from "./services/useMongoService";
 import {observer} from "mobx-react-lite";
 import {CSSTransition } from "react-transition-group";
 import RequestCreationModal from "./components/RequestCreationModal";
+import StatisticPage, {StatisticsContext} from "./pages/StatisticPage";
 
 
 const App = observer(() => {
@@ -51,6 +52,7 @@ const App = observer(() => {
       <Routes>
         <Route path="/" element={<RequestPage/>}/>
         <Route path="/monitor" element={<VehiclesPage/>}/>
+        <Route path="/statistic" element={<StatisticPage/>}/>
       </Routes>
         {Store.showRequestModal ? <RequestCreationModal/> : null}
         <CSSTransition

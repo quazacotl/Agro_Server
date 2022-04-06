@@ -23,7 +23,6 @@ const RequestsControls = observer(() => {
         } else if (Store.searchInputValue.length < 3) {
             updateAfterRequestEdit()
         }
-
     }
 
     const onSortBy = (e:React.ChangeEvent<HTMLSelectElement>) => {

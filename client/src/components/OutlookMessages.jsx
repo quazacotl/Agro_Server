@@ -144,7 +144,7 @@ const MailView = observer(() => {
     const view = !(Store.mailsLoading || Store.mailsError)  ? <LoadedMessages/> : null
 
     return (
-        <div  className="table-auto rounded-xl overflow-hidden table-fixed position:relative border-collapse mx-auto border-hidden  shadow-xl shadow-around bg-gray-100 shadow-md mt-2 shadow-stone-700" {...getTableProps()}>
+        <div  className="table-auto rounded-xl overflow-hidden table-fixed position:relative border-collapse mx-auto border-hidden bg-gray-100 shadow-form-sh mt-2" {...getTableProps()}>
             <div className="bg-amber-200/80 text-center text-slate-900 text-lg py-1">
             {// Loop over the header rows
                 headerGroups.map((headerGroup, i) => (

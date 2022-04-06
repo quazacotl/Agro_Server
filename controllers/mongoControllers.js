@@ -244,7 +244,6 @@ const getExecutors = async (executorsList) => {
         let Executor = [];
         for (const item of executorsList) {
             const execId = await ExecutorModel.findOne({name: item}).select('_id')
-            console.log(execId)
             Executor.push(execId)
         }
         return Executor
@@ -278,7 +277,6 @@ export const writeNewRequest = async function (req, res) {
 export const editRequest = async function (req, res) {
     try {
         const Executor = await getExecutors(req.body.Executor)
-        console.log('executors: ' + Executor)
         const RequestType = await RequestTypes.findOne({description: req.body.RequestType}).select('_id')
         await RequestModel.findOneAndUpdate({_id: req.body.id}, {
             Description: req.body.Description,
@@ -369,3 +367,29 @@ export const searchRequests = async function (req, res) {
     }
 }
 
+export const getStatistics = async function (req, res) {
+    try {
+        const executors = await ExecutorModel.find({_id: {$nin: ['61e17dc4749a917e0a0a62f1', '61e17e04749a917e0a0a62f2', '61e17e80749a917e0a0a62f3', '61e17e93749a917e0a0a62f4', '61d744d647a4f92e864356cd']}}).select('_id').select('name')
+        let result = []
+        let totalCounts = {}
+
+        for await (const executor of executors) {
+            const requests = await RequestModel.find({Executor:  executor._id, ExecuteDate: {$gte: req.body.dateFrom, $lt: req.body.dateTill}})
+            totalCounts[executor.name] = requests.length
+            let requestCounts = {"Исполнитель": executor.name}
+            requests.forEach(request => {
+                if (request.RequestType) {
+                    const type = request.RequestType.description
+                    requestCounts[type] ? requestCounts[type] += 1 : requestCounts[type] = 1
+                }
+
+            })
+            result.push(requestCounts)
+        }
+
+        res.status(200).json({totalCounts: totalCounts, result: result})
+    }
+    catch (e) {
+        res.status(500).json({message: `Ошибка монго сервера: ${e}`})
+    }
+}

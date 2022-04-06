@@ -50,6 +50,12 @@ class Store {
     checkStatusLoading = false
     searchInputValue = ''
 
+    //statistics state
+    dateFrom = null
+    dateTill = null
+    currentStat = null
+    isLoadingStat = false
+
 
     constructor() {
         makeAutoObservable(this)
@@ -296,6 +302,20 @@ class Store {
 
     setSearchInputValue = value => {
         this.searchInputValue = value
+    }
+
+    //statistics
+    setDateFrom(date) {
+        this.dateFrom = date
+    }
+    setDateTill(date) {
+        this.dateTill = date
+    }
+    setCurrentStat(stat) {
+        this.currentStat = stat
+    }
+    setIsLoadingStat(bool) {
+        this.isLoadingStat = bool
     }
 }
 

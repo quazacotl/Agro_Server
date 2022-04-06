@@ -19,7 +19,7 @@ oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 
 const app = express()
 app.use(cors())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(morgan('dev'))
 app.use(oraRouter)
@@ -34,7 +34,7 @@ app.listen(process.env.EXPRESS_PORT,  () => {
 });
 
 mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`, () => {
-    console.log('Mongoose connected...')
+    console.log('MongoDB connected...')
 });
 
 if (process.env.NODE_ENV === 'development') {
@@ -49,12 +49,21 @@ try {
         password      : process.env.ORACLE_PASS,
         connectString : process.env.ORACLE_CONNECT_STRING
     });
-    console.log('OracleBD connected...')
+    console.log('OracleDB connected...')
+
+    } catch (err) {
+         console.error(err);
+    }
 
 
-} catch (err) {
-    console.error(err);
-}
+let interval = setInterval(() => {
+    try {
+        oraConnection.execute(`select 1 from dual`)
+        console.log('knocked to base')
+    } catch (e) {
+        console.log(e)
+    }
+}, 300000)
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

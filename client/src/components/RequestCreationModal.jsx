@@ -125,7 +125,7 @@ const RequestCreationModal = observer(() => {
             return (
                 <div>
                     <h2 className={'text-xl text-center text'}>Выбранная техника</h2>
-                    <div className={'flex justify-between text-md bg-white mt-2 rounded-lg shadow-md shadow-stone-700'}>
+                    <div className={'flex justify-between text-md bg-white mt-2 rounded-lg shadow-form-sh '}>
                         <div className={'px-2 py-1'}>{Store.currentVehicle.OBJ_NAME}</div>
                         <div className={'px-2 py-1'}>{Store.currentVehicle.BASES_NAME}</div>
                         <div className={'px-2 py-1'}>{Store.currentVehicle.NODE_NAME}</div>
@@ -144,7 +144,7 @@ const RequestCreationModal = observer(() => {
                 <label className={'text-xl'} htmlFor="region">Область</label>
                 <select
                     defaultValue={Store.reqChosenRegion ? Store.reqChosenRegion : 'DEFAULT'}
-                    className={'rounded-lg shadow-md py-1 shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
+                    className={'rounded-lg shadow-form-sh py-1  text-md border-stone-300 focus:outline-amber-200'}
                     name="region"
                     id="region"
                     onChange={(e) => setReqChosenRegion(e)}
@@ -162,7 +162,7 @@ const RequestCreationModal = observer(() => {
         return (
             <select
                 defaultValue={'DEFAULT'}
-                className={'w-full rounded-lg shadow-md py-1 mt-5 shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
+                className={'w-full rounded-lg shadow-form-sh py-1 mt-5  text-md border-stone-300 focus:outline-amber-200'}
                 name="executor2"
                 id="executor2"
                 onChange={e => setReqChosenExecutor(e, 2)}
@@ -192,7 +192,7 @@ const RequestCreationModal = observer(() => {
                                 <div className={'flex justify-between items-center'}>
                                     <select
                                         defaultValue={'DEFAULT'}
-                                        className={'w-[80%] rounded-lg shadow-md py-1 shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
+                                        className={'w-[80%] rounded-lg shadow-form-sh py-1  text-md border-stone-300 focus:outline-amber-200'}
                                         name="executor1"
                                         id="executor1"
                                         onChange={e => setReqChosenExecutor(e, 1)}
@@ -205,7 +205,7 @@ const RequestCreationModal = observer(() => {
                                     <button
                                         onClick={onPlusExecutor}
                                         disabled={addExecutor || Store.reqChosenExecutors.length === 0}
-                                        className={'w-[10%] h-full rounded-lg bg-white shadow-md shadow-stone-700 hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
+                                        className={'w-[10%] h-full rounded-lg bg-white shadow-form-sh  hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
                                         <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
                                             <HiPlus/>
                                         </IconContext.Provider>
@@ -217,7 +217,7 @@ const RequestCreationModal = observer(() => {
                                 <label className={'text-xl'} htmlFor="type">Тип заявки</label>
                                 <select
                                     defaultValue={'DEFAULT'}
-                                    className={'rounded-lg shadow-md py-1 shadow-stone-700 text-md border-stone-300 focus:outline-amber-200'}
+                                    className={'rounded-lg shadow-form-sh py-1  text-md border-stone-300 focus:outline-amber-200'}
                                     name="type"
                                     id="type"
                                     onChange={setReqChosenType}
@@ -231,7 +231,7 @@ const RequestCreationModal = observer(() => {
                             {Store.currentVehicle ? null : <RegionSelectView/>}
                             <div className={'flex flex-col gap-2'}>
                                 <h2 className={'text-xl'}>Прислал письмо</h2>
-                                <div className={'rounded-lg h-[32px] py-1 px-2 shadow-md shadow-stone-700 text-md border-stone-300 bg-white'}>
+                                <div className={'rounded-lg h-[32px] py-1 px-2 shadow-form-sh  text-md border-stone-300 bg-white'}>
                                     {Store.reqChosenMail ?
                                         `${Store.reqChosenMail.senderName}, ${new Date(Store.reqChosenMail.sentDate).toLocaleString()}` :
                                         <h2> -- выберите письмо --</h2>}
@@ -252,13 +252,13 @@ const RequestCreationModal = observer(() => {
                                 type="text"
                                 name={'comment'}
                                 id={'comment'}
-                                className={'rounded-lg h-[32px] py-1 shadow-md shadow-stone-700 text-md border-stone-300 focus:outline-amber-200 mt-2'}
+                                className={'rounded-lg h-[32px] py-1 shadow-form-sh  text-md border-stone-300 focus:outline-amber-200 mt-2'}
                                 onChange={setReqChosenComment}
                             />
                         </div>
                         <button
                             onClick={saveRequest}
-                            className={'h-full bg-button-gradient font-semibold shadow-md shadow-stone-700 rounded-lg text-center text-lg text-white px-2 py-2 shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}
+                            className={'h-full bg-button-gradient font-semibold shadow-form-sh  rounded-lg text-center text-lg text-white px-2 py-2 shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}
                         >Создать заявку</button>
                     </div>
                 </div>

@@ -12,7 +12,6 @@ import AddCarlistModal from "../components/AddCarlistModal";
 
 const RequestPage = observer(() => {
 
-
     const closeContextMenu = (e) => {
         e.stopPropagation()
         if (e.target.tagName !== 'LI') Store.setContextMenu(false)
