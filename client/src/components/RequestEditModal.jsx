@@ -9,6 +9,7 @@ import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
 import {DateTime} from "luxon";
 import {IconContext} from "react-icons";
 import {HiMinus, HiPlus} from "react-icons/hi";
+import MailView from "./OutlookMessages";
 
 registerLocale("ru", ru)
 
@@ -22,10 +23,19 @@ const RequestEditModal = observer(() => {
     useEffect(() => {
         (async () => {
             document.body.style.overflow = 'hidden';
+            if (Store.currentRequest.SentFromName) {
+                const chosenMail = {
+                    senderName: Store.currentRequest.SentFromName,
+                    senderEmail: Store.currentRequest.SentFromEmail,
+                    sentDate: Store.currentRequest.SentFromDate
+                }
+                Store.setReqChosenMail(chosenMail)
+            }
         })()
         return () => {
             document.body.style.overflow = 'auto'
             Store.setCurrentRequest(null)
+            Store.setReqChosenMail(null)
         }
     }, [])
 
@@ -138,6 +148,11 @@ const RequestEditModal = observer(() => {
             RequestType: Store.currentRequest.RequestType,
             Region: Store.currentRequest.Region,
             PlannedDate: Store.currentRequest.PlannedDate,
+            SentFromName: Store.reqChosenMail ? Store.reqChosenMail.senderName : null,
+            SentFromEmail: Store.reqChosenMail ? Store.reqChosenMail.senderEmail : null,
+            SentFromDate: Store.reqChosenMail ? Store.reqChosenMail.sentDate : null,
+            mailId: Store.reqChosenMail ? Store.reqChosenMail.id : null,
+            mailChangeKey: Store.reqChosenMail ? Store.reqChosenMail.changeKey : null,
         }
         await editRequest(editedRequest)
         Store.setShowEditRequestModal(false)
@@ -190,7 +205,6 @@ const RequestEditModal = observer(() => {
         )
     })
 
-
     return (
         <div
             onMouseDown={hideModal}
@@ -200,9 +214,10 @@ const RequestEditModal = observer(() => {
             <div className={'flex m-auto p-6 bg-blue-50 rounded-xl'}>
                 <div className={'flex flex-col'}>
                     {Store.currentRequest && Store.currentRequest.VehicleId ? <CurrentVehicle/> : null}
-                        <form className="flex flex-col">
-                            <div className={'flex justify-between gap-6'}>
-                                <div className={'flex flex-col w-[380px] gap-2'}>
+                    <form className="flex flex-col">
+                        <div className={'flex justify-between gap-6'}>
+                            <div className={'flex flex-col gap-4'}>
+                                <div className={'flex flex-col w-[400px] gap-2'}>
                                     <label className={'text-xl'} htmlFor="executor">Исполнитель</label>
                                     <div className={'flex justify-between items-center'}>
                                         <select
@@ -229,7 +244,7 @@ const RequestEditModal = observer(() => {
                                     </div>
                                     {isMultipleExecutors || (Store.currentRequest.Executor && Store.currentRequest.Executor.length > 1) ? <Executor2View/> : null}
                                 </div>
-                                <div className={'flex flex-col w-[380px] gap-2'}>
+                                <div className={'flex flex-col w-[400px] gap-2'}>
                                     <label className={'text-xl'} htmlFor="type">Тип заявки</label>
                                     <select
                                         defaultValue={Store.currentRequest.RequestType}
@@ -244,9 +259,7 @@ const RequestEditModal = observer(() => {
                                         ))}
                                     </select>
                                 </div>
-                            </div>
-                            <div className={'flex justify-between  gap-6 mt-6'}>
-                                <div className={'flex flex-col w-[380px] gap-2'}>
+                                <div className={'flex flex-col w-[400px] gap-2'}>
                                     <label className={'text-xl'} htmlFor="region">Регион</label>
                                     <select
                                         defaultValue={Store.currentRequest.Region}
@@ -262,7 +275,7 @@ const RequestEditModal = observer(() => {
                                         ))}
                                     </select>
                                 </div>
-                                <div className={'flex flex-col w-[380px] gap-2'}>
+                                <div className={'flex flex-col w-[400px] gap-2'}>
                                     <h2 className={'text-xl'}>Дата исполнения</h2>
                                     <DatePicker
                                         className={'rounded-lg shadow-form-sh py-1 w-full text-md border-stone-300 focus:outline-amber-200'}
@@ -294,27 +307,40 @@ const RequestEditModal = observer(() => {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div className={'flex mt-6 gap-16'}>
-                                <div className={'flex flex-col w-full'}>
-                                    <label className={'text-xl'} htmlFor="comment">Комментарий</label>
-                                    <input
-                                        value={Store.currentRequest.Description}
-                                        type="text"
-                                        name={'comment'}
-                                        id={'comment'}
-                                        className={'rounded-lg h-[40px] py-1 shadow-form-sh  text-md border-stone-300 focus:outline-amber-200 mt-2'}
-                                        onChange={(e) => setRequestField(e, 'Description')}
-
-                                    />
+                                <div className={'flex flex-col w-[400px] gap-2'}>
+                                    <h2 className={'text-xl'}>Прислал письмо</h2>
+                                    <div className={'rounded-lg h-[32px] py-1 px-2 shadow-form-sh  text-md border-stone-300 bg-white line-clamp-1'}>
+                                        {Store.reqChosenMail ?
+                                            `${Store.reqChosenMail.senderName}, ${new Date(Store.reqChosenMail.sentDate).toLocaleString()}` :
+                                            <h2> -- выберите письмо --</h2>}
+                                    </div>
                                 </div>
-                                <button
-                                    onClick={editMongoRequest}
-                                    className={'h-full shadow-form-sh  rounded-lg text-center text-lg text-white px-2 py-2 shadow-shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}
-                                >Редактировать заявку</button>
                             </div>
-                        </form>
+                            <div className={'relative'}>
+                                <h2 className={'text-center text-slate-900 text-xl'}>Последние письма</h2>
+                                <MailView height={385}/>
+                            </div>
+                        </div>
+
+                        <div className={'flex mt-6 gap-16'}>
+                            <div className={'flex flex-col w-full'}>
+                                <label className={'text-xl'} htmlFor="comment">Комментарий</label>
+                                <input
+                                    value={Store.currentRequest.Description}
+                                    type="text"
+                                    name={'comment'}
+                                    id={'comment'}
+                                    className={'rounded-lg h-[40px] py-1 shadow-form-sh  text-md border-stone-300 focus:outline-amber-200 mt-2'}
+                                    onChange={(e) => setRequestField(e, 'Description')}
+
+                                />
+                            </div>
+                            <button
+                                onClick={editMongoRequest}
+                                className={'h-full shadow-form-sh  rounded-lg text-center text-lg text-white px-2 py-2 shadow-shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}
+                            >Редактировать заявку</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

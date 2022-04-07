@@ -279,6 +279,11 @@ export const editRequest = async function (req, res) {
         const Executor = await getExecutors(req.body.Executor)
         const RequestType = await RequestTypes.findOne({description: req.body.RequestType}).select('_id')
         await RequestModel.findOneAndUpdate({_id: req.body.id}, {
+            SentFromName: req.body.SentFromName,
+            SentFromEmail: req.body.SentFromEmail,
+            SentFromDate: req.body.SentFromDate,
+            mailId: req.body.mailId,
+            mailChangeKey: req.body.mailChangeKey,
             Description: req.body.Description,
             Executor,
             RequestType,
@@ -369,7 +374,7 @@ export const searchRequests = async function (req, res) {
 
 export const getStatistics = async function (req, res) {
     try {
-        const executors = await ExecutorModel.find({_id: {$nin: ['61e17dc4749a917e0a0a62f1', '61e17e04749a917e0a0a62f2', '61e17e80749a917e0a0a62f3', '61e17e93749a917e0a0a62f4', '61d744d647a4f92e864356cd']}}).select('_id').select('name')
+        const executors = await ExecutorModel.find({_id: {$nin: ['61e17dc4749a917e0a0a62f1', '61e17e04749a917e0a0a62f2', '61e17e80749a917e0a0a62f3', '61e17e93749a917e0a0a62f4', '61d744d647a4f92e864356cd']}}).select('_id').select('name').sort({name: 'asc'})
         let result = []
         let totalCounts = {}
 

@@ -185,7 +185,7 @@ const RequestCreationModal = observer(() => {
             <div className={'flex min-w-[900px] m-auto p-6 bg-blue-50 rounded-xl'}>
                 <div className={'flex flex-col'}>
                     {Store.vehiclePageLocation ? <CurrentVehicle/> : null}
-                    <div className="flex gap-16 text-stone-900 w-full mt-5">
+                    <div className="flex gap-6 text-stone-900 w-full mt-5">
                         <form className="flex flex-col gap-4">
                             <div className={'flex flex-col gap-2'}>
                                 <label className={'text-xl'} htmlFor="executor1">Исполнители</label>
@@ -240,7 +240,7 @@ const RequestCreationModal = observer(() => {
                         </form>
                         <div className={'relative'}>
                             <h2 className={'text-center text-slate-900 text-xl'}>Последние письма</h2>
-                            <MailView/>
+                            <MailView height={245}/>
                         </div>
                     </div>
                     {Store.previousRequestsData.length > 0 ? <PreviousRequests/> : null}
@@ -265,7 +265,7 @@ const RequestCreationModal = observer(() => {
             </div>
             {Store.isBubbleContextShow ? <BubbleContext/> : null}
         </div>
-    );
-});
+    )
+})
 
-export default RequestCreationModal;
+export default RequestCreationModal

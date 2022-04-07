@@ -7,7 +7,7 @@ import Loading from "./Loading";
 import useOutlookService from "../services/useOutlookService";
 import {dateFromIsoToLocal} from "../funcs/funcs";
 
-const MailView = observer(() => {
+const MailView = observer((props) => {
     const {getLastMails} = useOutlookService()
 
     useEffect(() => {
@@ -100,7 +100,10 @@ const MailView = observer(() => {
                         style,
                     })}
                     className={'text-center text-black hover:bg-cyan-100 bg-white cursor-pointer'}
-                    onClick={() => setReqChosenMail(row.values)}
+                    onClick={() => {
+                        setReqChosenMail(row.values)
+                        console.log(row.values)
+                    }}
                 >
                     {row.cells.map((cell, i) => {
                         return (
@@ -117,9 +120,10 @@ const MailView = observer(() => {
 
     const LoadedMessages = () => {
         return (
+
             <div {...getTableBodyProps()}>
                 <FixedSizeList
-                    height={245}
+                    height={props.height}
                     itemCount={rows.length}
                     itemSize={35}
                     width={totalColumnsWidth }
@@ -142,26 +146,26 @@ const MailView = observer(() => {
     const loadingView = Store.mailsLoading ? <Loading/> : null
     const errView = Store.mailsError ? <ErrorMessages/> : null
     const view = !(Store.mailsLoading || Store.mailsError)  ? <LoadedMessages/> : null
-
+    const heightClass = `${String(props.height)}px`
     return (
         <div  className="table-auto rounded-xl overflow-hidden table-fixed position:relative border-collapse mx-auto border-hidden bg-gray-100 shadow-form-sh mt-2" {...getTableProps()}>
             <div className="bg-amber-200/80 text-center text-slate-900 text-lg py-1">
-            {// Loop over the header rows
-                headerGroups.map((headerGroup, i) => (
-                    // Apply the header row propsS
-                    <div key={i}  {...headerGroup.getHeaderGroupProps()} >
-                        {// Loop over the headers in each row
-                            headerGroup.headers.map((column, i) => (
-                                // Apply the header cell props
-                                <div key={i}  {...column.getHeaderProps()}>
-                                    {// Render the header
-                                        column.render('Header')}
-                                </div>
-                            ))}
-                    </div>
-                ))}
+                {// Loop over the header rows
+                    headerGroups.map((headerGroup, i) => (
+                        // Apply the header row propsS
+                        <div key={i}  {...headerGroup.getHeaderGroupProps()} >
+                            {// Loop over the headers in each row
+                                headerGroup.headers.map((column, i) => (
+                                    // Apply the header cell props
+                                    <div key={i}  {...column.getHeaderProps()}>
+                                        {// Render the header
+                                            column.render('Header')}
+                                    </div>
+                                ))}
+                        </div>
+                    ))}
             </div>
-            <div className={'h-[245px] relative'}>
+            <div className={`relative`} style={{height: heightClass}}>
                 {loadingView}
                 {errView}
                 {view}

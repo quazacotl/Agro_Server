@@ -83,7 +83,7 @@ const RequestsControls = observer(() => {
                     <option value={'RequestType'}>По типу</option>
                 </select>
             </div>
-            <div className={'flex items-end mb-2 gap-8'}>
+            <div className={'flex self-end mb-2 gap-8'}>
                 <label className={'text-xl text-white block w-[180px]'} htmlFor="{'checkClosed'}">Показать закрытые</label>
                 <input checked={Store.isShowUnexecuted} onChange={onShowClosed} className={'w-6 h-6 focus:shadow-input-focus focus:outline-none text-amber-500'} type="checkbox" id={'checkClosed'}/>
             </div>
@@ -93,6 +93,9 @@ const RequestsControls = observer(() => {
                 className={'min-w-[230px] h-14 border-2 border-amber-500 self-end rounded-lg bg-indigo-500 active:bg-indigo-700 focus:outline-none focus:shadow-input-focus text-2xl text-white'}
             >Создать заявку
             </button>
+            <div className={'self-end mb-2  text-white text-xl'}>
+                <h2>Заявок: {Store.requestsData ? Store.requestsData.length : '0'}</h2>
+            </div>
         </form>
     );
 });
