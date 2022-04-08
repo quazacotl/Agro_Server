@@ -10,6 +10,7 @@ const RequestSchema = new Schema({
     VehicleType: String,
     VehicleRegNum: String,
     VehicleId: Number,
+    VehicleVin: String,
     RequestType: {type: Types.ObjectId, ref: 'requesttype', autopopulate: true},
     Creator: {type: Types.ObjectId, ref: 'user', autopopulate: true},
     Executor: [{type: Types.ObjectId, ref: 'executor', autopopulate: true}],

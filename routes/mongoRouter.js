@@ -7,7 +7,7 @@ import {
     getOreRequests, getOreUnexecutedRequests,
     getTulRequests, getTulUnexecutedRequests, getVorRegRequests, getVorRegUnexecutedRequests,
     getVorRequests, getVorUnexecutedRequests,
-    getAllExecutors, getAllRegions, getAllRequestTypes, writeNewRequest, getCurrentUsers, getRequestsByRegNom,
+    getAllExecutors, getAllRegions, getAllRequestTypes, writeNewRequest, getCurrentUsers, getRequestsByVin,
     editRequest, closeRequest, getActNames,
     getAct, getTare, getTareNames, deleteRequest, searchRequests, getStatistics
 } from '../controllers/mongoControllers.js'
@@ -63,7 +63,7 @@ mongoRouter.get('/current-users', getCurrentUsers)
 
 mongoRouter.post('/request-write', writeNewRequest)
 
-mongoRouter.post('/request-reg-nom', getRequestsByRegNom)
+mongoRouter.post('/request-vin', getRequestsByVin)
 
 mongoRouter.post('/request-edit', editRequest)
 

@@ -146,8 +146,8 @@ const useMongoService = (loading = true) => {
         return await request(`${Config.baseRoute}/request-write`, 'POST', JSON.stringify(body) )
     }
 
-    const getRequestsByRegNom = async (body) => {
-        const res = await request(`${Config.baseRoute}/request-reg-nom`, 'POST', JSON.stringify(body))
+    const getRequestsByVin = async (body) => {
+        const res = await request(`${Config.baseRoute}/request-vin`, 'POST', JSON.stringify(body))
         return transformRequestData(res)
     }
 
@@ -187,7 +187,7 @@ const useMongoService = (loading = true) => {
         return await request(`${Config.baseRoute}/get-statistics`,'POST', JSON.stringify(body))
     }
 
-    return {writeNewRequest, getStatistics, searchRequests, deleteRequest, getTareNames, getAct, getTare, getActNames, addFile, closeRequest, editRequest, getRequestsByRegNom, getCurrentUsers, getAllExecutors, getAllRequestTypes, getAllRegions, getAllRequests, getAllUnexecutedRequests, getVorRequests, getVorUnexecutedRequests, getKurRequests, getKurUnexecutedRequests, getOreRequests, getOreUnexecutedRequests, getBelRequests, getBelUnexecutedRequests, getLipRequests, getLipUnexecutedRequests, getTulRequests, getTulUnexecutedRequests, getVorRegRequests, getVorRegUnexecutedRequests, getOreRegRequests, getOreRegUnexecutedRequests}
+    return {writeNewRequest, getStatistics, searchRequests, deleteRequest, getTareNames, getAct, getTare, getActNames, addFile, closeRequest, editRequest, getRequestsByVin, getCurrentUsers, getAllExecutors, getAllRequestTypes, getAllRegions, getAllRequests, getAllUnexecutedRequests, getVorRequests, getVorUnexecutedRequests, getKurRequests, getKurUnexecutedRequests, getOreRequests, getOreUnexecutedRequests, getBelRequests, getBelUnexecutedRequests, getLipRequests, getLipUnexecutedRequests, getTulRequests, getTulUnexecutedRequests, getVorRegRequests, getVorRegUnexecutedRequests, getOreRegRequests, getOreRegUnexecutedRequests}
 }
 
 export default useMongoService

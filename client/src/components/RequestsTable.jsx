@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from "react"
+import {useCallback, useMemo} from "react"
 import {useBlockLayout, useTable} from 'react-table'
 import useOracleService from "../services/useOracleService";
 import Store from "../state/Store";
@@ -23,7 +23,7 @@ const getClassesForDate = (cell) => {
 }
 
 const RequestsTable = observer(() => {
-    const {getVehiclesByRegNum} = useOracleService()
+    const {getVehiclesByVin} = useOracleService()
 
 
     const data = useMemo(() => Store.requestsData, [Store.requestsData])
@@ -65,6 +65,10 @@ const RequestsTable = observer(() => {
                 Header: 'ID',
                 accessor: 'VehicleId',
                 width: 80
+            },
+            {
+                Header: 'VIN',
+                accessor: 'VehicleVin'
             },
             {
                 Header: 'Тип заявки',
@@ -145,7 +149,7 @@ const RequestsTable = observer(() => {
         []
     )
 
-    const initialState = { hiddenColumns: ['_id', 'Acts', 'SentFromEmail', 'mailChangeKey', 'mailId', 'CreateDate', 'ExecuteDate', 'Creator', 'Auditor', 'isExecuted'] };
+    const initialState = { hiddenColumns: ['_id', 'Acts', 'SentFromEmail', 'mailChangeKey', 'mailId', 'CreateDate', 'ExecuteDate', 'Creator', 'Auditor', 'isExecuted', 'VehicleVin'] };
 
     const {
         getTableProps,
@@ -245,11 +249,11 @@ const RequestsTable = observer(() => {
     const onCheckStatus = async (e, rowValues) => {
         e.preventDefault()
         Store.setCurrentRequest(rowValues)
-        if (Store.currentRequest.VehicleRegNum) {
+        if (Store.currentRequest.VehicleVin) {
             Store.setIsCheckStatusModalShow(true)
             Store.setCheckStatusLoading(true)
             try {
-                const res = await getVehiclesByRegNum(Store.currentRequest.VehicleRegNum)
+                const res = await getVehiclesByVin(Store.currentRequest.VehicleVin)
                 Store.setCheckStatusLoading(false)
                 if (res.length === 0) {
                     Store.setContextMenu(false);

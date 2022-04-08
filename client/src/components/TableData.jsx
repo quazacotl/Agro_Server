@@ -112,21 +112,6 @@ const TableData = observer(() => {
         },
         useBlockLayout
     )
-//todo
-//     const renderCellWithSelection = (cell) => {
-//         if (cell.column.Header === 'ID' && Store.inputId) {
-//             let str = cell.value.toString()
-//             console.log(str)
-//             const index = str.indexOf(Store.inputId)
-//             let value
-//             if (index >= 0) {
-//                 const text = str.substring(0,index) + "<span className='bg-cyan-200'>" + str.substring(index,index+Store.inputId.length) + "</span>" + str.substring(index + Store.inputId.length);
-//                 value = text
-//             }
-//             return value
-//         }
-//         return cell.value
-//     }
 
 
     const RenderRow = observer(useCallback(

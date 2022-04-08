@@ -15,13 +15,13 @@ import {IconContext} from "react-icons";
 const RequestCreationModal = observer(() => {
     const [addExecutor, setAddExecutor] = useState(false)
 
-    const {writeNewRequest, getAllUnexecutedRequests, getRequestsByRegNom} = useMongoService(false)
+    const {writeNewRequest, getAllUnexecutedRequests, getRequestsByVin} = useMongoService(false)
 
 
     useEffect(() => {
         (async () => {
             if (Store.currentVehicle) {
-                const previousRequests = await getRequestsByRegNom({regNom: Store.currentVehicle.REG_NOM})
+                const previousRequests = await getRequestsByVin({vin: Store.currentVehicle.ATTR_VALUE})
                 await Store.setPreviousRequestsData(previousRequests)
                 Store.setReqChosenRegion(Store.currentVehicle.REGION)
             }
@@ -110,6 +110,7 @@ const RequestCreationModal = observer(() => {
             VehicleType: Store.currentVehicle ? Store.currentVehicle.NODE_NAME : null,
             VehicleRegNum: Store.currentVehicle ? Store.currentVehicle.REG_NOM : null,
             VehicleId: Store.currentVehicle ? Store.currentVehicle.NAV_ID : null,
+            VehicleVin: Store.currentVehicle ? Store.currentVehicle.ATTR_VALUE : null,
         }
         await writeNewRequest(newRequest)
         Store.setShowRequestModal(false)
