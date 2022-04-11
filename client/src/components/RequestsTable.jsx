@@ -23,7 +23,7 @@ const getClassesForDate = (cell) => {
 }
 
 const RequestsTable = observer(() => {
-    const {getVehiclesByVin} = useOracleService()
+    const {getVehiclesByVin, getVehiclesByRegNum} = useOracleService()
 
 
     const data = useMemo(() => Store.requestsData, [Store.requestsData])
@@ -249,11 +249,11 @@ const RequestsTable = observer(() => {
     const onCheckStatus = async (e, rowValues) => {
         e.preventDefault()
         Store.setCurrentRequest(rowValues)
-        if (Store.currentRequest.VehicleVin) {
+        if (Store.currentRequest.VehicleVin || Store.currentRequest.VehicleRegNum) {
             Store.setIsCheckStatusModalShow(true)
             Store.setCheckStatusLoading(true)
             try {
-                const res = await getVehiclesByVin(Store.currentRequest.VehicleVin)
+                const res = Store.currentRequest.VehicleVin ? await getVehiclesByVin(Store.currentRequest.VehicleVin) : await getVehiclesByRegNum(Store.currentRequest.VehicleRegNum)
                 Store.setCheckStatusLoading(false)
                 if (res.length === 0) {
                     Store.setContextMenu(false);

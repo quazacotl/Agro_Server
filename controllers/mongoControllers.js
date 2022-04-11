@@ -189,9 +189,9 @@ export const getOreRegUnexecutedRequests = async function (req, res) {
     }
 }
 
-export const getRequestsByVin = async function (req, res) {
+export const getRequestsByVinReg = async function (req, res) {
     try {
-        const requests = await RequestModel.find({'VehicleVin': req.body.vin}).sort({CreateDate: -1})
+        const requests = req.body.vin ? await RequestModel.find({VehicleVin: req.body.vin}).sort({CreateDate: -1}) : await RequestModel.find({VehicleRegNum: req.body.reg}).sort({CreateDate: -1})
         res.status(200).json(requests)
     }
     catch (e) {
