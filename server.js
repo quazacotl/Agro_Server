@@ -12,7 +12,7 @@ import mongoRouter from './routes/mongoRouter.js'
 import outlookRouter from './routes/outlookRouter.js'
 import uploadFileRouter from './routes/uploadFileRouter.js'
 import * as path from "path";
-// import RequestModel from './models/request.js'
+import RequestModel from './models/request.js'
 // import {copyActs, migrateBase} from "./baseMigration/baseMigration.js";
 
 
@@ -77,31 +77,6 @@ if (process.env.NODE_ENV === 'production') {
     })
 }
 
-// const writeVin = async () => {
-//     const requests = RequestModel.find()
-//     try {
-//         for await (const request of requests) {
-//             console.log(request._id)
-//             const vin = await oraConnection.execute(`SELECT TD.ATTR_VALUE FROM ((ABS.BUD_AGRO_OBJS_V RIGHT JOIN (ABS.AGRO_TREES_V INNER JOIN
-//   (ABS.AGRO_BASES_V RIGHT JOIN ABS.AGRO_TRANSPORT_V ON
-//   ABS.AGRO_BASES_V.BASE_ID = ABS.AGRO_TRANSPORT_V.BASE_ID) ON
-//   ABS.AGRO_TREES_V.NODE_ID = ABS.AGRO_TRANSPORT_V.NODE_ID) ON
-//   ABS.BUD_AGRO_OBJS_V.OBJ_ID = ABS.AGRO_TRANSPORT_V.FARM_ID) LEFT JOIN
-//   ABS.AGRO_NAV_TRANSP_V ON ABS.AGRO_TRANSPORT_V.TRANSP_ID =
-//   ABS.AGRO_NAV_TRANSP_V.TRANSP_ID) LEFT JOIN (SELECT TECH_ID, ATTR_VALUE FROM
-//   ABS.AGRO_TECHNIC_DATA_V WHERE ATTR_ID=374) TD ON
-//   ABS.AGRO_TRANSPORT_V.TRANSP_ID = TD.TECH_ID WHERE
-//   ABS.AGRO_TRANSPORT_V.REG_NOM LIKE '%${request.VehicleRegNum}%'`)
-//             console.log(vin)
-//             if (vin.rows.length > 0) {
-//                 await RequestModel.findOneAndUpdate({_id: request._id}, {VehicleVin: vin.rows[0].ATTR_VALUE})
-//             }
-//         }
-//     } catch (e) {
-//         console.log(e)
-//     }
-// }
-// writeVin()
 
 // migrateBase()
 // copyActs()

@@ -17,7 +17,12 @@ const useOracleService = () => {
         return  await request(`${Config.baseRoute}/vehicles-id`, 'POST', JSON.stringify({id}))
     }
 
-    return {getVehiclesByRegNum, getVehiclesByVin, getVehiclesById}
+    const getVehiclesByOraId = async (id) => {
+        return  await request(`${Config.baseRoute}/vehicles-ora-id`, 'POST', JSON.stringify({id}))
+    }
+
+
+    return {getVehiclesByRegNum, getVehiclesByVin, getVehiclesById, getVehiclesByOraId}
 }
 
 export default useOracleService

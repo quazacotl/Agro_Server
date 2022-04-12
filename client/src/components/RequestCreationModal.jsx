@@ -111,6 +111,7 @@ const RequestCreationModal = observer(() => {
             VehicleRegNum: Store.currentVehicle ? Store.currentVehicle.REG_NOM : null,
             VehicleId: Store.currentVehicle ? Store.currentVehicle.NAV_ID : null,
             VehicleVin: Store.currentVehicle ? Store.currentVehicle.ATTR_VALUE : null,
+            VehicleOraId: Store.currentVehicle ? Store.currentVehicle.TRANSP_ID : null,
         }
         await writeNewRequest(newRequest)
         Store.setShowRequestModal(false)

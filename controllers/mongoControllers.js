@@ -364,7 +364,7 @@ export const getTare = async function (req, res) {
 
 export const searchRequests = async function (req, res) {
     try {
-        const requests = await RequestModel.find({VehicleRegNum: {$regex: req.body.regNum.trim()}}).sort(({ _id: -1 })).limit(15)
+        const requests = await RequestModel.find({VehicleRegNum: {$regex: req.body.regNum.trim()}}).sort(({ _id: -1 }))
         res.status(200).json(requests)
     }
     catch (e) {
@@ -393,6 +393,17 @@ export const getStatistics = async function (req, res) {
         }
 
         res.status(200).json({totalCounts: totalCounts, result: result})
+    }
+    catch (e) {
+        res.status(500).json({message: `Ошибка монго сервера: ${e}`})
+    }
+}
+
+export const updateRequest = async function (req, res) {
+    try {
+        const region = await RegionModel.findOne({name: req.body.region}).select('_id')
+        await RequestModel.updateMany({VehicleOraId: req.body.oraId}, {ObjName: req.body.object, BaseName: req.body.base, VehicleRegNum: req.body.regNum, VehicleVin: req.body.vin, Region: region})
+        res.status(200).json({message: 'заявка отредактирована'})
     }
     catch (e) {
         res.status(500).json({message: `Ошибка монго сервера: ${e}`})

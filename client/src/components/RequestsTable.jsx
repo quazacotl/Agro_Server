@@ -7,6 +7,8 @@ import {DateTime} from "luxon";
 import {FixedSizeList} from "react-window";
 import {dateFromIsoToLocal} from '../funcs/funcs'
 import reactStringReplace from 'react-string-replace'
+import useMongoService from "../services/useMongoService";
+import {toJS} from "mobx";
 
 
 // Классы для окрашивания ячеек с планируемой датой
@@ -23,7 +25,8 @@ const getClassesForDate = (cell) => {
 }
 
 const RequestsTable = observer(() => {
-    const {getVehiclesByVin, getVehiclesByRegNum} = useOracleService()
+    const {getVehiclesByOraId} = useOracleService()
+    const {updateRequest} = useMongoService()
 
 
     const data = useMemo(() => Store.requestsData, [Store.requestsData])
@@ -126,6 +129,10 @@ const RequestsTable = observer(() => {
                 accessor: '_id'
             },
             {
+                Header: 'ID oracle',
+                accessor: 'VehicleOraId'
+            },
+            {
                 Header: 'isExecuted',
                 accessor: 'isExecuted'
             },
@@ -149,7 +156,7 @@ const RequestsTable = observer(() => {
         []
     )
 
-    const initialState = { hiddenColumns: ['_id', 'Acts', 'SentFromEmail', 'mailChangeKey', 'mailId', 'CreateDate', 'ExecuteDate', 'Creator', 'Auditor', 'isExecuted', 'VehicleVin'] };
+    const initialState = { hiddenColumns: ['_id', 'VehicleOraId', 'Acts', 'SentFromEmail', 'mailChangeKey', 'mailId', 'CreateDate', 'ExecuteDate', 'Creator', 'Auditor', 'isExecuted', 'VehicleVin'] };
 
     const {
         getTableProps,
@@ -166,6 +173,11 @@ const RequestsTable = observer(() => {
         },
         useBlockLayout
     )
+
+    const updateBase =  async (base, object, region, vin, regNum, oraId) => {
+        const body = {base, object, region, vin, regNum, oraId}
+        await updateRequest(body)
+    }
 
     // Показ полного комментария, имени создателя и проверяющего, даты создания и закрытия
     const showBubble = (e, cell) => {
@@ -249,11 +261,22 @@ const RequestsTable = observer(() => {
     const onCheckStatus = async (e, rowValues) => {
         e.preventDefault()
         Store.setCurrentRequest(rowValues)
-        if (Store.currentRequest.VehicleVin || Store.currentRequest.VehicleRegNum) {
+        if (Store.currentRequest.VehicleOraId) {
             Store.setIsCheckStatusModalShow(true)
             Store.setCheckStatusLoading(true)
             try {
-                const res = Store.currentRequest.VehicleVin ? await getVehiclesByVin(Store.currentRequest.VehicleVin) : await getVehiclesByRegNum(Store.currentRequest.VehicleRegNum)
+                const res = await getVehiclesByOraId(Store.currentRequest.VehicleOraId)
+                const vehicle = toJS(Store.currentRequest)
+                // Проверяем не изменились ли данные по технике в базе оракл и обновляем
+                if (
+                    vehicle.VehicleVin !== res[0].ATTR_VALUE ||
+                    vehicle.BaseName !== res[0].BASES_NAME ||
+                    vehicle.ObjName !== res[0].OBJ_NAME ||
+                    vehicle.Region !== res[0].REGION ||
+                    vehicle.VehicleRegNum !== res[0].REG_NOM
+                ) {
+                    await updateBase(res[0].BASES_NAME, res[0].OBJ_NAME, res[0].REGION, res[0].ATTR_VALUE, res[0].REG_NOM, res[0].TRANSP_ID)
+                }
                 Store.setCheckStatusLoading(false)
                 if (res.length === 0) {
                     Store.setContextMenu(false);

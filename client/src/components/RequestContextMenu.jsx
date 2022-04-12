@@ -207,7 +207,7 @@ const RequestContextMenu = observer((props) => {
 
     return (
         <ul
-            className={'absolute w-64 text-md min-h-[200px] rounded-xl bg-white border border-amber-300'}
+            className={'absolute w-64 text-md min-h-[170px] rounded-xl bg-white border border-amber-300'}
             style={calculatePosition(props.posX, props.posY, 256, 302)}
         >
             <ContextMenuView/>

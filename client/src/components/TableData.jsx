@@ -37,6 +37,10 @@ const TableData = observer(() => {
 
             },
             {
+                Header: 'OraId',
+                accessor: 'TRANSP_ID'
+            },
+            {
                 Header: 'Рег номер',
                 accessor: 'REG_NOM',
                 width: 210,
@@ -88,6 +92,7 @@ const TableData = observer(() => {
       )
 
     const onRightClick = (e, rowValue) => {
+        console.log(rowValue)
         e.preventDefault()
         Store.setCurrentVehicle(rowValue)
         Store.setPosX(e)
@@ -95,7 +100,7 @@ const TableData = observer(() => {
         Store.setContextMenu(true)
     }
 
-    const initialState = { hiddenColumns: ['LAST_LAT', 'LAST_LON'] };
+    const initialState = { hiddenColumns: ['LAST_LAT', 'LAST_LON', 'TRANSP_ID'] };
 
     const {
         getTableProps,
