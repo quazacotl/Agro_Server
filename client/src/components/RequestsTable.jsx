@@ -9,6 +9,7 @@ import {dateFromIsoToLocal} from '../funcs/funcs'
 import reactStringReplace from 'react-string-replace'
 import useMongoService from "../services/useMongoService";
 import {toJS} from "mobx";
+import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
 
 
 // Классы для окрашивания ячеек с планируемой датой
@@ -27,6 +28,7 @@ const getClassesForDate = (cell) => {
 const RequestsTable = observer(() => {
     const {getVehiclesByOraId} = useOracleService()
     const {updateRequest} = useMongoService()
+    const {updateAfterRequestEdit} = useUpdateAfterEdit()
 
 
     const data = useMemo(() => Store.requestsData, [Store.requestsData])
@@ -261,6 +263,7 @@ const RequestsTable = observer(() => {
     const onCheckStatus = async (e, rowValues) => {
         e.preventDefault()
         Store.setCurrentRequest(rowValues)
+        console.log(Store.currentRequest.VehicleOraId)
         if (Store.currentRequest.VehicleOraId) {
             Store.setIsCheckStatusModalShow(true)
             Store.setCheckStatusLoading(true)
@@ -276,6 +279,7 @@ const RequestsTable = observer(() => {
                     vehicle.VehicleRegNum !== res[0].REG_NOM
                 ) {
                     await updateBase(res[0].BASES_NAME, res[0].OBJ_NAME, res[0].REGION, res[0].ATTR_VALUE, res[0].REG_NOM, res[0].TRANSP_ID)
+                    await updateAfterRequestEdit()
                 }
                 Store.setCheckStatusLoading(false)
                 if (res.length === 0) {
