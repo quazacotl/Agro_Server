@@ -54,7 +54,7 @@ const StatisticControls = observer(() => {
             <div className={'flex flex-col gap-4'}>
                 <h2 className={'text-xl text-white'}>Начало</h2>
                 <DatePicker
-                    className={'rounded-lg py-1 text-md border-stone-300 focus:outline-amber-200'}
+                    className={'rounded-lg py-1 text-md border-stone-300 border-none focus:border-none focus:ring-0 focus:ring-offset-0 focus:shadow-input-focus'}
                     selected={Store.dateFrom ? Store.dateFrom : ''}
                     onChange={(date) => {onChangeFromDate(date)}}
                     dateFormat="dd.MM.yy"
@@ -66,7 +66,7 @@ const StatisticControls = observer(() => {
             <div className={'flex flex-col gap-4'}>
                 <h2 className={'text-xl text-white'}>Конец</h2>
                 <DatePicker
-                    className={'rounded-lg py-1 text-md border-stone-300 focus:outline-amber-200'}
+                    className={'rounded-lg py-1 text-md border-stone-300 border-none focus:border-none focus:ring-0 focus:ring-offset-0 focus:shadow-input-focus'}
                     selected={Store.dateTill ? Store.dateTill : ''}
                     onChange={(date) => {onChangeTillDate(date)}}
                     dateFormat="dd.MM.yy"

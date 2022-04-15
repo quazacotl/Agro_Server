@@ -10,6 +10,7 @@ import {DateTime} from "luxon";
 import {IconContext} from "react-icons";
 import {HiMinus, HiPlus} from "react-icons/hi";
 import MailView from "./OutlookMessages";
+import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
 
 registerLocale("ru", ru)
 
@@ -19,10 +20,10 @@ const RequestEditModal = observer(() => {
 
     const {updateAfterRequestEdit} = useUpdateAfterEdit()
     const {editRequest} = useMongoService(false)
+    useLockBodyScroll()
 
     useEffect(() => {
         (async () => {
-            document.body.style.overflow = 'hidden';
             if (Store.currentRequest.SentFromName) {
                 const chosenMail = {
                     senderName: Store.currentRequest.SentFromName,
@@ -33,7 +34,6 @@ const RequestEditModal = observer(() => {
             }
         })()
         return () => {
-            document.body.style.overflow = 'auto'
             Store.setCurrentRequest(null)
             Store.setReqChosenMail(null)
         }
@@ -184,7 +184,7 @@ const RequestEditModal = observer(() => {
             <div className={'flex justify-between items-center mt-5'}>
                 <select
                     defaultValue={Store.currentRequest.Executor && Store.currentRequest.Executor.length > 1 ? Store.currentRequest.Executor[1] : 'DEFAULT'}
-                    className={'w-[80%] rounded-lg shadow-form-sh py-1   text-md border-stone-300 focus:outline-amber-200'}
+                    className={'w-[80%] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                     name="executor2"
                     id="executor2"
                     onChange={e => onChangeExecutor(e, 2)}
@@ -222,7 +222,7 @@ const RequestEditModal = observer(() => {
                                     <div className={'flex justify-between items-center'}>
                                         <select
                                             defaultValue={Store.currentRequest.Executor && Store.currentRequest.Executor.length > 0 ? Store.currentRequest.Executor[0] : "DEFAULT"}
-                                            className={'w-[80%] rounded-lg shadow-form-sh py-1  text-md border-stone-300 focus:outline-amber-200'}
+                                            className={'w-[80%] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                                             name="executor"
                                             id="executor"
                                             onChange={e => onChangeExecutor(e, 1)}
@@ -248,7 +248,7 @@ const RequestEditModal = observer(() => {
                                     <label className={'text-xl'} htmlFor="type">Тип заявки</label>
                                     <select
                                         defaultValue={Store.currentRequest.RequestType}
-                                        className={'rounded-lg shadow-form-sh py-1  text-md border-stone-300 focus:outline-amber-200'}
+                                        className={'rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                                         name="type"
                                         id="type"
                                         onChange={(e) => setRequestField(e, 'RequestType')}
@@ -263,7 +263,7 @@ const RequestEditModal = observer(() => {
                                     <label className={'text-xl'} htmlFor="region">Регион</label>
                                     <select
                                         defaultValue={Store.currentRequest.Region}
-                                        className={'rounded-lg shadow-form-sh py-1  text-md border-stone-300 focus:outline-amber-200'}
+                                        className={'rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                                         name="region"
                                         id="region"
                                         onChange={(e) => setRequestField(e, 'Region')}
@@ -278,7 +278,7 @@ const RequestEditModal = observer(() => {
                                 <div className={'flex flex-col w-[400px] gap-2'}>
                                     <h2 className={'text-xl'}>Дата исполнения</h2>
                                     <DatePicker
-                                        className={'rounded-lg shadow-form-sh py-1 w-full text-md border-stone-300 focus:outline-amber-200'}
+                                        className={'w-full rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                                         selected={Store.currentRequest.PlannedDate ? new Date(Store.currentRequest.PlannedDate) : ''}
                                         onChange={(date) => {onChangeDate(date)}}
                                         dateFormat="dd.MM.yy"
@@ -330,7 +330,7 @@ const RequestEditModal = observer(() => {
                                     type="text"
                                     name={'comment'}
                                     id={'comment'}
-                                    className={'rounded-lg h-[40px] py-1 shadow-form-sh  text-md border-stone-300 focus:outline-amber-200 mt-2'}
+                                    className={'rounded-lg h-[40px] mt-2 shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                                     onChange={(e) => setRequestField(e, 'Description')}
 
                                 />

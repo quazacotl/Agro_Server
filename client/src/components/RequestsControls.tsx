@@ -41,7 +41,7 @@ const RequestsControls = observer(() => {
                 <label className={'text-xl text-white block ml-2'} htmlFor="region-select">Выбор региона</label>
                 <select
                     onChange={changeRegion}
-                    className={'mt-3 px-4 py-2 mx-auto text-xl rounded-xl w-[330px] focus:shadow-input-focus focus:outline-none'}
+                    className={'mt-3 px-4 py-2 mx-auto text-xl border-none rounded-xl w-[330px] focus:shadow-input-focus focus:ring-0'}
                     name="region-select"
                     id="region-select"
                     defaultValue={Store.currentRegionSelected}
@@ -61,7 +61,7 @@ const RequestsControls = observer(() => {
                 <label className={'text-xl text-white block ml-2'} htmlFor="request-search">Поиск по заявкам</label>
                 <input
                     type="text"
-                    className={'mt-3 px-4 py-2 mx-auto text-xl rounded-xl w-[220px] focus:shadow-input-focus focus:outline-none'}
+                    className={'mt-3 px-4 py-2 mx-auto border-none text-xl rounded-xl w-[220px] focus:shadow-input-focus focus:ring-0'}
                     id={'request-search'}
                     name={'request-search'}
                     placeholder={'3 символа минимум'}
@@ -73,7 +73,7 @@ const RequestsControls = observer(() => {
                 <label className={'text-xl text-white block ml-2'} htmlFor="sort-by">Сортировка</label>
                 <select
                     onChange={e => onSortBy(e)}
-                    className={'mt-3 px-4 py-2 mx-auto text-xl rounded-xl w-[180px] focus:shadow-input-focus focus:outline-none'}
+                    className={'mt-3 px-4 py-2 mx-auto text-xl border-none rounded-xl w-[180px] focus:shadow-input-focus focus:ring-0'}
                     name="sort-by"
                     id="sort-by"
                     defaultValue={Store.sortBy}
@@ -85,7 +85,11 @@ const RequestsControls = observer(() => {
             </div>
             <div className={'flex self-end mb-2 gap-8'}>
                 <label className={'text-xl text-white block w-[180px]'} htmlFor="{'checkClosed'}">Показать закрытые</label>
-                <input checked={Store.isShowUnexecuted} onChange={onShowClosed} className={'w-6 h-6 focus:shadow-input-focus focus:outline-none text-amber-500'} type="checkbox" id={'checkClosed'}/>
+                <input
+                    checked={Store.isShowUnexecuted}
+                    onChange={onShowClosed}
+                    className={'w-6 h-6 border-none focus:shadow-input-focus focus:ring-0 focus:ring-offset-0 text-amber-500'}
+                    type="checkbox" id={'checkClosed'}/>
             </div>
             <button
                 type={"button"}

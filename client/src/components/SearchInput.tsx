@@ -16,7 +16,7 @@ const SearchInput = (props:SearchInputProps) => {
                 id={props.id}
                 autoFocus={props.id === 'reg'}
                 type="text"
-                className={'my-3 px-4 rounded-lg text-stone-800 focus:outline-none focus:shadow-input-focus h-10'}
+                className={'my-3 px-4 rounded-lg text-stone-800 focus:border-none focus:ring-0 focus:ring-offset-0 focus:shadow-input-focus h-10'}
                 value={props.inputState}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     props.inputHandler(event.currentTarget.value)

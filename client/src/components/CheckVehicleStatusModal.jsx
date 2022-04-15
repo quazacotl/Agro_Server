@@ -4,16 +4,13 @@ import {observer} from "mobx-react-lite";
 import {useTable} from "react-table";
 import {dateFromIsoToLocal, getClassesForRow} from "../funcs/funcs";
 import Loading from "./Loading";
+import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
 
 const CheckVehicleStatusModal = observer(() => {
-
+    useLockBodyScroll()
 
     useEffect(() => {
-        (async () => {
-            document.body.style.overflow = 'hidden';
-        })()
         return () => {
-            document.body.style.overflow = 'auto'
             Store.setCurrentRequest(null)
             Store.setFoundVehiclesByRegNom([])
         }

@@ -409,3 +409,16 @@ export const updateRequest = async function (req, res) {
         res.status(500).json({message: `Ошибка монго сервера: ${e}`})
     }
 }
+
+
+export const getExecId = async function (req, res) {
+    try {
+        const execIds = await ExecutorModel.find({_id: {$nin: ['61e17dc4749a917e0a0a62f1', '61e17e04749a917e0a0a62f2', '61e17e80749a917e0a0a62f3', '61e17e93749a917e0a0a62f4', '61d744d647a4f92e864356cd']}, status: 'field'}).select('navId').select('name')
+
+        res.status(200).json(execIds)
+    }
+    catch (e) {
+        res.status(500).json({message: `Ошибка монго сервера: ${e}`})
+    }
+}
+

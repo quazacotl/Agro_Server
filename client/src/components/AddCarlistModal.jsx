@@ -1,9 +1,11 @@
 import Store from "../state/Store";
 import {observer, useLocalObservable} from "mobx-react-lite"
+import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
 
 
 
 const AddCarlistModal = observer(() => {
+    useLockBodyScroll()
 
     const carlistState = useLocalObservable(() => ({
         valueInput: '',
@@ -30,7 +32,6 @@ const AddCarlistModal = observer(() => {
 
     const hideModal = (e) => {
         if(e.target === e.currentTarget) {
-            document.body.style.overflow = 'auto';
             carlistState.setError(false)
             Store.setIsShowCarlistModal(false)
         }

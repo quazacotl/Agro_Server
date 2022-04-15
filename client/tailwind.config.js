@@ -17,8 +17,15 @@ module.exports = {
         'request-table': 'radial-gradient(circle farthest-corner at center, #686e7a 0%, #C7D2FE 100%)',
         'button-gradient': 'linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB)',
         'button-gradient-invert': 'linear-gradient(315deg,#AF40FF, #5B42F3 50%,#00DDEB)',
-        'tab-gradient': 'linear-gradient(144deg, rgba(255,150,3,1) 0%,  50%, #B514D9 100%)',
-        'tab-active': 'linear-gradient(315deg, rgba(255,150,3,1) 0%,  50%, #B514D9 100%)'
+        'tab-gradient': 'linear-gradient(to right, #8e9eab 0%, #eef2f3  51%, #8e9eab  100%)',
+        // 'tab-active': 'linear-gradient(315deg, rgba(255,150,3,1) 0%,  50%, #B514D9 100%)'
+        'tab-active': 'linear-gradient(to top, #8e9eab 0%, #eef2f3  51%, #8e9eab  100%)'
+      },
+      backgroundPosition: {
+        'right-center': 'right center'
+      },
+      backgroundSize: {
+        '200p': '200% auto'
       }
     },
   },

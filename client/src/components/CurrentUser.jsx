@@ -12,7 +12,7 @@ const CurrentUser = observer(() => {
             <label className={'text-xl text-white'} htmlFor="curr-user">Оператор</label>
             <select
                 defaultValue={Store.currentUser}
-                className={'rounded-lg w-46 py-1  text-lg focus:outline-amber-200'}
+                className={'rounded-lg w-46 py-1 text-lg focus:border-none focus:ring-0 focus:ring-offset-0'}
                 name="curr-user"
                 id="curr-user"
                 onChange={setCurrentUser}

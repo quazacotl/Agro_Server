@@ -217,6 +217,7 @@ const TableData = observer(() => {
             {loadingView}
             {errView}
             {view}
+            {/*<RowsView/>*/}
         </div>
     )
 })

@@ -6,19 +6,19 @@ const useOracleService = () => {
 
 
     const getVehiclesByRegNum = async (regNum) => {
-        return  await request(`${Config.baseRoute}/vehicles-reg`, 'POST', JSON.stringify({regNum}))
+        return await request(`${Config.baseRoute}/vehicles-reg`, 'POST', JSON.stringify({regNum}))
     }
 
     const getVehiclesByVin = async (vin) => {
-        return  await request(`${Config.baseRoute}/vehicles-vin`, 'POST', JSON.stringify({vin}))
+        return await request(`${Config.baseRoute}/vehicles-vin`, 'POST', JSON.stringify({vin}))
     }
 
     const getVehiclesById = async (id) => {
-        return  await request(`${Config.baseRoute}/vehicles-id`, 'POST', JSON.stringify({id}))
+        return await request(`${Config.baseRoute}/vehicles-id`, 'POST', JSON.stringify({id}))
     }
 
     const getVehiclesByOraId = async (id) => {
-        return  await request(`${Config.baseRoute}/vehicles-ora-id`, 'POST', JSON.stringify({id}))
+        return await request(`${Config.baseRoute}/vehicles-ora-id`, 'POST', JSON.stringify({id}))
     }
 
 

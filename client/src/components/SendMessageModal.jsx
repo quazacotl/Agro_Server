@@ -5,12 +5,12 @@ import useMongoService from "../services/useMongoService";
 import {BsFillCheckCircleFill} from "react-icons/bs"
 import {IconContext} from "react-icons";
 import useOutlookService from "../services/useOutlookService";
-import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
+import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
 
 const SendMessageModal = observer(() => {
     const {sendMessage} = useOutlookService()
-    const {getActNames, closeRequest} = useMongoService()
-    const {updateAfterRequestEdit} = useUpdateAfterEdit()
+    const {getActNames} = useMongoService()
+    useLockBodyScroll()
 
 
     const formState = useLocalObservable(() => ({
@@ -44,7 +44,7 @@ const SendMessageModal = observer(() => {
                 break
             case 'Планшеты': formState.setMessageText(`Работы проведены. Заявка закрыта`)
                 break
-            case 'Метеостанция': formState.setMessageText(`Работы не метеостанции завершены. Заявка закрыта`)
+            case 'Метеостанция': formState.setMessageText(`Работы на метеостанции завершены. Заявка закрыта`)
                 break
             case 'Сигнализация': formState.setMessageText(`Работы по ремонту сигнализации проведены. Заявка закрыта`)
                 break
@@ -57,13 +57,11 @@ const SendMessageModal = observer(() => {
 
     useEffect(() => {
         (async () => {
-            document.body.style.overflow = 'hidden';
             const res = await getActNames({id: Store.currentRequest._id})
             setCurrentMessageText()
             await formState.setActs(res)
         })()
         return () => {
-            document.body.style.overflow = 'auto'
             Store.setCurrentRequest(null)
         }
     }, [])

@@ -52,13 +52,9 @@ export const getVehiclesByVin = async function (req, res) {
 }
 
 export const getVehiclesByOraId = async function (req, res) {
-    console.log(req.body)
-
     try {
         const requests = await oraConnection.execute(`${baseString} WHERE 
   ABS.AGRO_TRANSPORT_V.TRANSP_ID = ${req.body.id}`)
-        console.log(requests)
-
         res.status(200).json(requests.rows)
     }
     catch (e) {

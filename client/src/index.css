@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 @layer utilities {
-  @variants responsive {
     .text-shadow-sm {
       text-shadow: 1px 1px 1px grey;
     }
@@ -19,7 +18,6 @@
     .text-shadow-none {
       text-shadow: none;
     }
-  }
 }
 
 #root {

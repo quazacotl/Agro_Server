@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
 import useMongoService from "../services/useMongoService";
+import useGetDistance from "../hooks/useGetDistance";
 import Store from "../state/Store";
-import { observer } from "mobx-react-lite"
+import {observer, useLocalObservable} from "mobx-react-lite"
 import MailView from "./OutlookMessages";
 import {regions} from "../interfaces/interfaces";
 import PreviousRequests from "./PreviousRequests";
@@ -9,13 +10,24 @@ import BubbleContext from "./BubbleContext";
 import {dateFromIsoToLocal} from "../funcs/funcs";
 import { HiPlus } from "react-icons/hi"
 import {IconContext} from "react-icons";
+import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
 
 
 
 const RequestCreationModal = observer(() => {
     const [addExecutor, setAddExecutor] = useState(false)
+    useLockBodyScroll()
 
-    const {writeNewRequest, getAllUnexecutedRequests, getRequestsByVinReg} = useMongoService(false)
+    const {writeNewRequest, getAllUnexecutedRequests, getRequestsByVinReg, getExecId} = useMongoService(false)
+    const {getCoords} = useGetDistance()
+
+    const execState = useLocalObservable(() => ({
+            execData: null,
+            setExecData(data) {
+                this.execData = data
+            }
+        })
+    )
 
 
     useEffect(() => {
@@ -24,11 +36,13 @@ const RequestCreationModal = observer(() => {
                 const previousRequests = await getRequestsByVinReg({vin: Store.currentVehicle.ATTR_VALUE, reg: Store.currentVehicle.REG_NOM})
                 await Store.setPreviousRequestsData(previousRequests)
                 Store.setReqChosenRegion(Store.currentVehicle.REGION)
+                const execData = await getExecId()
+                const coords = await getCoords(execData, {lat: Store.currentVehicle.LAST_LAT, lon: Store.currentVehicle.LAST_LON})
+                coords.sort((a, b) => a.distance - b.distance)
+                execState.setExecData(coords)
             }
-            document.body.style.overflow = 'hidden';
         })()
         return () => {
-            document.body.style.overflow = 'auto'
             Store.setLastMails([])
             Store.setReqChosenMail(null)
             Store.setReqChosenComment('')
@@ -36,6 +50,7 @@ const RequestCreationModal = observer(() => {
             Store.setReqChosenRegion(null)
             Store.setPreviousRequestsData([])
             Store.setCurrentVehicle(null)
+            execState.setExecData(null)
         }
     }, [])
 
@@ -146,7 +161,7 @@ const RequestCreationModal = observer(() => {
                 <label className={'text-xl'} htmlFor="region">Область</label>
                 <select
                     defaultValue={Store.reqChosenRegion ? Store.reqChosenRegion : 'DEFAULT'}
-                    className={'rounded-lg shadow-form-sh py-1  text-md border-stone-300 focus:outline-amber-200'}
+                    className={'rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                     name="region"
                     id="region"
                     onChange={(e) => setReqChosenRegion(e)}
@@ -164,15 +179,22 @@ const RequestCreationModal = observer(() => {
         return (
             <select
                 defaultValue={'DEFAULT'}
-                className={'w-full rounded-lg shadow-form-sh py-1 mt-5  text-md border-stone-300 focus:outline-amber-200'}
+                className={'w-full mt-2 rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                 name="executor2"
                 id="executor2"
                 onChange={e => setReqChosenExecutor(e, 2)}
             >
-                <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
-                {Store.currentExecutors.map(item => (
-                    <option key={item._id} value={item.name}>{item.name}</option>
-                ))}
+                <option  disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
+                {execState.execData
+                    ?
+                    execState.execData.map(item => (
+                        <option className={'font-mono'} key={item._id} value={item.name}>{`${item.name}${Array(38 - item.name.length).fill('\xa0').join('')}~${item.distance} км`}</option>
+                    ))
+                    :
+                    Store.currentExecutors.map(item => (
+                        <option key={item._id} value={item.name}>{item.name}</option>
+                    ))
+                }
             </select>
         )
     }
@@ -194,15 +216,26 @@ const RequestCreationModal = observer(() => {
                                 <div className={'flex justify-between items-center'}>
                                     <select
                                         defaultValue={'DEFAULT'}
-                                        className={'w-[80%] rounded-lg shadow-form-sh py-1  text-md border-stone-300 focus:outline-amber-200'}
+                                        className={'w-[80%] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300   focus:outline-offset-0 focus:outline-amber-400'}
                                         name="executor1"
                                         id="executor1"
                                         onChange={e => setReqChosenExecutor(e, 1)}
                                     >
-                                        <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
-                                        {Store.currentExecutors.map(item => (
-                                            <option key={item._id} value={item.name}>{item.name}</option>
-                                        ))}
+                                        <option
+                                            disabled={Store.currentVehicle && Store.currentVehicle.navId ? !execState.execData : false}
+                                            value="DEFAULT" >
+                                            -- выбрать исполнителя --
+                                        </option>
+                                        {execState.execData
+                                            ?
+                                            execState.execData.map(item => (
+                                            <option className={'font-mono'} key={item._id} value={item.name}>{`${item.name}${Array(28 - item.name.length).fill('\xa0').join('')}~${item.distance} км`}</option>
+                                            ))
+                                            :
+                                            Store.currentExecutors.map(item => (
+                                                <option key={item._id} value={item.name}>{item.name}</option>
+                                            ))
+                                        }
                                     </select>
                                     <button
                                         onClick={onPlusExecutor}
@@ -219,7 +252,7 @@ const RequestCreationModal = observer(() => {
                                 <label className={'text-xl'} htmlFor="type">Тип заявки</label>
                                 <select
                                     defaultValue={'DEFAULT'}
-                                    className={'rounded-lg shadow-form-sh py-1  text-md border-stone-300 focus:outline-amber-200'}
+                                    className={'rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                                     name="type"
                                     id="type"
                                     onChange={setReqChosenType}
@@ -233,7 +266,7 @@ const RequestCreationModal = observer(() => {
                             {Store.currentVehicle ? null : <RegionSelectView/>}
                             <div className={'flex flex-col gap-2'}>
                                 <h2 className={'text-xl'}>Прислал письмо</h2>
-                                <div className={'rounded-lg h-[32px] py-1 px-2 shadow-form-sh  text-md border-stone-300 bg-white'}>
+                                <div className={'rounded-lg h-[32px] py-1 px-2 rounded-lg shadow-form-sh py-1 text-md border-stone-300 bg-white'}>
                                     {Store.reqChosenMail ?
                                         `${Store.reqChosenMail.senderName}, ${new Date(Store.reqChosenMail.sentDate).toLocaleString()}` :
                                         <h2> -- выберите письмо --</h2>}
@@ -254,7 +287,7 @@ const RequestCreationModal = observer(() => {
                                 type="text"
                                 name={'comment'}
                                 id={'comment'}
-                                className={'rounded-lg h-[32px] py-1 shadow-form-sh  text-md border-stone-300 focus:outline-amber-200 mt-2'}
+                                className={'rounded-lg mt-2 h-[32px] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                                 onChange={setReqChosenComment}
                             />
                         </div>
