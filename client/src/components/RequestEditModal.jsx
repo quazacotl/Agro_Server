@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import useMongoService from "../services/useMongoService";
 import Store from "../state/Store";
-import { observer } from "mobx-react-lite"
+import {observer, useLocalObservable} from "mobx-react-lite"
 import DatePicker, { registerLocale } from "react-datepicker"
 import ru from 'date-fns/locale/ru'
 import "react-datepicker/dist/react-datepicker.css";
@@ -11,6 +11,9 @@ import {IconContext} from "react-icons";
 import {HiMinus, HiPlus} from "react-icons/hi";
 import MailView from "./OutlookMessages";
 import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
+import useGetDistance from "../hooks/useGetDistance";
+import axios from "axios";
+import {Config} from "../config";
 
 registerLocale("ru", ru)
 
@@ -19,8 +22,17 @@ const RequestEditModal = observer(() => {
     const [isMultipleExecutors, setIsMultipleExecutors] = useState(false)
 
     const {updateAfterRequestEdit} = useUpdateAfterEdit()
-    const {editRequest} = useMongoService(false)
+    const {getDistance} = useGetDistance()
+    const {editRequest, getExecId} = useMongoService(false)
     useLockBodyScroll()
+
+    const execState = useLocalObservable(() => ({
+            execData: null,
+            setExecData(data) {
+                this.execData = data
+            }
+        })
+    )
 
     useEffect(() => {
         (async () => {
@@ -31,6 +43,14 @@ const RequestEditModal = observer(() => {
                     sentDate: Store.currentRequest.SentFromDate
                 }
                 Store.setReqChosenMail(chosenMail)
+            }
+            if (Store.currentRequest.VehicleId) {
+                const execData = await getExecId();
+                const vehicles = await axios.post(`${Config.baseRoute}/vehicles-id`, {id: String(Store.currentRequest.VehicleId)})
+                const vehicle = vehicles.data[0]
+                const coords = await getDistance(execData, {lat: vehicle.LAST_LAT, lon: vehicle.LAST_LON})
+                coords.sort((a, b) => a.distance - b.distance)
+                execState.setExecData(coords)
             }
         })()
         return () => {
@@ -190,9 +210,19 @@ const RequestEditModal = observer(() => {
                     onChange={e => onChangeExecutor(e, 2)}
                 >
                     <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
-                    {Store.currentExecutors.map(item => (
-                        <option key={item._id} value={item.name}>{item.name}</option>
-                    ))}
+                    {/*{Store.currentExecutors.map(item => (*/}
+                    {/*    <option key={item._id} value={item.name}>{item.name}</option>*/}
+                    {/*))}*/}
+                    {execState.execData
+                        ?
+                        execState.execData.map(item => (
+                            <option className={'font-mono'} key={item._id} value={item.name}>{`${item.name}${Array(38 - item.name.length).fill('\xa0').join('')}~${item.distance} км`}</option>
+                        ))
+                        :
+                        Store.currentExecutors.map(item => (
+                            <option key={item._id} value={item.name}>{item.name}</option>
+                        ))
+                    }
                 </select>
                 <button
                     onClick={(e) => onMinusExecutor(e)}
@@ -229,9 +259,19 @@ const RequestEditModal = observer(() => {
 
                                         >
                                             <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
-                                            {Store.currentExecutors.map(item => (
-                                                <option key={item._id} value={item.name}>{item.name}</option>
-                                            ))}
+                                            {/*{Store.currentExecutors.map(item => (*/}
+                                            {/*    <option key={item._id} value={item.name}>{item.name}</option>*/}
+                                            {/*))}*/}
+                                            {execState.execData
+                                                ?
+                                                execState.execData.map(item => (
+                                                    <option className={'font-mono'} key={item._id} value={item.name}>{`${item.name}${Array(38 - item.name.length).fill('\xa0').join('')}~${item.distance} км`}</option>
+                                                ))
+                                                :
+                                                Store.currentExecutors.map(item => (
+                                                    <option key={item._id} value={item.name}>{item.name}</option>
+                                                ))
+                                            }
                                         </select>
                                         <button
                                             onClick={(e) => onPlusExecutor(e)}
