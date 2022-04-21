@@ -7,7 +7,7 @@ const useMongoService = (loading = true) => {
     const {request} = useHttpHooks(loading)
 
     const transformRequestData = requestData => {
-        requestData.map((item) => {
+        const newData = requestData.map((item) => {
             let executors = []
             if (item.Executor) {
                 item.Executor.forEach(item => {
@@ -26,7 +26,7 @@ const useMongoService = (loading = true) => {
                 }
             );
         })
-        return requestData
+        return newData
     }
 
 

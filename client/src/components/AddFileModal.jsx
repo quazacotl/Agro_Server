@@ -104,6 +104,66 @@ const AddFileModal = observer(() => {
         )
     }
 
+    const actTypes = [
+        {
+            name: 'Трактор',
+            id: 'tractor'
+        },
+        {
+            name: 'Комбайн',
+            id: 'harvester'
+        },
+        {
+            name: 'Грузовой',
+            id: 'cargo'
+        },
+        {
+            name: 'Легковой',
+            id: 'light'
+        },
+        {
+            name: 'Заправщики',
+            id: 'fuel'
+        },
+        {
+            name: 'РУМы',
+            id: 'rum'
+        },
+        {
+            name: 'Сеялки',
+            id: 'seeder'
+        },
+        {
+            name: 'Опрыскиватели',
+            id: 'sprayer'
+        },
+        {
+            name: 'Самолёт',
+            id: 'airplane'
+        },
+        {
+            name: 'Весы',
+            id: 'scales'
+        },
+        {
+            name: 'Метеостанции',
+            id: 'meteo'
+        },
+        {
+            name: 'Тахографы',
+            id: 'taho'
+        },
+        {
+            name: 'Сигнализация',
+            id: 'signal'
+        },
+        {
+            name: 'Другое',
+            id: 'other'
+        },
+    ]
+
+
 
     return (
         <div
@@ -111,65 +171,17 @@ const AddFileModal = observer(() => {
             className={'absolute left-0 w-screen h-screen flex justify-center items-center bg-neutral-700/50'}
             style={{top: Store.offsetY}}
         >
-            <div className={'min-w-[600px] min-h-[400px] p-4 bg-blue-50 rounded-xl border border-amber-400 select-none'}>
-                <h2 className={'text-center text-xl'}>Тип заявки</h2>
-                <div className={'flex gap-3 w-[600px] p-4 flex-wrap mt-3 bg-gray-50 border border-blue-500/50 rounded-xl'}>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="tractor">Трактор</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'tractor'} name={'acttype'} value={'tractor'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                       <label className={'py-2 px-2 grow text-lg'} htmlFor="harvester">Комбайн</label>
-                       <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'harvester'} name={'acttype'} value={'harvester'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="cargo">Грузовой</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'cargo'} name={'acttype'} value={'cargo'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="light">Легковой</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'light'} name={'acttype'} value={'light'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="rum">РУМы</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'rum'} name={'acttype'} value={'rum'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="fuel">Заправщики</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'fuel'} name={'acttype'} value={'fuel'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="seeder">Сеялки</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'seeder'} name={'acttype'} value={'seeder'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="sprayer">Опрыскиватели</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'sprayer'} name={'acttype'} value={'sprayer'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="airplane">Самолёт</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'airplane'} name={'acttype'} value={'airplane'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="scales">Весы</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'scales'} name={'acttype'} value={'scales'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="meteo">Метеостанции</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'meteo'} name={'acttype'} value={'meteo'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="taho">Тахографы</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'taho'} name={'acttype'} value={'taho'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="signal">Сигнализация</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'signal'} name={'acttype'} value={'signal'}/>
-                    </div>
-                    <div className={'flex w-44 bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                        <label className={'py-2 px-2 grow text-lg'} htmlFor="other">Другое</label>
-                        <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={'other'} name={'acttype'} value={'other'}/>
-                    </div>
+            <div className={'p-2 xl:p-4 bg-blue-50 rounded-xl border border-amber-400 select-none'}>
+                <h2 className={'text-center text-lg xl:text-xl' }>Тип заявки</h2>
+                <div className={'flex justify-center w-[540px] xl:w-[600px] gap-1 md:gap-2 xl:gap-3 p-2 xl:p-4 flex-wrap mt-3 bg-gray-50 border border-blue-500/50 rounded-xl'}>
+                    {actTypes.map(item => {
+                        return (
+                            <div key={item.id} className={'flex w-40 xl:w-44  bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
+                                <label className={'py-1 px-1 xl:py-2 xl:px-2 grow text-md xl:text-lg'} htmlFor={item.id}>{item.name}</label>
+                                <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={item.id} name={'acttype'} value={item.id}/>
+                            </div>
+                        )
+                    })}
                 </div>
                 <div className={'flex gap-4 mt-3'}>
                     <MyDropzone
