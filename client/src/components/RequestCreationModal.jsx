@@ -19,7 +19,7 @@ const RequestCreationModal = observer(() => {
     useLockBodyScroll()
 
     const {writeNewRequest, getAllUnexecutedRequests, getRequestsByVinReg, getExecId} = useMongoService(false)
-    const {getCoords} = useGetDistance()
+    const {getDistance} = useGetDistance()
 
     const execState = useLocalObservable(() => ({
             execData: null,
@@ -37,7 +37,7 @@ const RequestCreationModal = observer(() => {
                 await Store.setPreviousRequestsData(previousRequests)
                 Store.setReqChosenRegion(Store.currentVehicle.REGION)
                 const execData = await getExecId()
-                const coords = await getCoords(execData, {lat: Store.currentVehicle.LAST_LAT, lon: Store.currentVehicle.LAST_LON})
+                const coords = await getDistance(execData, {lat: Store.currentVehicle.LAST_LAT, lon: Store.currentVehicle.LAST_LON})
                 coords.sort((a, b) => a.distance - b.distance)
                 execState.setExecData(coords)
             }

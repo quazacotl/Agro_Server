@@ -176,8 +176,8 @@ const RequestsTable = observer(() => {
         useBlockLayout
     )
 
-    const updateBase =  async (base, object, region, vin, regNum, oraId) => {
-        const body = {base, object, region, vin, regNum, oraId}
+    const updateBase =  async (base, object, region, vin, regNum, oraId, id) => {
+        const body = {base, object, region, vin, regNum, oraId, id}
         await updateRequest(body)
     }
 
@@ -263,7 +263,6 @@ const RequestsTable = observer(() => {
     const onCheckStatus = async (e, rowValues) => {
         e.preventDefault()
         Store.setCurrentRequest(rowValues)
-        console.log(Store.currentRequest.VehicleOraId)
         if (Store.currentRequest.VehicleOraId) {
             Store.setIsCheckStatusModalShow(true)
             Store.setCheckStatusLoading(true)
@@ -276,9 +275,10 @@ const RequestsTable = observer(() => {
                     vehicle.BaseName !== res[0].BASES_NAME ||
                     vehicle.ObjName !== res[0].OBJ_NAME ||
                     vehicle.Region !== res[0].REGION ||
-                    vehicle.VehicleRegNum !== res[0].REG_NOM
+                    vehicle.VehicleRegNum !== res[0].REG_NOM ||
+                    vehicle.VehicleId !== res[0].NAV_ID
                 ) {
-                    await updateBase(res[0].BASES_NAME, res[0].OBJ_NAME, res[0].REGION, res[0].ATTR_VALUE, res[0].REG_NOM, res[0].TRANSP_ID)
+                    await updateBase(res[0].BASES_NAME, res[0].OBJ_NAME, res[0].REGION, res[0].ATTR_VALUE, res[0].REG_NOM, res[0].TRANSP_ID, res[0].NAV_ID)
                     await updateAfterRequestEdit()
                 }
                 Store.setCheckStatusLoading(false)

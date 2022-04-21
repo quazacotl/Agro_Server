@@ -9,7 +9,7 @@ import {
     getVorRequests, getVorUnexecutedRequests,
     getAllExecutors, getAllRegions, getAllRequestTypes, writeNewRequest, getCurrentUsers, getRequestsByVinReg,
     editRequest, closeRequest, getActNames,
-    getAct, getTare, getTareNames, deleteRequest, searchRequests, getStatistics, updateRequest, getExecId
+    getAct, getTare, getTareNames, deleteRequest, searchRequests, getStatistics, updateRequest, getExecId, getAllUnexecutedRequestsWithId
 } from '../controllers/mongoControllers.js'
 
 const mongoRouter = Router()
@@ -18,6 +18,8 @@ const mongoRouter = Router()
 mongoRouter.get('/requests-all', getAllRequests)
 
 mongoRouter.get('/requests-all-unex', getAllUnexecutedRequests)
+
+mongoRouter.get('/requests-all-unex-id', getAllUnexecutedRequestsWithId)
 
 mongoRouter.get('/requests-vor', getVorRequests)
 

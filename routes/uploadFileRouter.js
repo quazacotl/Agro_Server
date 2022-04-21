@@ -16,7 +16,7 @@ const actStorage = multer.diskStorage({
                     break
                 case 'Курск': path = `${path}/Курск`
                     break
-                case 'Орёл': path = `${path}/Орёл`
+                case 'Орел': path = `${path}/Орёл`
                     break
                 case 'Липецк': path = `${path}/Липецк`
                     break
@@ -32,7 +32,7 @@ const actStorage = multer.diskStorage({
                 break
             case 'harvester': path = `${path}/Комбайны`
                 break
-            case 'cargo': path = `${path}/Грузовые`
+            case 'cargo': path = `${path}/Грузовики`
                 break
             case 'light': path = `${path}/Легковой`
                 break

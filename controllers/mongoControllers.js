@@ -25,6 +25,18 @@ export const getAllUnexecutedRequests = async function (req, res) {
     }
 }
 
+
+export const getAllUnexecutedRequestsWithId = async function (req, res) {
+    try {
+        const requests = await RequestModel.find({VehicleId: { $ne: null }}).where({isExecuted: false})
+        res.status(200).json(requests)
+    }
+    catch (e) {
+        res.status(500).json({message: `Ошибка монго сервера: ${e}`})
+    }
+}
+
+
 // Simple
 
 export const getVorRequests = async function (req, res) {
@@ -402,7 +414,7 @@ export const getStatistics = async function (req, res) {
 export const updateRequest = async function (req, res) {
     try {
         const region = await RegionModel.findOne({name: req.body.region}).select('_id')
-        await RequestModel.updateMany({VehicleOraId: req.body.oraId}, {ObjName: req.body.object, BaseName: req.body.base, VehicleRegNum: req.body.regNum, VehicleVin: req.body.vin, Region: region})
+        await RequestModel.updateMany({VehicleOraId: req.body.oraId}, {ObjName: req.body.object, BaseName: req.body.base, VehicleRegNum: req.body.regNum, VehicleVin: req.body.vin, VehicleId: req.body.id, Region: region})
         res.status(200).json({message: 'заявка отредактирована'})
     }
     catch (e) {

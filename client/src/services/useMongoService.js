@@ -7,7 +7,7 @@ const useMongoService = (loading = true) => {
     const {request} = useHttpHooks(loading)
 
     const transformRequestData = requestData => {
-        const newData = requestData.map((item) => {
+        requestData.map((item) => {
             let executors = []
             if (item.Executor) {
                 item.Executor.forEach(item => {
@@ -26,7 +26,7 @@ const useMongoService = (loading = true) => {
                 }
             );
         })
-        return newData
+        return requestData
     }
 
 
@@ -37,6 +37,11 @@ const useMongoService = (loading = true) => {
 
     const getAllUnexecutedRequests = async () => {
         const res =  await request(`${Config.baseRoute}/requests-all-unex`)
+        return transformRequestData(res)
+    }
+
+    const getAllUnexecutedRequestsWithId = async () => {
+        const res =  await request(`${Config.baseRoute}/requests-all-unex-id`)
         return transformRequestData(res)
     }
 
@@ -197,7 +202,7 @@ const useMongoService = (loading = true) => {
     }
 
 
-    return {writeNewRequest, getExecId, updateRequest, getStatistics, searchRequests, deleteRequest, getTareNames, getAct, getTare, getActNames, addFile, closeRequest, editRequest, getRequestsByVinReg, getCurrentUsers, getAllExecutors, getAllRequestTypes, getAllRegions, getAllRequests, getAllUnexecutedRequests, getVorRequests, getVorUnexecutedRequests, getKurRequests, getKurUnexecutedRequests, getOreRequests, getOreUnexecutedRequests, getBelRequests, getBelUnexecutedRequests, getLipRequests, getLipUnexecutedRequests, getTulRequests, getTulUnexecutedRequests, getVorRegRequests, getVorRegUnexecutedRequests, getOreRegRequests, getOreRegUnexecutedRequests}
+    return {writeNewRequest, getAllUnexecutedRequestsWithId, getExecId, updateRequest, getStatistics, searchRequests, deleteRequest, getTareNames, getAct, getTare, getActNames, addFile, closeRequest, editRequest, getRequestsByVinReg, getCurrentUsers, getAllExecutors, getAllRequestTypes, getAllRegions, getAllRequests, getAllUnexecutedRequests, getVorRequests, getVorUnexecutedRequests, getKurRequests, getKurUnexecutedRequests, getOreRequests, getOreUnexecutedRequests, getBelRequests, getBelUnexecutedRequests, getLipRequests, getLipUnexecutedRequests, getTulRequests, getTulUnexecutedRequests, getVorRegRequests, getVorRegUnexecutedRequests, getOreRegRequests, getOreRegUnexecutedRequests}
 }
 
 export default useMongoService
