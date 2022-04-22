@@ -30,8 +30,8 @@ const useOutlookService = () => {
         }
     }, [])
 
-    const getLastMails = async () => {
-        return await request(`${Config.baseRoute}/messages`)
+    const getLastMails = async (offset) => {
+        return await request(`${Config.baseRoute}/messages`, 'POST', JSON.stringify({offset}))
     }
 
     const sendMessage = async (body) => {

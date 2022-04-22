@@ -10,13 +10,18 @@ import {dateFromIsoToLocal} from "../funcs/funcs";
 const MailView = observer((props) => {
     const {getLastMails} = useOutlookService()
 
+    const updateMails = async () => {
+        const mails = await getLastMails(Store.mailOffset)
+        Store.setLastMails(mails)
+    }
+
     useEffect(() => {
         (async () => {
             try {
-                const mails = await getLastMails()
-                Store.setLastMails(mails)
+                await updateMails()
             }
             catch (e) {console.log(e)}
+            return () => Store.resetMailOffset()
         })()
     }, [])
 
@@ -34,37 +39,71 @@ const MailView = observer((props) => {
         })
     }
 
+
+    const LoadNextButton = observer(() => {
+        return (
+            <button
+                disabled={Store.mailsLoading}
+                className={'text-lg text-sky-600 disabled:text-stone-500 hover:text-amber-500'}
+                onClick={() => {
+                    Store.increaseMailOffset(10)
+                    updateMails()
+                }}
+            >
+                &dArr; Сдедующие &dArr;
+            </button>
+        )
+    })
+
+    const LoadPreviousButton = observer(() => {
+        return (
+            <button
+                disabled={Store.mailsLoading || Store.mailOffset === 0}
+                className={'text-lg text-sky-600 disabled:text-stone-500 hover:text-amber-500'}
+                onClick={() => {
+                    Store.increaseMailOffset(-10)
+                    updateMails()
+                }}
+            >
+                &uArr; Предыдущие &uArr;
+            </button>
+        )
+    })
+
     const columns = useMemo(
         () => [
-            {
-                Header: 'Прислал',
-                accessor: 'senderName',
-                width: 270
-            },
-            {
-                Header: 'Дата',
-                accessor: 'sentDate',
-                Cell: ({value}) => value ? dateFromIsoToLocal(value) : null,
-                width: 180
-            },
-            {
-                Header: 'Тема',
-                accessor: 'subject',
-                width: 305
-            },
-            {
-                Header: 'Адрес почты',
-                accessor: 'senderEmail'
-            },
-            {
-                Header: 'ID',
-                accessor: 'id'
-            },
-            {
-                Header: 'ChangeKey',
-                accessor: 'changeKey'
-            }
-        ],
+
+                {
+                    Header: 'Прислал',
+                    accessor: 'senderName',
+                    width: 270
+                },
+                {
+                    Header: 'Дата',
+                    accessor: 'sentDate',
+                    Cell: ({value}) => value ? dateFromIsoToLocal(value) : null,
+                    width: 180,
+                    Footer: <LoadNextButton/>
+                },
+                {
+                    Header: 'Тема',
+                    accessor: 'subject',
+                    width: 305,
+                    Footer: <LoadPreviousButton/>
+                },
+                {
+                    Header: 'Адрес почты',
+                    accessor: 'senderEmail'
+                },
+                {
+                    Header: 'ID',
+                    accessor: 'id'
+                },
+                {
+                    Header: 'ChangeKey',
+                    accessor: 'changeKey'
+                }
+           ],
         []
     )
 
@@ -78,6 +117,7 @@ const MailView = observer((props) => {
         headerGroups,
         rows,
         totalColumnsWidth,
+        footerGroups,
         prepareRow,
     } = useTable(
         {
@@ -170,7 +210,20 @@ const MailView = observer((props) => {
                 {errView}
                 {view}
             </div>
-
+            <div>
+                {footerGroups.map(group => (
+                    <div {...group.getFooterGroupProps()}>
+                        {group.headers.map(column => (
+                            <div
+                                className={'text-center text-lg'}
+                                {...column.getFooterProps()}
+                            >
+                                {column.render('Footer')}
+                            </div>
+                        ))}
+                    </div>
+                ))}
+            </div>
         </div>
     )})
 

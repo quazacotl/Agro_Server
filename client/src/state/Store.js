@@ -6,6 +6,7 @@ class Store {
     loading = false
     mailsLoading = true
     mailsError = false
+    mailOffset = 0
     error = false
     inputReg = ''
     inputVin = ''
@@ -91,6 +92,14 @@ class Store {
 
     setMailsError = bool => {
         this.mailsError = bool
+    }
+
+    increaseMailOffset = (num) => {
+        this.mailOffset = this.mailOffset + num
+    }
+
+    resetMailOffset = () => {
+        this.mailOffset = 0
     }
 
     // Search inputs funcs

@@ -3,7 +3,7 @@ import {findLastMessages, sendEmail} from "../outlookFuncs/outlookFuncs.js";
 
 export const getLastMessages = async function (req, res) {
     try {
-        const messages = await findLastMessages()
+        const messages = await findLastMessages(req.body.offset)
         res.status(200).json(messages)
     }
     catch (e) {

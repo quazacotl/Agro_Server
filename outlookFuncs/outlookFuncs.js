@@ -20,7 +20,7 @@ const formatMail = mailItem => {
 }
 
 
-export async function findLastMessages() {
+export async function findLastMessages(offset) {
     const messIds = []
     const messages = []
 
@@ -34,7 +34,7 @@ export async function findLastMessages() {
         'IndexedPageItemView': {
             'attributes': {
                 'MaxEntriesReturned': process.env.OUTLOOK_NUMBER_OF_MAILS,
-                'Offset': '0',
+                'Offset': offset,
                 'BasePoint': 'Beginning'
             }
         },

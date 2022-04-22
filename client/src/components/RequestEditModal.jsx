@@ -210,9 +210,6 @@ const RequestEditModal = observer(() => {
                     onChange={e => onChangeExecutor(e, 2)}
                 >
                     <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
-                    {/*{Store.currentExecutors.map(item => (*/}
-                    {/*    <option key={item._id} value={item.name}>{item.name}</option>*/}
-                    {/*))}*/}
                     {execState.execData
                         ?
                         execState.execData.map(item => (
@@ -358,7 +355,7 @@ const RequestEditModal = observer(() => {
                             </div>
                             <div className={'relative'}>
                                 <h2 className={'text-center text-slate-900 text-xl'}>Последние письма</h2>
-                                <MailView height={385}/>
+                                <MailView height={350}/>
                             </div>
                         </div>
 
