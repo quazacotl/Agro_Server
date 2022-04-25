@@ -1,6 +1,6 @@
 import Store from "../state/Store";
 import {regions} from "../interfaces/interfaces";
-import {observer, useLocalObservable} from "mobx-react-lite"
+import {observer} from "mobx-react-lite"
 import useMongoService from "../services/useMongoService";
 import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
 import {sortRequest} from "../funcs/funcs";

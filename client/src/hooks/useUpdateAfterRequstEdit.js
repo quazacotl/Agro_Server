@@ -5,6 +5,7 @@ import {sortRequest} from "../funcs/funcs";
 
 
 const useUpdateAfterEdit = () => {
+    const {searchRequests} = useMongoService()
     const {getAllRequests,
         getAllUnexecutedRequests,
         getKurRequests,
@@ -37,28 +38,34 @@ const useUpdateAfterEdit = () => {
         }
     }
 
-    const updateAfterRequestEdit = () => {
-        switch (Store.currentRegionSelected) {
-            case regions.all: makeRequest(getAllRequests, getAllUnexecutedRequests)
-                break
-            case regions.kur: makeRequest(getKurRequests, getKurUnexecutedRequests)
-                break
-            case regions.vor: makeRequest(getVorRequests, getVorUnexecutedRequests)
-                break
-            case regions.ore: makeRequest(getOreRequests, getOreUnexecutedRequests)
-                break
-            case regions.tul: makeRequest(getTulRequests, getTulUnexecutedRequests)
-                break
-            case regions.bel: makeRequest(getBelRequests, getBelUnexecutedRequests)
-                break
-            case regions.lip: makeRequest(getLipRequests, getLipUnexecutedRequests)
-                break
-            case regions.orereg: makeRequest(getOreRegRequests, getOreRegUnexecutedRequests)
-                break
-            case regions.vorreg: makeRequest(getVorRegRequests, getVorRegUnexecutedRequests)
-                break
-            default: makeRequest(getAllRequests, getAllUnexecutedRequests)
+    const updateAfterRequestEdit = async () => {
+        if (Store.searchInputValue.length > 2) {
+            const res = await searchRequests({regNum: Store.searchInputValue})
+            Store.setRequestsData(res)
+        } else {
+            switch (Store.currentRegionSelected) {
+                case regions.all: makeRequest(getAllRequests, getAllUnexecutedRequests)
+                    break
+                case regions.kur: makeRequest(getKurRequests, getKurUnexecutedRequests)
+                    break
+                case regions.vor: makeRequest(getVorRequests, getVorUnexecutedRequests)
+                    break
+                case regions.ore: makeRequest(getOreRequests, getOreUnexecutedRequests)
+                    break
+                case regions.tul: makeRequest(getTulRequests, getTulUnexecutedRequests)
+                    break
+                case regions.bel: makeRequest(getBelRequests, getBelUnexecutedRequests)
+                    break
+                case regions.lip: makeRequest(getLipRequests, getLipUnexecutedRequests)
+                    break
+                case regions.orereg: makeRequest(getOreRegRequests, getOreRegUnexecutedRequests)
+                    break
+                case regions.vorreg: makeRequest(getVorRegRequests, getVorRegUnexecutedRequests)
+                    break
+                default: makeRequest(getAllRequests, getAllUnexecutedRequests)
+            }
         }
+
     }
 
     return {updateAfterRequestEdit}

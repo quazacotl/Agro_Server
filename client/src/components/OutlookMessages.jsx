@@ -21,8 +21,9 @@ const MailView = observer((props) => {
                 await updateMails()
             }
             catch (e) {console.log(e)}
-            return () => Store.resetMailOffset()
+
         })()
+        return () => Store.resetMailOffset()
     }, [])
 
     const data = useMemo(() => Store.lastMails, [Store.lastMails])

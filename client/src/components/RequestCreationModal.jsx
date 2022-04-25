@@ -18,7 +18,7 @@ const RequestCreationModal = observer(() => {
     const [addExecutor, setAddExecutor] = useState(false)
     useLockBodyScroll()
 
-    const {writeNewRequest, getAllUnexecutedRequests, getRequestsByVinReg, getExecId} = useMongoService(false)
+    const {writeNewRequest, getAllUnexecutedRequests, getRequestsByOraId, getExecId} = useMongoService(false)
     const {getDistance} = useGetDistance()
 
     const execState = useLocalObservable(() => ({
@@ -33,7 +33,7 @@ const RequestCreationModal = observer(() => {
     useEffect(() => {
         (async () => {
             if (Store.currentVehicle) {
-                const previousRequests = await getRequestsByVinReg({vin: Store.currentVehicle.ATTR_VALUE, reg: Store.currentVehicle.REG_NOM})
+                const previousRequests = await getRequestsByOraId({oraId: Store.currentVehicle.TRANSP_ID})
                 await Store.setPreviousRequestsData(previousRequests)
                 Store.setReqChosenRegion(Store.currentVehicle.REGION)
                 const execData = await getExecId()
@@ -206,7 +206,7 @@ const RequestCreationModal = observer(() => {
 
     return (
         <div onMouseDown={hideModal} className={'absolute top-0 left-0 w-screen h-screen flex bg-neutral-700/50'}>
-            <div className={'flex min-w-[900px] m-auto p-6 bg-blue-50 rounded-xl'}>
+            <div className={'flex m-auto p-6 bg-blue-50 rounded-xl transition-all'}>
                 <div className={'flex flex-col'}>
                     {Store.vehiclePageLocation ? <CurrentVehicle/> : null}
                     <div className="flex gap-6 text-stone-900 w-full mt-5">

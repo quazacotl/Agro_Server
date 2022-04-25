@@ -18,26 +18,21 @@ const PreviousRequests = observer(() => {
             {
                 Header: 'Прислал',
                 accessor: 'SentFromName',
-                width: 250
+                width: 280
             },
             {
                 Header: 'Комментарий',
                 accessor: 'Description',
-                width: 250
+                width: 280
             },
             {
-                Header: 'Создал',
-                accessor: 'Creator',
+                Header: 'Рег. номер',
+                accessor: 'VehicleRegNum',
                 width: 120
             },
             {
                 Header: 'Исполнил',
                 accessor: 'Executor',
-                width: 120
-            },
-            {
-                Header: 'Закрыл',
-                accessor: 'Auditor',
                 width: 120
             },
             {
@@ -113,16 +108,11 @@ const PreviousRequests = observer(() => {
             <h2 className={'text-center text-slate-900 text-xl'}>Прошлые заявки по этой технике</h2>
             <div  className="table-auto mt-2 rounded-xl overflow-hidden table-fixed position:relative border-collapse mx-auto border-hidden shadow-xl shadow-around bg-gray-100 shadow-md mt-2 shadow-stone-700" {...getTableProps()}>
                 <div className="bg-amber-200/80 rounded-t-xl text-center text-slate-900 text-lg py-1">
-                    {// Loop over the header rows
-                        headerGroups.map((headerGroup, i) => (
-                            // Apply the header row propsS
+                    {headerGroups.map((headerGroup, i) => (
                             <div key={i}  {...headerGroup.getHeaderGroupProps()} >
-                                {// Loop over the headers in each row
-                                    headerGroup.headers.map((column, i) => (
-                                        // Apply the header cell props
+                                {headerGroup.headers.map((column, i) => (
                                         <div key={i} {...column.getHeaderProps()}>
-                                            {// Render the header
-                                                column.render('Header')}
+                                            {column.render('Header')}
                                         </div>
                                     ))}
                             </div>
