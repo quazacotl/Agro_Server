@@ -1,5 +1,3 @@
-import React, {useEffect, useRef} from "react";
-
 interface SearchInputProps {
     inputState: string,
     inputHandler: (value: string)=>void,

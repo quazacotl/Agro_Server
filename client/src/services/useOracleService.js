@@ -1,12 +1,19 @@
 import { useHttpHooks } from "../hooks/usehttp.hooks"
 import {Config} from "../config";
+import axios from "axios";
+
 
 const useOracleService = () => {
     const {request} = useHttpHooks()
 
 
     const getVehiclesByRegNum = async (regNum) => {
-        return await request(`${Config.baseRoute}/vehicles-reg`, 'POST', JSON.stringify({regNum}))
+
+        const res = await axios.post(`${Config.baseRoute}/vehicles-reg`, {regNum})
+        console.log(res)
+        return res
+
+        // return await request(`${Config.baseRoute}/vehicles-reg`, 'POST', JSON.stringify({regNum}))
     }
 
     const getVehiclesByVin = async (vin) => {
