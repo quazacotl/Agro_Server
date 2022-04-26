@@ -1,15 +1,58 @@
-import {useCallback, useMemo} from "react"
+import {useCallback, useEffect, useMemo} from "react"
 import { useTable, useBlockLayout } from 'react-table'
 import Store from "../state/Store";
-import { observer } from "mobx-react-lite"
+import {observer, useLocalObservable} from "mobx-react-lite"
 import {FixedSizeList} from "react-window";
 import ErrorPage from "./ErrorPage";
 import Loading from "./Loading";
 import {dateFromIsoToLocal, getClassesForRow} from "../funcs/funcs";
 import reactStringReplace from 'react-string-replace'
+import ContextMenu from "./ContextMenu";
+import AddCarlistModal from "./AddCarlistModal";
+import useOracleService from "../services/useOracleService";
 
 
-const TableData = observer(() => {
+const VehiclesTable = observer(() => {
+    const {getVehiclesByRegNum, getVehiclesByVin, getVehiclesById } = useOracleService()
+
+    // Локальный стейт для представления таблицы техники
+    const vehiclesState = useLocalObservable(() => ({
+            loading: false,
+            setLoading(bool) {
+                this.loading = bool
+            },
+            error: false,
+            setError(bool) {
+                this.error = bool
+            }
+        }
+    ))
+
+    const fetchVehicles = async (input, getFunction) => {
+        if (input.length > 2) {
+            vehiclesState.setLoading(true)
+            try {
+                const res = await getFunction(input)
+                Store.setTableData(res.data)
+            } catch (err) {
+                vehiclesState.setError(true)
+                vehiclesState.setLoading(false)
+                console.log(err)
+            }
+            finally {
+                vehiclesState.setLoading(false);
+            }
+        }
+    }
+
+    useEffect(() => {
+        (async () => {
+            if (Store.inputReg.length > 2) await fetchVehicles(Store.inputReg, getVehiclesByRegNum)
+            else if (Store.inputVin.length > 2) await fetchVehicles(Store.inputVin, getVehiclesByVin)
+            else if (Store.inputId.length > 2) await fetchVehicles(Store.inputId, getVehiclesById)
+        })()
+    },[Store.inputReg, Store.inputVin, Store.inputId])
+
 
     const data = useMemo(() => Store.tableData, [Store.tableData])
 
@@ -90,6 +133,7 @@ const TableData = observer(() => {
         ],
         []
       )
+
 
     const onRightClick = (e, rowValue) => {
         console.log(rowValue)
@@ -187,9 +231,9 @@ const TableData = observer(() => {
         Store.setSelectedText(window.getSelection().toString())
     }
 
-    const loadingView = Store.loading ? <Loading/> : null
-    const errView = Store.error ? <ErrorPage errorText={'Не удалось достучаться до базы данных'}/> : null
-    const view = !(Store.error || Store.loading)  ? <RowsView/> : null
+    const loadingView = vehiclesState.loading ? <Loading/> : null
+    const errView = vehiclesState.error ? <ErrorPage errorText={'Не удалось достучаться до базы данных'}/> : null
+    const view = !(vehiclesState.error || vehiclesState.loading)  ? <RowsView/> : null
 
 
     return (
@@ -199,16 +243,11 @@ const TableData = observer(() => {
             {...getTableProps()}
         >
             <div className="bg-indigo-200 text-center text-slate-900 text-xl py-1">
-                {// Loop over the header rows
-                    headerGroups.map(headerGroup => (
-                        // Apply the header row propsS
+                {headerGroups.map(headerGroup => (
                         <div  {...headerGroup.getHeaderGroupProps()} >
-                            {// Loop over the headers in each row
-                                headerGroup.headers.map((column, i) => (
-                                    // Apply the header cell props
+                            {headerGroup.headers.map((column, i) => (
                                     <div key={i} className={'py-2'} {...column.getHeaderProps()}>
-                                        {// Render the header
-                                            column.render('Header')}
+                                        {column.render('Header')}
                                     </div>
                                 ))}
                         </div>
@@ -217,9 +256,10 @@ const TableData = observer(() => {
             {loadingView}
             {errView}
             {view}
-            {/*<RowsView/>*/}
+            {Store.showContextMenu ? <ContextMenu posX={Store.mouseX} posY={Store.mouseY}/> : null}
+            {Store.isShowCarlistModal ? <AddCarlistModal/> : null}
         </div>
     )
 })
 
-export default TableData
+export default VehiclesTable

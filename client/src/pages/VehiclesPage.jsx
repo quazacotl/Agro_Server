@@ -1,9 +1,9 @@
-import Vehicles from '../components/Vehicles'
 import MenuTabs from '../components/MenuTabs'
 import SearchInputs from "../components/SearchInputs";
 import Store from "../state/Store";
 import { observer } from "mobx-react-lite"
 import {useEffect} from "react";
+import VehiclesTable from "../components/VehiclesTable";
 
 const VehiclesPage = observer(() => {
 
@@ -25,7 +25,7 @@ const VehiclesPage = observer(() => {
         <div className={classes} onClick={e => closeContextMenu(e)}>
             <MenuTabs/>
             <SearchInputs/>
-            <Vehicles/>
+            <VehiclesTable/>
         </div>
     )
 })
