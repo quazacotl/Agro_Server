@@ -256,9 +256,6 @@ const RequestEditModal = observer(() => {
 
                                         >
                                             <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
-                                            {/*{Store.currentExecutors.map(item => (*/}
-                                            {/*    <option key={item._id} value={item.name}>{item.name}</option>*/}
-                                            {/*))}*/}
                                             {execState.execData
                                                 ?
                                                 execState.execData.map(item => (

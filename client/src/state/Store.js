@@ -3,11 +3,9 @@ import { makeAutoObservable } from "mobx"
 class Store {
     tableData = []
     requestsData = []
-    loading = false
     mailsLoading = true
     mailsError = false
     mailOffset = 0
-    error = false
     inputReg = ''
     inputVin = ''
     inputId = ''
@@ -29,7 +27,6 @@ class Store {
     reqChosenRegion = ''
     reqChosenComment = ''
     reqChosenMail = null
-    reqPlannedDate = null
     currentUsers = null
     currentUser = 'Михайлов В.'
     currentVehicle = null
@@ -67,27 +64,14 @@ class Store {
         this.tableData = data
     }
 
-    clearTableData = () => {
-        this.tableData = []
-    }
 
     // Requests funcs
     setRequestsData = data => {
         this.requestsData = data
     }
 
-    // loading funcs
-    setLoading = status => {
-        this.loading = status
-    }
-
     setMailsLoading = status => {
         this.mailsLoading = status
-    }
-
-    // error funcs
-    setError = status => {
-        this.error = status
     }
 
     setMailsError = bool => {
@@ -214,9 +198,6 @@ class Store {
         this.reqChosenExecutors = item
     }
 
-    setReqPlannedDate = date => {
-        this.reqPlannedDate = date
-    }
 
     setCurrentUser = data => {
         this.currentUser = data

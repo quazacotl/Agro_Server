@@ -3,7 +3,6 @@ import {observer, useLocalObservable} from "mobx-react-lite"
 import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
 
 
-
 const AddCarlistModal = observer(() => {
     useLockBodyScroll()
 
@@ -38,9 +37,9 @@ const AddCarlistModal = observer(() => {
     }
 
     const convertTare = (tareList, tareString) => {
-        if (tareList[tareList.length - 1] == '0') {
+        if (tareList[tareList.length - 1] === '0') {
             for (let i = 1; i < tareList.length; i = i + 2) {
-                if (tareList[i] == '0') {
+                if (tareList[i] === '0') {
                     tareString = `${tareString}${tareList[i]},`
                     tareString = `${tareString}${tareList[i-1]}`
                 } else {

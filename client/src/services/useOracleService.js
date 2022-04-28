@@ -4,19 +4,23 @@ import axios from "axios";
 
 const useOracleService = () => {
     const getVehiclesByRegNum = async (regNum) => {
-        return await axios.post(`${Config.baseRoute}/vehicles-reg`, {regNum})
+       const res = await axios.post(`${Config.baseRoute}/vehicles-reg`, {regNum})
+        return res.data
     }
 
     const getVehiclesByVin = async (vin) => {
-        return await axios.post(`${Config.baseRoute}/vehicles-vin`, {vin})
+        const res =  await axios.post(`${Config.baseRoute}/vehicles-vin`, {vin})
+        return res.data
     }
 
     const getVehiclesById = async (id) => {
-        return await axios.post(`${Config.baseRoute}/vehicles-id`, {id})
+        const res =  await axios.post(`${Config.baseRoute}/vehicles-id`, {id})
+        return res.data
     }
 
     const getVehiclesByOraId = async (id) => {
-        return await axios.post(`${Config.baseRoute}/vehicles-ora-id`, {id})
+        const res =  await axios.post(`${Config.baseRoute}/vehicles-ora-id`, {id})
+        return res.data
     }
 
 

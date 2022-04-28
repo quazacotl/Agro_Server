@@ -1,21 +1,20 @@
-import {useEffect, useState} from "react";
-import useMongoService from "../services/useMongoService";
-import useGetDistance from "../hooks/useGetDistance";
-import Store from "../state/Store";
+import {useEffect} from "react"
 import {observer, useLocalObservable} from "mobx-react-lite"
-import MailView from "./OutlookMessages";
-import {regions} from "../interfaces/interfaces";
-import PreviousRequests from "./PreviousRequests";
-import BubbleContext from "./BubbleContext";
-import {dateFromIsoToLocal} from "../funcs/funcs";
 import { HiPlus } from "react-icons/hi"
-import {IconContext} from "react-icons";
-import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
+import {IconContext} from "react-icons"
+import {useLockBodyScroll} from "../hooks/useLockBodyScroll"
+import useMongoService from "../services/useMongoService"
+import useGetDistance from "../hooks/useGetDistance"
+import MailView from "./OutlookMessages"
+import PreviousRequests from "./PreviousRequests"
+import BubbleContext from "./BubbleContext"
+import Store from "../state/Store"
+import {dateFromIsoToLocal} from "../funcs/funcs"
+import {regions} from "../interfaces/interfaces"
 
 
 
 const RequestCreationModal = observer(() => {
-    const [addExecutor, setAddExecutor] = useState(false)
     useLockBodyScroll()
 
     const {writeNewRequest, getAllUnexecutedRequests, getRequestsByOraId, getExecId} = useMongoService(false)
@@ -25,33 +24,46 @@ const RequestCreationModal = observer(() => {
             execData: null,
             setExecData(data) {
                 this.execData = data
+            },
+            isAddExecutor: false,
+            setIsAddExecutor(bool)  {
+                this.isAddExecutor = bool
             }
         })
     )
 
+    const setPreviousRequests = async () => {
+        const previousRequests = await getRequestsByOraId({oraId: Store.currentVehicle.TRANSP_ID})
+        await Store.setPreviousRequestsData(previousRequests)
+    }
+
+    const setNearestExecs = async () => {
+        const execData = await getExecId()
+        const coords = await getDistance(execData, {lat: Store.currentVehicle.LAST_LAT, lon: Store.currentVehicle.LAST_LON})
+        coords.sort((a, b) => a.distance - b.distance)
+        execState.setExecData(coords)
+    }
+
+    const clearData = () => {
+        Store.setLastMails([])
+        Store.setReqChosenMail(null)
+        Store.setReqChosenComment('')
+        Store.setReqChosenExecutors([])
+        Store.setReqChosenRegion(null)
+        Store.setPreviousRequestsData([])
+        Store.setCurrentVehicle(null)
+        execState.setExecData(null)
+    }
 
     useEffect(() => {
         (async () => {
             if (Store.currentVehicle) {
-                const previousRequests = await getRequestsByOraId({oraId: Store.currentVehicle.TRANSP_ID})
-                await Store.setPreviousRequestsData(previousRequests)
                 Store.setReqChosenRegion(Store.currentVehicle.REGION)
-                const execData = await getExecId()
-                const coords = await getDistance(execData, {lat: Store.currentVehicle.LAST_LAT, lon: Store.currentVehicle.LAST_LON})
-                coords.sort((a, b) => a.distance - b.distance)
-                execState.setExecData(coords)
+                await setPreviousRequests()
+                await setNearestExecs()
             }
         })()
-        return () => {
-            Store.setLastMails([])
-            Store.setReqChosenMail(null)
-            Store.setReqChosenComment('')
-            Store.setReqChosenExecutors([])
-            Store.setReqChosenRegion(null)
-            Store.setPreviousRequestsData([])
-            Store.setCurrentVehicle(null)
-            execState.setExecData(null)
-        }
+        return () => clearData()
     }, [])
 
 
@@ -73,7 +85,7 @@ const RequestCreationModal = observer(() => {
                     break
                 case 'Установка автографа': Store.setReqChosenComment(`Установка автографа`)
                     break
-                default: Store.setReqChosenComment('')
+                default: Store.reqChosenComment || Store.setReqChosenComment('')
             }
         }
     }
@@ -121,7 +133,7 @@ const RequestCreationModal = observer(() => {
             Region: Store.currentVehicle ? Store.currentVehicle.REGION : Store.reqChosenRegion,
             RequestType: Store.reqChosenType,
             ObjName: Store.currentVehicle ? Store.currentVehicle.OBJ_NAME : null,
-            BaseName: Store.currentVehicle ? Store.currentVehicle.BASES_NAME : null,
+            BaseName: Store.currentVehicle ? Store.currentVehicle.BASES_NAMl : null,
             VehicleType: Store.currentVehicle ? Store.currentVehicle.NODE_NAME : null,
             VehicleRegNum: Store.currentVehicle ? Store.currentVehicle.REG_NOM : null,
             VehicleId: Store.currentVehicle ? Store.currentVehicle.NAV_ID : null,
@@ -137,7 +149,7 @@ const RequestCreationModal = observer(() => {
         Store.showNotification()
     }
 
-    const CurrentVehicle = () => {
+    const CurrentVehicle = observer(() => {
         if (Store.currentVehicle) {
             return (
                 <div>
@@ -153,9 +165,9 @@ const RequestCreationModal = observer(() => {
                 </div>
             )
         }
-    }
+    })
 
-    const RegionSelectView = () => {
+    const RegionSelectView = observer(() => {
         return (
             <div className={'flex flex-col gap-2'}>
                 <label className={'text-xl'} htmlFor="region">Область</label>
@@ -173,18 +185,18 @@ const RequestCreationModal = observer(() => {
                 </select>
             </div>
         )
-    }
+    })
 
-    const Executor2View = () => {
+    const Executor2View = observer(() => {
         return (
             <select
-                defaultValue={'DEFAULT'}
+                defaultValue={Store.reqChosenExecutors.length === 2 ? Store.reqChosenExecutors[1] : 'DEFAULT'}
                 className={'w-full mt-2 rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                 name="executor2"
                 id="executor2"
                 onChange={e => setReqChosenExecutor(e, 2)}
             >
-                <option  disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
+                <option disabled value={"DEFAULT"}> -- выбрать исполнителя -- </option>
                 {execState.execData
                     ?
                     execState.execData.map(item => (
@@ -197,11 +209,11 @@ const RequestCreationModal = observer(() => {
                 }
             </select>
         )
-    }
+    })
 
     const onPlusExecutor = (e) => {
         e.preventDefault()
-        setAddExecutor(true)
+        execState.setIsAddExecutor(true)
     }
 
     return (
@@ -239,14 +251,14 @@ const RequestCreationModal = observer(() => {
                                     </select>
                                     <button
                                         onClick={onPlusExecutor}
-                                        disabled={addExecutor || Store.reqChosenExecutors.length === 0}
+                                        disabled={execState.isAddExecutor || Store.reqChosenExecutors.length === 0}
                                         className={'w-[10%] h-full rounded-lg bg-white shadow-form-sh  hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
                                         <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
                                             <HiPlus/>
                                         </IconContext.Provider>
                                     </button>
                                 </div>
-                                {addExecutor ? <Executor2View/> : null}
+                                {execState.isAddExecutor ? <Executor2View/> : null}
                             </div>
                             <div className={'flex flex-col gap-2'}>
                                 <label className={'text-xl'} htmlFor="type">Тип заявки</label>

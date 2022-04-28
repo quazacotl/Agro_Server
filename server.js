@@ -12,7 +12,6 @@ import mongoRouter from './routes/mongoRouter.js'
 import outlookRouter from './routes/outlookRouter.js'
 import uploadFileRouter from './routes/uploadFileRouter.js'
 import * as path from "path";
-// import {copyActs, migrateBase} from "./baseMigration/baseMigration.js";
 
 
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
@@ -75,9 +74,3 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
     })
 }
-
-
-// migrateBase()
-// copyActs()
-
-

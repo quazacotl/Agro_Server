@@ -1,10 +1,8 @@
-import { useHttpHooks } from "../hooks/usehttp.hooks"
 import {Config} from "../config";
 import axios from "axios";
 
 
-const useMongoService = (loading = true) => {
-    const {request} = useHttpHooks(loading)
+const useMongoService = () => {
 
     const transformRequestData = requestData => {
         const newData = requestData.map((item) => {
@@ -31,174 +29,190 @@ const useMongoService = (loading = true) => {
 
 
     const getAllRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-all`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-all`)
+        return transformRequestData(res.data)
     }
 
     const getAllUnexecutedRequests = async () => {
-        const res =  await request(`${Config.baseRoute}/requests-all-unex`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-all-unex`)
+        return transformRequestData(res.data)
     }
 
     const getAllUnexecutedRequestsWithId = async () => {
-        const res =  await request(`${Config.baseRoute}/requests-all-unex-id`)
-        return transformRequestData(res)
+        const res =  await axios.get(`${Config.baseRoute}/requests-all-unex-id`)
+        return transformRequestData(res.data)
     }
 
     const getVorRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-vor`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-vor`)
+        return transformRequestData(res.data)
     }
 
     const getVorUnexecutedRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-vor-unex`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-vor-unex`)
+        return transformRequestData(res.data)
     }
 
     const getKurRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-kur`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-kur`)
+        return transformRequestData(res.data)
     }
 
     const getKurUnexecutedRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-kur-unex`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-kur-unex`)
+        return transformRequestData(res.data)
     }
 
     const getOreRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-ore`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-ore`)
+        return transformRequestData(res.data)
     }
 
     const getOreUnexecutedRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-ore-unex`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-ore-unex`)
+        return transformRequestData(res.data)
     }
 
     const getBelRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-bel`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-bel`)
+        return transformRequestData(res.data)
     }
 
     const getBelUnexecutedRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-bel-unex`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-bel-unex`)
+        return transformRequestData(res.data)
     }
 
     const getLipRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-lip`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-lip`)
+        return transformRequestData(res.data)
     }
 
     const getLipUnexecutedRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-lip-unex`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-lip-unex`)
+        return transformRequestData(res.data)
     }
 
     const getTulRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-tul`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-tul`)
+        return transformRequestData(res.data)
     }
 
     const getTulUnexecutedRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-tul-unex`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-tul-unex`)
+        return transformRequestData(res.data)
     }
 
     const getVorRegRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-vor-reg`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-vor-reg`)
+        return transformRequestData(res.data)
     }
 
     const getVorRegUnexecutedRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-vor-reg-unex`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-vor-reg-unex`)
+        return transformRequestData(res.data)
     }
 
     const getOreRegRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-ore-reg`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-ore-reg`)
+        return transformRequestData(res.data)
     }
 
     const getOreRegUnexecutedRequests = async () => {
-        const res = await request(`${Config.baseRoute}/requests-ore-reg-unex`)
-        return transformRequestData(res)
+        const res = await axios.get(`${Config.baseRoute}/requests-ore-reg-unex`)
+        return transformRequestData(res.data)
     }
 
     const searchRequests = async (body) => {
-        const res = await request(`${Config.baseRoute}/search-requests`, 'POST', JSON.stringify(body))
-        return transformRequestData(res)
+        const res = await axios.post(`${Config.baseRoute}/search-requests`, body)
+        return transformRequestData(res.data)
     }
 
 
     const getAllExecutors = async () => {
-        return await request(`${Config.baseRoute}/executors`)
+        const res = await axios.get(`${Config.baseRoute}/executors`)
+        return res.data
     }
 
     const getAllRegions = async () => {
-        return await request(`${Config.baseRoute}/regions`)
+        const res =  await axios.get(`${Config.baseRoute}/regions`)
+        return res.data
     }
 
     const getAllRequestTypes = async () => {
-        return await request(`${Config.baseRoute}/request-type`)
+        const res =  await axios.get(`${Config.baseRoute}/request-type`)
+        return res.data
     }
 
     const getCurrentUsers = async () => {
-        return await request(`${Config.baseRoute}/current-users`)
+        const res =  await axios.get(`${Config.baseRoute}/current-users`)
+        return res.data
     }
 
     const writeNewRequest = async (body) => {
-        return await request(`${Config.baseRoute}/request-write`, 'POST', JSON.stringify(body) )
+        const res =  await axios.post(`${Config.baseRoute}/request-write`, body )
+        return res.data
     }
 
     const getRequestsByOraId = async (body) => {
-        const res = await request(`${Config.baseRoute}/request-ora-id`, 'POST', JSON.stringify(body))
-        return transformRequestData(res)
+        const res = await axios.post(`${Config.baseRoute}/request-ora-id`, body)
+        return transformRequestData(res.data)
     }
 
     const editRequest = async (body) => {
-        return await request(`${Config.baseRoute}/request-edit`, 'POST', JSON.stringify(body))
+        const res =  await axios.post(`${Config.baseRoute}/request-edit`, body)
+        return res.data
     }
 
     const closeRequest = async (body) => {
-        return await request(`${Config.baseRoute}/request-close`, 'POST', JSON.stringify(body))
+        const res =  await axios.post(`${Config.baseRoute}/request-close`, body)
+        return res.data
     }
 
     const deleteRequest = async (body) => {
-        return await request(`${Config.baseRoute}/request-delete`, 'POST', JSON.stringify(body))
+        const res =  await axios.post(`${Config.baseRoute}/request-delete`, body)
+        return res.data
     }
 
     const addFile = async (body) => {
-        return await request(`${Config.baseRoute}/add-file`, 'POST', JSON.stringify(body))
+        const res =  await axios.post(`${Config.baseRoute}/add-file`, body)
+        return res.data
     }
 
     const getActNames = async (body) => {
-        return await request(`${Config.baseRoute}/get-act-names`, 'POST', JSON.stringify(body))
+        const res =  await axios.post(`${Config.baseRoute}/get-act-names`, body)
+        return res.data
     }
 
     const getTareNames = async (body) => {
-        return await request(`${Config.baseRoute}/get-tare-names`, 'POST', JSON.stringify(body))
+        const res =  await axios.post(`${Config.baseRoute}/get-tare-names`, body)
+        return res.data
     }
 
     const getAct = async (body) => {
-        return await axios.post(`${Config.baseRoute}/get-act`, body, { responseType: 'blob' })
+        const res =  await await axios.post(`${Config.baseRoute}/get-act`, body, { responseType: 'blob' })
+        return res.data
     }
 
     const getTare = async (body) => {
-        return await axios.post(`${Config.baseRoute}/get-tare`, body, { responseType: 'blob' })
+        const res =  await await axios.post(`${Config.baseRoute}/get-tare`, body, { responseType: 'blob' })
+        return res.data
     }
 
     const getStatistics = async (body) => {
-        return await request(`${Config.baseRoute}/get-statistics`,'POST', JSON.stringify(body))
+        const res =  await axios.post(`${Config.baseRoute}/get-statistics`, body)
+        return res.data
     }
 
     const updateRequest = async (body) => {
-        return await request(`${Config.baseRoute}/update-request`,'POST', JSON.stringify(body))
+        const res =  await axios.post(`${Config.baseRoute}/update-request`, body)
+        return res.data
     }
 
 
     const getExecId = async () => {
-        return await request(`${Config.baseRoute}/executors-id`)
+        const res =  await axios.get(`${Config.baseRoute}/executors-id`)
+        return res.data
     }
 
 

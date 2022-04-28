@@ -7,7 +7,6 @@ import ErrorPage from "./ErrorPage";
 import Loading from "./Loading";
 import {dateFromIsoToLocal, getClassesForRow} from "../funcs/funcs";
 import reactStringReplace from 'react-string-replace'
-import ContextMenu from "./ContextMenu";
 import AddCarlistModal from "./AddCarlistModal";
 import useOracleService from "../services/useOracleService";
 
@@ -29,19 +28,20 @@ const VehiclesTable = observer(() => {
     ))
 
     const fetchVehicles = async (input, getFunction) => {
+        vehiclesState.setError(false)
         if (input.length > 2) {
             vehiclesState.setLoading(true)
             try {
                 const res = await getFunction(input)
-                Store.setTableData(res.data)
+                Store.setTableData(res)
             } catch (err) {
                 vehiclesState.setError(true)
                 vehiclesState.setLoading(false)
                 console.log(err)
-            }
-            finally {
+            }finally {
                 vehiclesState.setLoading(false);
             }
+
         }
     }
 
@@ -205,6 +205,10 @@ const VehiclesTable = observer(() => {
         )
     }
 
+    const setSelectedText = () => {
+        Store.setSelectedText(window.getSelection().toString())
+    }
+
     const RowsView = observer(() => {
         return (
             <div {...getTableBodyProps()}>
@@ -217,7 +221,7 @@ const VehiclesTable = observer(() => {
                         height={630}
                         itemCount={rows.length}
                         itemSize={35}
-                        width={totalColumnsWidth +12}
+                        width={totalColumnsWidth + 12}
                     >
                         {RenderRow}
                     </FixedSizeList>)
@@ -227,9 +231,6 @@ const VehiclesTable = observer(() => {
         )
     })
 
-    const setSelectedText = () => {
-        Store.setSelectedText(window.getSelection().toString())
-    }
 
     const loadingView = vehiclesState.loading ? <Loading/> : null
     const errView = vehiclesState.error ? <ErrorPage errorText={'Не удалось достучаться до базы данных'}/> : null
@@ -239,7 +240,7 @@ const VehiclesTable = observer(() => {
     return (
         <div
             onMouseUp={setSelectedText}
-            className="mt-2 cursor-pointer rounded-xl overflow-hidden position:relative border-collapse mx-auto border-hidden w-[1767px] vehicle-table mt-2"
+            className="mt-2 grow relative cursor-pointer rounded-xl overflow-hidden border-collapse mx-auto border-hidden w-[1767px] vehicle-table mt-2"
             {...getTableProps()}
         >
             <div className="bg-indigo-200 text-center text-slate-900 text-xl py-1">
@@ -256,7 +257,6 @@ const VehiclesTable = observer(() => {
             {loadingView}
             {errView}
             {view}
-            {Store.showContextMenu ? <ContextMenu posX={Store.mouseX} posY={Store.mouseY}/> : null}
             {Store.isShowCarlistModal ? <AddCarlistModal/> : null}
         </div>
     )

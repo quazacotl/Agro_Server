@@ -24,7 +24,7 @@ const useUpdateAfterEdit = () => {
         getVorUnexecutedRequests,
         getOreRegUnexecutedRequests,
         getVorRegUnexecutedRequests,
-    } = useMongoService(false)
+    } = useMongoService()
 
     const makeRequest = async (generalRequestFn, partialRequestFn) => {
         if (Store.isShowUnexecuted) {

@@ -52,6 +52,7 @@ export const calculatePosition = (posX, posY, menuWidth, menuHeight) => {
     return position
 }
 
+// Сортировка заявок до дате, хозяйству или типу
 export const sortRequest = (sortType) => {
     let newRequestData = toJS(Store.requestsData)
     if (sortType === 'date') {
@@ -60,4 +61,17 @@ export const sortRequest = (sortType) => {
         newRequestData = newRequestData.sort((a, b) => (a[sortType]===null)-(b[sortType]===null) || +(a[sortType]>b[sortType])||-(a[sortType]<b[sortType]));
     }
     Store.setRequestsData(newRequestData)
+}
+
+// Классы для окрашивания ячеек с планируемой датой
+export const getClassesForDate = (cell) => {
+    const classes = "p-2 border border-gray-300"
+    if (cell.column.id === 'PlannedDate' && cell.row.values.PlannedDate) {
+        if (!cell.row.values.PlannedDate) return `${classes} bg-gray-50`
+        if (DateTime.now().hasSame(DateTime.fromISO(cell.row.values.PlannedDate), 'day')) return `${classes} bg-yellow-300`
+        const getDateDiff = (DateTime.now().diff (DateTime.fromISO(cell.row.values.PlannedDate), 'day'))
+        if (getDateDiff > 1) return `${classes} bg-red-300`
+        else if (getDateDiff < 0) return `${classes} bg-green-300`
+    }
+    return classes
 }

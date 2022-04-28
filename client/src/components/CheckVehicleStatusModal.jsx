@@ -73,40 +73,28 @@ const CheckVehicleStatusModal = observer(() => {
         return (
             <table className="request-table rounded-xl overflow-hidden selection:bg-cyan-200 position:relative border-collapse mx-auto my-5 border-hidde mx-5 my-5 w-3/5 bg-white" {...getTableProps()}>
                 <thead className="bg-indigo-100">
-                {// Loop over the header rows
-                    headerGroups.map(headerGroup => (
-                        // Apply the header row propsS
+                {headerGroups.map(headerGroup => (
                         <tr  {...headerGroup.getHeaderGroupProps()}>
-                            {// Loop over the headers in each row
-                                headerGroup.headers.map(column => (
-                                    // Apply the header cell props
+                            {headerGroup.headers.map(column => (
                                     <th className="text-slate-700 text-lg h-11" {...column.getHeaderProps()}>
-                                        {// Render the header
-                                            column.render('Header')}
+                                        {column.render('Header')}
                                     </th>
                                 ))}
                         </tr>
                     ))}
                 </thead>
-                {/* Apply the table body props */}
                 <tbody {...getTableBodyProps()}>
-                {// Loop over the table rows
-                    rows.map(row => {
-                        // Prepare the row for display
+                {rows.map(row => {
                         prepareRow(row)
                         return (
-                            // Apply the row props
                             <tr
                                 className={getClassesForRow(row)}
 
                                 {...row.getRowProps()}>
-                                {// Loop over the rows cells
-                                    row.cells.map(cell => {
-                                        // Apply the cell props
+                                {row.cells.map(cell => {
                                         return (
                                             <td className="p-2 border" {...cell.getCellProps()}>
-                                                {// Render the cell contents
-                                                    cell.render('Cell')}
+                                                {cell.render('Cell')}
                                             </td>
                                         )
                                     })}

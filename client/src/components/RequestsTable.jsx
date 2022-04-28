@@ -1,8 +1,8 @@
-import {useCallback, useMemo} from "react"
+import {useCallback, useEffect, useMemo} from "react"
 import {useBlockLayout, useTable} from 'react-table'
 import useOracleService from "../services/useOracleService";
 import Store from "../state/Store";
-import { observer } from "mobx-react-lite"
+import {observer} from "mobx-react-lite"
 import {DateTime} from "luxon";
 import {FixedSizeList} from "react-window";
 import {dateFromIsoToLocal} from '../funcs/funcs'
@@ -10,25 +10,18 @@ import reactStringReplace from 'react-string-replace'
 import useMongoService from "../services/useMongoService";
 import {toJS} from "mobx";
 import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
+import {getClassesForDate} from '../funcs/funcs'
 
-
-// Классы для окрашивания ячеек с планируемой датой
-const getClassesForDate = (cell) => {
-    const classes = "p-2 border border-gray-300"
-    if (cell.column.id === 'PlannedDate' && cell.row.values.PlannedDate) {
-        if (!cell.row.values.PlannedDate) return `${classes} bg-gray-50`
-        if (DateTime.now().hasSame(DateTime.fromISO(cell.row.values.PlannedDate), 'day')) return `${classes} bg-yellow-300`
-        const getDateDiff = (DateTime.now().diff (DateTime.fromISO(cell.row.values.PlannedDate), 'day'))
-        if (getDateDiff > 1) return `${classes} bg-red-300`
-        else if (getDateDiff < 0) return `${classes} bg-green-300`
-    }
-    return classes
-}
 
 const RequestsTable = observer(() => {
     const {getVehiclesByOraId} = useOracleService()
     const {updateRequest} = useMongoService()
     const {updateAfterRequestEdit} = useUpdateAfterEdit()
+
+
+    useEffect(async ()=> {
+        await updateAfterRequestEdit()
+    }, [Store.currentRegionSelected, Store.isShowUnexecuted])
 
 
     const data = useMemo(() => Store.requestsData, [Store.requestsData])
@@ -339,20 +332,6 @@ const RequestsTable = observer(() => {
         [prepareRow, rows]
     ))
 
-    const RowsView = observer(() => {
-        return (
-            <div {...getTableBodyProps()}>
-                <FixedSizeList
-                    height={660}
-                    itemCount={rows.length}
-                    itemSize={33}
-                    width={totalColumnsWidth +12}
-                >
-                    {RenderRow}
-                </FixedSizeList>
-            </div>
-        )
-    })
 
     const onRightClick = async (e, rowValue) => {
         console.log(rowValue)
@@ -364,38 +343,37 @@ const RequestsTable = observer(() => {
         await Store.setContextMenu(true)
     }
 
-
     const setSelectedText = () => {
         Store.setSelectedText(window.getSelection().toString())
     }
 
-    // const loadingView = Store.loading ? <Loading/> : null
-    // const errView = Store.error ? <ErrorPage errorText={'Не удалось достучаться до базы данных'}/> : null
-    // const view = !(Store.error || Store.loading)  ? <RowsView/> : null
-
     return (
         <div
             onMouseUp={setSelectedText}
-            className="request-table overflow-hidden selection:bg-cyan-200 position:relative border-collapse mx-auto my-5 border-hidden rounded-l-xl rounded-tr-xl w-[1857px]"
+            className="grow relative request-table overflow-hidden selection:bg-cyan-200 border-collapse mx-auto my-5 border-hidden rounded-l-xl rounded-tr-xl w-[1857px]"
             {...getTableProps()}
         >
             <div className="bg-indigo-200 text-center text-black text-lg py-1">
-            {// Loop over the header rows
-                headerGroups.map(headerGroup => (
-                    // Apply the header row propsS
+            {headerGroups.map(headerGroup => (
                     <div {...headerGroup.getHeaderGroupProps()}>
-                        {// Loop over the headers in each row
-                            headerGroup.headers.map(column => (
-                                // Apply the header cell props
+                        {headerGroup.headers.map(column => (
                                 <div className={'py-1'} {...column.getHeaderProps()}>
-                                    {// Render the header
-                                        column.render('Header')}
+                                    {column.render('Header')}
                                 </div>
                             ))}
                     </div>
                 ))}
             </div>
-            <RowsView/>
+            <div {...getTableBodyProps()}>
+                <FixedSizeList
+                    height={660}
+                    itemCount={rows.length}
+                    itemSize={33}
+                    width={totalColumnsWidth +12}
+                >
+                    {RenderRow}
+                </FixedSizeList>
+            </div>
         </div>
     )
 })

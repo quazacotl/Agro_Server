@@ -1,14 +1,15 @@
 import {useDropzone} from 'react-dropzone'
-import {useMemo} from "react";
 import {IconContext} from "react-icons";
 import {BiFile} from "react-icons/bi";
 import Store from "../state/Store";
 import axios from "axios";
 import {Config} from "../config";
 import {observer} from "mobx-react-lite";
+import {useState} from "react";
 
 const MyDropzone = observer((props) => {
     const {text, actType, dropType, updateFiles} = props
+    const [entered, setEntered] = useState(false)
 
 
     const onDrop = (acceptedFiles) => {
@@ -65,26 +66,41 @@ const MyDropzone = observer((props) => {
         return disableState
     }
 
+    const classesObj = {
+        wrapperClasses: 'h-24 w-40 xl:h-28 xl:h-28 flex flex-col text-md xl:text-lg p-1 mt-2 border border-dashed border-amber-400 rounded-lg bg-white cursor-no-drop',
+        inputClasses: 'w-12 h-12 m-auto p-1 mt-2 bg-white text-gray-500 pointer-events-none'
+    }
+
+    const activeClassesObj = {
+        activeWrapper: 'h-24 w-40 xl:h-28 xl:h-28 flex flex-col text-md xl:text-lg p-1 mt-2 border-2 border-dashed border-red-400 rounded-lg bg-white cursor-copy'
+
+    }
+
+    classesObj.wrapperClasses = !isDisabled(actType, dropType) ?  'h-24 w-40 xl:h-28 xl:h-28 flex flex-col text-md xl:text-lg p-1 mt-2 border border-dashed border-amber-400 rounded-lg bg-white cursor-pointer' : classesObj.wrapperClasses
+
+    classesObj.inputClasses = !isDisabled(actType, dropType) ? 'w-12 h-12 m-auto p-1 mt-2 bg-white text-green-500 pointer-events-none' : classesObj.inputClasses
+
+
+    const onDragEnter = () => setEntered(true)
+    const onDragLeave = () => setEntered(false)
+
+
+
     const {getRootProps, getInputProps} = useDropzone({
         onDrop,
+        onDragEnter,
+        onDragLeave,
         noDragEventsBubbling: true,
         disabled: isDisabled(actType, dropType),
         multiple: false
     })
 
 
-    const classesObj = {
-        wrapperClasses: !isDisabled(actType, dropType) ? 'h-24 w-40 xl:h-28 xl:h-28 flex flex-col text-md xl:text-lg p-1 mt-2 border border-dashed rounded-lg border-amber-400 bg-white cursor-pointer' : 'h-24 w-40 xl:h-28 flex flex-col text-md xl:text-lg p-1 mt-2 border border-dashed rounded-lg border-amber-400 bg-white cursor-no-drop',
-        inputClasses: !isDisabled(actType, dropType) ? "text-xl m-auto w-10 h-10 text-green-500"  : "text-xl m-auto w-10 h-10 text-gray-500"
-    }
-
-    const classes = useMemo (() => classesObj, [actType])
-
     return (
-        <div className={classes.wrapperClasses} {...getRootProps()}>
+        <div className={entered ? activeClassesObj.activeWrapper : classesObj.wrapperClasses} {...getRootProps()}>
             <input {...getInputProps()}/>
-            <h3 className={'text-center text-slate-700 leading-5'}>{text}</h3>
-            <IconContext.Provider value={{className: classes.inputClasses}}>
+            <h3 className={'text-center text-slate-700 leading-5 pointer-events-none'}>{text}</h3>
+            <IconContext.Provider value={{className: classesObj.inputClasses}}>
                 <BiFile/>
             </IconContext.Provider>
         </div>

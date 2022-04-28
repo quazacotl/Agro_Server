@@ -43,12 +43,8 @@ const AddFileModal = observer(() => {
     )
 
     useEffect(() => {
-        (async () => {
-            await updateFiles()
-        })()
-        return () => {
-            formState.changeActType(null)
-        }
+        (async () => {await updateFiles()})()
+        return () => formState.changeActType(null)
     }, [])
 
     useEffect(() => {
@@ -70,7 +66,6 @@ const AddFileModal = observer(() => {
     const onChangeRadio = e => {
         formState.changeActType(e.target.value)
     }
-
 
     const onActOpen = async (fileName) => {
         const res = await getAct({name: fileName})
@@ -176,9 +171,24 @@ const AddFileModal = observer(() => {
                 <div className={'flex justify-center w-[540px] xl:w-[600px] gap-1 md:gap-2 xl:gap-3 p-2 xl:p-4 flex-wrap mt-3 bg-gray-50 border border-blue-500/50 rounded-xl'}>
                     {actTypes.map(item => {
                         return (
-                            <div key={item.id} className={'flex w-40 xl:w-44  bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}>
-                                <label className={'py-1 px-1 xl:py-2 xl:px-2 grow text-md xl:text-lg'} htmlFor={item.id}>{item.name}</label>
-                                <input className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'} onChange={onChangeRadio} type="radio" id={item.id} name={'acttype'} value={item.id}/>
+                            <div
+                                key={item.id}
+                                className={'flex w-40 xl:w-44  bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}
+                            >
+                                <label
+                                    className={'py-1 px-1 xl:py-2 xl:px-2 grow text-md xl:text-lg'}
+                                    htmlFor={item.id}
+                                >
+                                    {item.name}
+                                </label>
+                                <input
+                                    className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'}
+                                    onChange={onChangeRadio}
+                                    type="radio"
+                                    id={item.id}
+                                    name={'acttype'}
+                                    value={item.id}
+                                />
                             </div>
                         )
                     })}

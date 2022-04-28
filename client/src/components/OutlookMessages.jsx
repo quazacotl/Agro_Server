@@ -143,7 +143,6 @@ const MailView = observer((props) => {
                     className={'text-center text-black hover:bg-cyan-100 bg-white cursor-pointer'}
                     onClick={() => {
                         setReqChosenMail(row.values)
-                        console.log(row.values)
                     }}
                 >
                     {row.cells.map((cell, i) => {
@@ -161,7 +160,6 @@ const MailView = observer((props) => {
 
     const LoadedMessages = () => {
         return (
-
             <div {...getTableBodyProps()}>
                 <FixedSizeList
                     height={props.height}
@@ -178,7 +176,7 @@ const MailView = observer((props) => {
     const ErrorMessages = () => {
         return (
             <div className={'flex flex-col'}>
-                <img src="/icons8-error-cloud-96.png" alt="error-message"/>
+                <img className={'object-contain w-32 m-auto'} src="/icons8-error-cloud-96.png" alt="error-message"/>
                 <h2 className={'text-center text-lg text-black'}>Не удалось загрузить письма</h2>
             </div>
         )
@@ -191,16 +189,11 @@ const MailView = observer((props) => {
     return (
         <div  className="table-auto rounded-xl overflow-hidden table-fixed position:relative border-collapse mx-auto border-hidden bg-gray-100 shadow-form-sh mt-2" {...getTableProps()}>
             <div className="bg-amber-200/80 text-center text-slate-900 text-lg py-1">
-                {// Loop over the header rows
-                    headerGroups.map((headerGroup, i) => (
-                        // Apply the header row propsS
+                {headerGroups.map((headerGroup, i) => (
                         <div key={i}  {...headerGroup.getHeaderGroupProps()} >
-                            {// Loop over the headers in each row
-                                headerGroup.headers.map((column, i) => (
-                                    // Apply the header cell props
+                            {headerGroup.headers.map((column, i) => (
                                     <div key={i}  {...column.getHeaderProps()}>
-                                        {// Render the header
-                                            column.render('Header')}
+                                        {column.render('Header')}
                                     </div>
                                 ))}
                         </div>
