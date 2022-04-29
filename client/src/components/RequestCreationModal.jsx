@@ -125,13 +125,14 @@ const RequestCreationModal = observer(() => {
             Region: Store.currentVehicle ? Store.currentVehicle.REGION : Store.reqChosenRegion,
             RequestType: Store.reqChosenType,
             ObjName: Store.currentVehicle ? Store.currentVehicle.OBJ_NAME : null,
-            BaseName: Store.currentVehicle ? Store.currentVehicle.BASES_NAMl : null,
+            BaseName: Store.currentVehicle ? Store.currentVehicle.BASES_NAME : null,
             VehicleType: Store.currentVehicle ? Store.currentVehicle.NODE_NAME : null,
             VehicleRegNum: Store.currentVehicle ? Store.currentVehicle.REG_NOM : null,
             VehicleId: Store.currentVehicle ? Store.currentVehicle.NAV_ID : null,
             VehicleVin: Store.currentVehicle ? Store.currentVehicle.ATTR_VALUE : null,
             VehicleOraId: Store.currentVehicle ? Store.currentVehicle.TRANSP_ID : null,
         }
+        console.log(newRequest)
         await writeNewRequest(newRequest)
         Store.setShowRequestModal(false)
         const allUnexReq = await getAllUnexecutedRequests()

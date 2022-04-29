@@ -1,9 +1,4 @@
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route
-} from "react-router-dom";
-
+import {BrowserRouter as Router,} from "react-router-dom";
 import { useEffect, useRef} from "react";
 import Store from "./state/Store";
 import useMongoService from "./services/useMongoService";
@@ -18,6 +13,8 @@ import AddFileModal from "./components/AddFileModal";
 import SendMessageModal from "./components/SendMessageModal";
 import AnimatedRoutes from "./components/AnimatedRoutes";
 import MenuTabs from "./components/MenuTabs";
+import RequestContextMenu from "./components/RequestContextMenu";
+import ContextMenu from "./components/ContextMenu";
 
 
 const App = observer(() => {
@@ -72,7 +69,8 @@ const App = observer(() => {
         <ModalWrapper isVisible={Store.isShowSendMessageModal} hideFunction={Store.setIsShowSendMessageModal}>
             <SendMessageModal/>
         </ModalWrapper>
-
+        {Store.showRequestContextMenu && <RequestContextMenu posX={Store.mouseX} posY={Store.mouseY}/>}
+        {Store.showVehiclesContextMenu && <ContextMenu posX={Store.mouseX} posY={Store.mouseY}/>}
 
         <CSSTransition
             in={Store.isShowNotification}

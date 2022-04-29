@@ -11,21 +11,21 @@ const ContextMenu = (props) => {
     const [isShowAddMenu, setIsShowAddMenu] = useState(false)
 
     const onMakeRequest = () => {
-        Store.setContextMenu(false)
+        Store.setShowVehiclesContextMenu(false)
         Store.setShowRequestModal(true)
     }
 
     const copyYaCoords = async () => {
         const coordString = `http://maps.yandex.ru/?text=${Store.currentVehicle.LAST_LAT},${Store.currentVehicle.LAST_LON}&1=map`
         copy(coordString)
-        Store.setContextMenu(false)
+        Store.setShowVehiclesContextMenu(false)
         Store.setNotificationText('Координаты yandex скопированы')
         Store.showNotification()
     }
 
     const copyGooCoords = async () => {
         const coordString = `http://maps.google.com/?q=${Store.currentVehicle.LAST_LAT},${Store.currentVehicle.LAST_LON}`
-        Store.setContextMenu(false)
+        Store.setShowVehiclesContextMenu(false)
         copy(coordString)
         Store.setNotificationText('Координаты google скопированы')
         Store.showNotification()
@@ -34,7 +34,7 @@ const ContextMenu = (props) => {
     const copyText = async () => {
         if (Store.selectedText.length > 0) {
             copy(Store.selectedText)
-            Store.setContextMenu(false)
+            Store.setShowVehiclesContextMenu(false)
             Store.setNotificationText('Скопировано')
             Store.showNotification()
         }
@@ -42,7 +42,7 @@ const ContextMenu = (props) => {
 
     const onAddCarlist = async () => {
         document.body.style.overflow = 'hidden';
-        Store.setContextMenu(false)
+        Store.setShowVehiclesContextMenu(false)
         Store.setIsShowCarlistModal(true)
     }
 

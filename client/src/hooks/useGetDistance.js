@@ -25,12 +25,13 @@ const useGetDistance = () => {
     }, [])
 
     const getCoords = useCallback(async (execData) => {
-        console.log()
         for await (const item of execData) {
             const vehicles = await axios.post(`${Config.baseRoute}/vehicles-id`, {id: item.VehicleId ? String(item.VehicleId) : String(item.navId)})
-            const vehicle = vehicles.data[0]
-            item.lat = vehicle.LAST_LAT
-            item.lon = vehicle.LAST_LON
+            if (vehicles.data.length > 0) {
+                const vehicle = vehicles.data[0]
+                item.lat = vehicle.LAST_LAT
+                item.lon = vehicle.LAST_LON
+            }
         }
         return execData
     }, [])

@@ -1,13 +1,10 @@
 import Store from "../state/Store";
-import useOracleService from "../services/useOracleService";
 import useMongoService from "../services/useMongoService";
 import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
-import {useEffect, useState} from "react";
-import Loading from "./Loading";
+import {useEffect} from "react";
 import { observer } from "mobx-react-lite"
 import copy from 'copy-to-clipboard'
 import {
-    MdFlaky,
     MdOutgoingMail,
     MdSms,
     MdOutlineEdit,
@@ -33,7 +30,7 @@ const RequestContextMenu = observer((props) => {
     const copyText = async () => {
         if (Store.selectedText.length > 0) {
             copy(Store.selectedText)
-            Store.setContextMenu(false)
+            Store.setShowRequestContextMenu(false)
             Store.setNotificationText('Скопировано')
             Store.showNotification()
         }
@@ -42,7 +39,7 @@ const RequestContextMenu = observer((props) => {
     const onCloseRequest = async () => {
         try {
             const res = await closeRequest({id: Store.currentRequest._id, Auditor: Store.currentUser});
-            Store.setContextMenu(false)
+            Store.setShowRequestContextMenu(false)
             await updateAfterRequestEdit()
             Store.setNotificationText(res.message);
             Store.showNotification();
@@ -52,12 +49,12 @@ const RequestContextMenu = observer((props) => {
     }
 
     const onEdit = async () => {
-        Store.setContextMenu(false)
+        Store.setShowRequestContextMenu(false)
         Store.setIsShowEditRequestModal(true)
     }
 
     const onDelete = async () => {
-        Store.setContextMenu(false)
+        Store.setShowRequestContextMenu(false)
         const res = await deleteRequest({id: Store.currentRequest._id})
         Store.setNotificationText(res.message)
         Store.showNotification()
@@ -65,24 +62,24 @@ const RequestContextMenu = observer((props) => {
     }
 
     const onAddFile = async () => {
-        Store.setContextMenu(false)
+        Store.setShowRequestContextMenu(false)
         Store.setShowAddFileModal(true)
     }
 
     const onAddCarlist = async () => {
         document.body.style.overflow = 'hidden';
-        Store.setContextMenu(false)
+        Store.setShowRequestContextMenu(false)
         Store.setIsShowCarlistModal(true)
     }
 
     const onSendMessage = async () => {
         if (Store.currentRequest.SentFromName) {
-            Store.setContextMenu(false)
+            Store.setShowRequestContextMenu(false)
             Store.setIsShowSendMessageModal(true)
             await closeRequest({id: Store.currentRequest._id, Auditor: Store.currentUser})
             updateAfterRequestEdit()
         } else {
-            Store.setContextMenu(false)
+            Store.setShowRequestContextMenu(false)
             Store.setNotificationText('Не указан адресат в заявке')
             Store.showNotification()
         }
@@ -92,11 +89,11 @@ const RequestContextMenu = observer((props) => {
     const onTextSms = async () => {
         if (Store.currentRequest.VehicleRegNum) {
             copy(`${Store.currentRequest.BaseName} ${Store.currentRequest.VehicleType} ${Store.currentRequest.VehicleRegNum} ${Store.currentRequest.Description}`)
-            Store.setContextMenu(false)
+            Store.setShowRequestContextMenu(false)
             Store.setNotificationText('Скопировано')
             Store.showNotification()
         } else {
-            Store.setContextMenu(false)
+            Store.setShowRequestContextMenu(false)
             copy(`${Store.currentRequest.Description}`)
             Store.setNotificationText('Скопировано')
             Store.showNotification()

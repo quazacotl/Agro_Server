@@ -1,14 +1,13 @@
 import {useCallback, useEffect, useMemo} from "react"
 import { useTable, useBlockLayout } from 'react-table'
-import Store from "../state/Store";
+import Store from "../state/Store"
 import {observer, useLocalObservable} from "mobx-react-lite"
-import {FixedSizeList} from "react-window";
-import ErrorPage from "./ErrorPage";
-import Loading from "./Loading";
-import {dateFromIsoToLocal, getClassesForRow} from "../funcs/funcs";
+import {FixedSizeList} from "react-window"
+import ErrorPage from "./ErrorPage"
+import Loading from "./Loading"
+import {dateFromIsoToLocal, getClassesForRow} from "../funcs/funcs"
 import reactStringReplace from 'react-string-replace'
-import AddCarlistModal from "./AddCarlistModal";
-import useOracleService from "../services/useOracleService";
+import useOracleService from "../services/useOracleService"
 
 
 const VehiclesTable = observer(() => {
@@ -141,7 +140,7 @@ const VehiclesTable = observer(() => {
         Store.setCurrentVehicle(rowValue)
         Store.setPosX(e)
         Store.setPosY(e)
-        Store.setContextMenu(true)
+        Store.setShowVehiclesContextMenu(true)
     }
 
     const initialState = { hiddenColumns: ['LAST_LAT', 'LAST_LON', 'TRANSP_ID'] };

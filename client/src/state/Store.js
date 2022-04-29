@@ -11,7 +11,8 @@ class Store {
     inputId = ''
     mouseX = null
     mouseY = null
-    showContextMenu = false
+    showRequestContextMenu = false
+    showVehiclesContextMenu = false
     isShowNotification = false
     notificationText = ''
     currentRegionSelected = 'all'
@@ -131,8 +132,12 @@ class Store {
     }
 
     // Context menu
-    setContextMenu = state => {
-        this.showContextMenu = state
+    setShowRequestContextMenu = state => {
+        this.showRequestContextMenu = state
+    }
+
+    setShowVehiclesContextMenu = state => {
+        this.showVehiclesContextMenu = state
     }
 
     // Notification

@@ -340,7 +340,7 @@ const RequestsTable = observer(() => {
         await Store.setCurrentRequest(rowValue)
         await Store.setPosX(e)
         await Store.setPosY(e)
-        await Store.setContextMenu(true)
+        await Store.setShowRequestContextMenu(true)
     }
 
     const setSelectedText = () => {
