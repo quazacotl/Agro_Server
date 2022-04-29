@@ -1,10 +1,11 @@
-import MenuTabs from '../components/MenuTabs'
-import SearchInputs from "../components/SearchInputs";
-import Store from "../state/Store";
+import SearchInputs from "../components/SearchInputs"
+import Store from "../state/Store"
 import { observer } from "mobx-react-lite"
-import {useEffect} from "react";
-import VehiclesTable from "../components/VehiclesTable";
-import ContextMenu from "../components/ContextMenu";
+import {useEffect} from "react"
+import VehiclesTable from "../components/VehiclesTable"
+import ContextMenu from "../components/ContextMenu"
+import { motion } from "framer-motion"
+import {pageMotion} from "../funcs/funcs";
 
 const VehiclesPage = observer(() => {
 
@@ -22,13 +23,20 @@ const VehiclesPage = observer(() => {
         if (e.target.tagName !== 'LI') Store.setContextMenu(false)
     }
 
+
     return (
-        <div className={classes} onClick={e => closeContextMenu(e)}>
-            <MenuTabs/>
+        <motion.div
+            className={classes}
+            onClick={e => closeContextMenu(e)}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={pageMotion()}
+        >
             <SearchInputs/>
             <VehiclesTable/>
             {Store.showContextMenu ? <ContextMenu posX={Store.mouseX} posY={Store.mouseY}/> : null}
-        </div>
+        </motion.div>
     )
 })
 

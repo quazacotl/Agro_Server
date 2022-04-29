@@ -4,23 +4,20 @@ import {
     Route
 } from "react-router-dom";
 
-import VehiclesPage from "./pages/VehiclesPage";
-import RequestPage from "./pages/RequestPage";
 import { useEffect, useRef} from "react";
 import Store from "./state/Store";
 import useMongoService from "./services/useMongoService";
 import {observer} from "mobx-react-lite";
 import {CSSTransition } from "react-transition-group";
 import RequestCreationModal from "./components/RequestCreationModal";
-import StatisticPage from "./pages/StatisticPage";
-import MapPage from "./pages/MapPage";
 import ModalWrapper from "./components/ModalWrapper";
 import AddCarlistModal from "./components/AddCarlistModal";
-import {AnimatePresence} from "framer-motion";
 import CheckVehicleStatusModal from "./components/CheckVehicleStatusModal";
 import RequestEditModal from "./components/RequestEditModal";
 import AddFileModal from "./components/AddFileModal";
 import SendMessageModal from "./components/SendMessageModal";
+import AnimatedRoutes from "./components/AnimatedRoutes";
+import MenuTabs from "./components/MenuTabs";
 
 
 const App = observer(() => {
@@ -53,16 +50,10 @@ const App = observer(() => {
     }, [])
 
 
-
   return (
-
     <Router>
-      <Routes>
-        <Route path="/" element={<RequestPage/>}/>
-        <Route path="/monitor" element={<VehiclesPage/>}/>
-        <Route path="/statistic" element={<StatisticPage/>}/>
-        <Route path="/map" element={<MapPage/>}/>
-      </Routes>
+        <MenuTabs />
+        <AnimatedRoutes/>
         <ModalWrapper isVisible={Store.showRequestModal} hideFunction={Store.setShowRequestModal}>
             <RequestCreationModal/>
         </ModalWrapper>

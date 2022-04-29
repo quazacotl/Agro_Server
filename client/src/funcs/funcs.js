@@ -75,3 +75,12 @@ export const getClassesForDate = (cell) => {
     }
     return classes
 }
+
+// Анимация страниц
+export const pageMotion = () => {
+    return ({
+        initial: { opacity: 0, rotateY: 90 },
+        animate: { opacity: 1, rotateY: 0, transition: { duration: .3 } },
+        exit: { opacity: 0, rotateY: 90, transition: { duration: .3 } }
+    })
+}

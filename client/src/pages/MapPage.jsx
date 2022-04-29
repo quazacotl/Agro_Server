@@ -1,11 +1,12 @@
 import { Map, Overlay  } from "pigeon-maps"
-import MenuTabs from "../components/MenuTabs"
-import useMongoService from "../services/useMongoService";
-import {observer, useLocalObservable} from "mobx-react-lite";
-import {useEffect} from "react";
-import useGetDistance from "../hooks/useGetDistance";
-import { FcAutomotive, FcLowPriority } from "react-icons/fc";
-import {IconContext} from "react-icons";
+import useMongoService from "../services/useMongoService"
+import {observer, useLocalObservable} from "mobx-react-lite"
+import {useEffect} from "react"
+import useGetDistance from "../hooks/useGetDistance"
+import { FcAutomotive, FcLowPriority } from "react-icons/fc"
+import {IconContext} from "react-icons"
+import { motion } from "framer-motion"
+import {pageMotion} from "../funcs/funcs"
 
 const MapPage = observer(() => {
     const {getExecId} = useMongoService(false)
@@ -59,9 +60,14 @@ const MapPage = observer(() => {
     }, [])
 
     return (
-        <div className={'h-screen h-screen'}>
-            <MenuTabs />
-            <div className={'w-[90%] h-[80%] mx-auto mt-10 rounded-3xl overflow-hidden cursor-pointer'}>
+        <motion.div
+            className={'h-screen h-screen'}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={pageMotion()}
+        >
+            <div className={'w-[90%] h-[80%] mx-auto mt-10 rounded-3xl overflow-hidden cursor-pointer bg-amber-400'}>
                 <Map defaultCenter={[52.1352, 37.6666]} defaultZoom={7}>
                     {mapState.execData && mapState.execData.map(item => (
                         <Overlay key={item._id} width={60} height={60} color anchor={[item.lat, item.lon]}>
@@ -95,7 +101,7 @@ const MapPage = observer(() => {
                 </Map>
             </div>
 
-        </div>
+        </motion.div>
     )
 })
 

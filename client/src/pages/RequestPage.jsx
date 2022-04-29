@@ -1,15 +1,11 @@
 import {observer} from "mobx-react-lite"
-import MenuTabs from '../components/MenuTabs'
 import RequestContextMenu from "../components/RequestContextMenu"
-import CheckVehicleStatusModal from "../components/CheckVehicleStatusModal"
-import RequestEditModal from "../components/RequestEditModal"
-import AddFileModal from "../components/AddFileModal"
-import SendMessageModal from "../components/SendMessageModal"
-import AddCarlistModal from "../components/AddCarlistModal"
 import RequestsControls from "../components/RequestsControls"
 import RequestsTable from "../components/RequestsTable"
 import BubbleContext from "../components/BubbleContext"
 import Store from "../state/Store"
+import { motion } from "framer-motion"
+import {pageMotion} from "../funcs/funcs";
 
 
 
@@ -20,14 +16,21 @@ const RequestPage = observer(() => {
         if (e.target.tagName !== 'LI') Store.setContextMenu(false)
     }
 
+
     return (
-        <div className={'flex flex-col min-h-screen relative'} onClick={e => closeContextMenu(e)}>
-            <MenuTabs />
+        <motion.div
+            className={'flex flex-col min-h-screen relative'}
+            onClick={e => closeContextMenu(e)}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={pageMotion()}
+        >
             <RequestsControls/>
             <RequestsTable/>
             {Store.showContextMenu && <RequestContextMenu posX={Store.mouseX} posY={Store.mouseY}/>}
             {Store.isBubbleContextShow && <BubbleContext/>}
-        </div>
+        </motion.div>
     )
     
 })

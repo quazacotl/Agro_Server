@@ -190,7 +190,7 @@ const VehiclesTable = observer(() => {
     const SearchPlaceholder = () => {
         return (
             <>
-                <h2 className={'mt-20 text-indigo-200 text-center text-5xl'}>Введите номер для поиска</h2>
+                <h2 className={'mt-20 text-amber-500 text-center text-5xl'}>Введите номер для поиска</h2>
                 <img className={'m-auto w-[150px] mt-9'} src="./search2.png" alt="search"/>
             </>
         )
@@ -257,7 +257,6 @@ const VehiclesTable = observer(() => {
             {loadingView}
             {errView}
             {view}
-            {/*{Store.isShowCarlistModal ? <AddCarlistModal/> : null}*/}
         </div>
     )
 })

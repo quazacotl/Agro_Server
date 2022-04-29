@@ -1,7 +1,7 @@
 import DatePicker, { registerLocale } from "react-datepicker"
-import {observer} from "mobx-react-lite";
-import useMongoService from "../services/useMongoService";
-import Store from "../state/Store";
+import {observer} from "mobx-react-lite"
+import useMongoService from "../services/useMongoService"
+import Store from "../state/Store"
 import ru from 'date-fns/locale/ru'
 
 registerLocale("ru", ru)
@@ -50,7 +50,7 @@ const StatisticControls = observer(() => {
     }
 
     return (
-        <div className={'flex justify-center mt-14 gap-24'}>
+        <div className={'flex justify-center my-6 gap-24'}>
             <div className={'flex flex-col gap-4'}>
                 <h2 className={'text-xl text-white'}>Начало</h2>
                 <DatePicker

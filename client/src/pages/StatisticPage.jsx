@@ -1,10 +1,11 @@
-import MenuTabs from "../components/MenuTabs";
-import StatisticControls from "../components/StatisticControls";
-import {observer} from "mobx-react-lite";
-import StatisticChart from "../components/StatisticChart";
-import Loading from "../components/Loading";
-import Store from "../state/Store";
-import {useEffect} from "react";
+import StatisticControls from "../components/StatisticControls"
+import {observer} from "mobx-react-lite"
+import StatisticChart from "../components/StatisticChart"
+import Loading from "../components/Loading"
+import Store from "../state/Store"
+import {useEffect} from "react"
+import { motion } from "framer-motion"
+import {pageMotion} from "../funcs/funcs"
 
 
 const StatisticPage = observer(() => {
@@ -18,14 +19,28 @@ const StatisticPage = observer(() => {
 
     }, [])
 
+    const StatPlaceholder = () => {
+        return (
+            <>
+                <h2 className={'my-6 text-amber-500 text-3xl text-center'}>Выберите промежуток дат</h2>
+                <img className={'w-5/12 mt-10 mx-auto'} src="/business-statistics.png" alt="статистика"/>
+            </>
+        )
+    }
+
     return (
-        <div className={'flex flex-col relative h-screen'}>
-            <MenuTabs/>
+        <motion.div
+            className={'flex flex-col relative h-screen'}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={pageMotion()}
+        >
             <StatisticControls/>
-            {!Store.currentStat && !Store.isLoadingStat ? null : (
+            {!Store.currentStat && !Store.isLoadingStat ? <StatPlaceholder/> : (
                 !Store.isLoadingStat ? <StatisticChart/> : <Loading/>
             )}
-        </div>
+        </motion.div>
     );
 })
 

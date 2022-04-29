@@ -17,14 +17,12 @@ const ModalWrapper = observer(({isVisible, hideFunction, children}) => {
             opacity: 1,
                 transition: {
                 duration: .15,
-                    // when: "beforeChildren"
             },
         },
         hidden: {
             opacity: 0,
                 transition: {
                 duration: .15,
-                    // when: "afterChildren"
             },
         }
     }),[])
@@ -35,6 +33,7 @@ const ModalWrapper = observer(({isVisible, hideFunction, children}) => {
             scale: .5,
             opacity: 0,
             transition: {
+                type: 'spring',
                 duration: .2,
             }
         },
@@ -42,6 +41,7 @@ const ModalWrapper = observer(({isVisible, hideFunction, children}) => {
             scale: 1,
             opacity: 1,
             transition: {
+                type: 'spring',
                 duration: .2,
             }
         }
