@@ -366,7 +366,7 @@ const RequestsTable = observer(() => {
             </div>
             <div {...getTableBodyProps()}>
                 <FixedSizeList
-                    height={660}
+                    height={627}
                     itemCount={rows.length}
                     itemSize={33}
                     width={totalColumnsWidth +12}

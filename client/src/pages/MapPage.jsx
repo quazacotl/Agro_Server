@@ -61,7 +61,7 @@ const MapPage = observer(() => {
 
     return (
         <motion.div
-            className={'h-screen h-screen'}
+            className={'flex flex-col h-[950px] relative'}
             initial="initial"
             animate="animate"
             exit="exit"

@@ -30,7 +30,7 @@ const StatisticPage = observer(() => {
 
     return (
         <motion.div
-            className={'flex flex-col relative h-screen'}
+            className={'flex flex-col relative h-full'}
             initial="initial"
             animate="animate"
             exit="exit"

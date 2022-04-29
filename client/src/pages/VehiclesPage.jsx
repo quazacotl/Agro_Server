@@ -15,7 +15,7 @@ const VehiclesPage = observer(() => {
         return () => Store.setVehiclePageLocation(false)
     }, [])
 
-    const classes = Store.showRequestModal ? 'flex flex-col min-h-screen relative overflow-hidden selection:bg-cyan-200 selection:text-stone-800' : 'flex flex-col relative min-h-screen selection:bg-cyan-200 selection:text-stone-800'
+    const classes = Store.showRequestModal ? 'flex flex-col h-full relative overflow-hidden selection:bg-cyan-200 selection:text-stone-800' : 'flex flex-col relative h-full selection:bg-cyan-200 selection:text-stone-800'
 
 
     const closeContextMenu = (e) => {

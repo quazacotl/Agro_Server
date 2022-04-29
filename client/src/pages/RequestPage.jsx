@@ -19,7 +19,7 @@ const RequestPage = observer(() => {
 
     return (
         <motion.div
-            className={'flex flex-col min-h-screen relative'}
+            className={'flex flex-col h-full relative'}
             onClick={e => closeContextMenu(e)}
             initial="initial"
             animate="animate"
