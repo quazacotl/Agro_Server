@@ -4,8 +4,8 @@ import RequestsTable from "../components/RequestsTable"
 import BubbleContext from "../components/BubbleContext"
 import Store from "../state/Store"
 import { motion } from "framer-motion"
-import {pageMotion} from "../funcs/funcs";
-import {useEffect} from "react";
+import {pageMotion} from "../funcs/funcs"
+import {useEffect} from "react"
 
 
 

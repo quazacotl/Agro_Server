@@ -175,7 +175,7 @@ const VehiclesTable = observer(() => {
                 >
                     {row.cells.map((cell, i) => {
                         return (
-                            <div key={i} className="p-2 border " {...cell.getCellProps()}>
+                            <div key={i} className="p-2 border" {...cell.getCellProps()}>
                                 {cell.render('Cell')}
                             </div>
                         )
@@ -239,7 +239,7 @@ const VehiclesTable = observer(() => {
     return (
         <div
             onMouseUp={setSelectedText}
-            className="mt-2 grow relative cursor-pointer rounded-xl overflow-hidden border-collapse mx-auto border-hidden w-[1767px] vehicle-table mt-2"
+            className="mt-2 mx-auto min-h-[500px] relative cursor-pointer rounded-xl overflow-hidden border-collapse border-hidden w-[1767px] vehicle-table"
             {...getTableProps()}
         >
             <div className="bg-indigo-200 text-center text-slate-900 text-xl py-1">

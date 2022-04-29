@@ -1,20 +1,20 @@
-import {BrowserRouter as Router,} from "react-router-dom";
-import { useEffect, useRef} from "react";
-import Store from "./state/Store";
-import useMongoService from "./services/useMongoService";
-import {observer} from "mobx-react-lite";
-import {CSSTransition } from "react-transition-group";
-import RequestCreationModal from "./components/RequestCreationModal";
-import ModalWrapper from "./components/ModalWrapper";
-import AddCarlistModal from "./components/AddCarlistModal";
-import CheckVehicleStatusModal from "./components/CheckVehicleStatusModal";
-import RequestEditModal from "./components/RequestEditModal";
-import AddFileModal from "./components/AddFileModal";
-import SendMessageModal from "./components/SendMessageModal";
-import AnimatedRoutes from "./components/AnimatedRoutes";
-import MenuTabs from "./components/MenuTabs";
-import RequestContextMenu from "./components/RequestContextMenu";
-import ContextMenu from "./components/ContextMenu";
+import {BrowserRouter as Router,} from "react-router-dom"
+import { useEffect, useRef} from "react"
+import Store from "./state/Store"
+import useMongoService from "./services/useMongoService"
+import {observer} from "mobx-react-lite"
+import {CSSTransition } from "react-transition-group"
+import RequestCreationModal from "./components/RequestCreationModal"
+import ModalWrapper from "./components/ModalWrapper"
+import AddCarlistModal from "./components/AddCarlistModal"
+import CheckVehicleStatusModal from "./components/CheckVehicleStatusModal"
+import RequestEditModal from "./components/RequestEditModal"
+import AddFileModal from "./components/AddFileModal"
+import SendMessageModal from "./components/SendMessageModal"
+import AnimatedRoutes from "./components/AnimatedRoutes"
+import MenuTabs from "./components/MenuTabs"
+import RequestContextMenu from "./components/RequestContextMenu"
+import ContextMenu from "./components/ContextMenu"
 
 
 const App = observer(() => {
