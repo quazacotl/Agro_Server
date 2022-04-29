@@ -10,6 +10,7 @@
     "copy-to-clipboard": "^3.3.1",
     "date-fns": "^2.28.0",
     "date-format": "^3.0.0",
+    "framer-motion": "^6.3.3",
     "luxon": "^2.3.0",
     "mobx": "^6.3.10",
     "mobx-react-lite": "^3.2.2",
@@ -27,6 +28,7 @@
     "react-window": "^1.8.6",
     "recharts": "^2.1.9",
     "use-http": "^1.0.26",
+    "uuid": "^8.3.2",
     "web-vitals": "^2.1.2"
   },
   "scripts": {

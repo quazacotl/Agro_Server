@@ -1,6 +1,7 @@
 import Store from "../state/Store";
 import {observer, useLocalObservable} from "mobx-react-lite"
 import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
+import {useEffect} from "react";
 
 
 const AddCarlistModal = observer(() => {
@@ -29,12 +30,16 @@ const AddCarlistModal = observer(() => {
         }
     }))
 
-    const hideModal = (e) => {
-        if(e.target === e.currentTarget) {
-            carlistState.setError(false)
-            Store.setIsShowCarlistModal(false)
-        }
-    }
+
+    useEffect(() => {
+        return () => carlistState.setError(false)
+    },[])
+
+    // const hideModal = (e) => {
+    //     if(e.target === e.currentTarget) {
+    //         Store.setIsShowCarlistModal(false)
+    //     }
+    // }
 
     const convertTare = (tareList, tareString) => {
         if (tareList[tareList.length - 1] === '0') {
@@ -55,7 +60,6 @@ const AddCarlistModal = observer(() => {
     }
 
     const onChange = (value) => {
-        console.log(value)
         carlistState.setTextAreaInput(value)
         if (value === '') {
             carlistState.setError(false)
@@ -113,55 +117,49 @@ const AddCarlistModal = observer(() => {
 
 
     return (
-        <div
-            onMouseDown={hideModal}
-            className={'absolute left-0 w-screen h-screen flex bg-neutral-700/50'}
-            style={{top: Store.offsetY}}
-        >
-            <div className={'m-auto p-5 bg-blue-50 rounded-xl'}>
-                <h2 className={'text-center text-lg font-semibold text-teal-600'}>Выбранная техника: {Store.currentRequest ? Store.currentRequest.VehicleRegNum : Store.currentVehicle.REG_NOM}</h2>
-                <div className={'flex mt-6'}>
-                    <textarea
-                        className={textAreaClasses}
-                        placeholder={'Вставить данные'}
-                        value={carlistState.textAreaInput}
-                        onChange={(e) => onChange(e.currentTarget.value)}
-                        >
-                    </textarea>
-                    <textarea
-                        className={'w-[300px] h-[350px] text-sm rounded-lg shadow-form-sh border-blue-300 bg-white focus:outline-none resize-none ml-6'}
-                        placeholder={'Результат'}
-                        readOnly
-                        value={carlistState.resultAreaInput}
-                        >
-                    </textarea>
-                    <div className={'flex flex-col ml-6'}>
-                        <div className={'flex flex-col'}>
-                            <label className={'text-md text-slate-900'} htmlFor="volume">Объём бака, л</label>
-                            <input
-                                className={'w-28 h-6 px-1 rounded bg-white mt-2 border-blue-300 shadow-form-sh focus:outline-none'}
-                                type="text"
-                                id={'volume'}
-                                readOnly
-                                placeholder={'- - -'}
-                                value={carlistState.valueInput}
-                            />
-                        </div>
-                        <div className={'flex flex-col mt-6'}>
-                            <label className={'text-md text-slate-900'} htmlFor="id-nav">Навигатор</label>
-                            <input
-                                className={'w-28 h-6 px-1 rounded bg-white mt-2 border-blue-300 shadow-form-sh focus:outline-none'}
-                                type="text"
-                                id={'id-nav'}
-                                readOnly
-                                placeholder={'- - -'}
-                                value={Store.vehiclePageLocation ? Store.currentVehicle.NAV_ID : (Store.currentRequest.VehicleId ? Store.currentRequest.VehicleId :  '- - -')}
-                            />
-                        </div>
+        <>
+            <h2 className={'text-center text-lg font-semibold text-teal-600'}>Выбранная техника: {Store.currentRequest ? Store.currentRequest.VehicleRegNum : Store.currentVehicle.REG_NOM}</h2>
+            <div className={'flex mt-6'}>
+                <textarea
+                    className={textAreaClasses}
+                    placeholder={'Вставить данные'}
+                    value={carlistState.textAreaInput}
+                    onChange={(e) => onChange(e.currentTarget.value)}
+                    >
+                </textarea>
+                <textarea
+                    className={'w-[300px] h-[350px] text-sm rounded-lg shadow-form-sh border-blue-300 bg-white focus:outline-none resize-none ml-6'}
+                    placeholder={'Результат'}
+                    readOnly
+                    value={carlistState.resultAreaInput}
+                    >
+                </textarea>
+                <div className={'flex flex-col ml-6'}>
+                    <div className={'flex flex-col'}>
+                        <label className={'text-md text-slate-900'} htmlFor="volume">Объём бака, л</label>
+                        <input
+                            className={'w-28 h-6 px-1 rounded bg-white mt-2 border-blue-300 shadow-form-sh focus:outline-none'}
+                            type="text"
+                            id={'volume'}
+                            readOnly
+                            placeholder={'- - -'}
+                            value={carlistState.valueInput}
+                        />
+                    </div>
+                    <div className={'flex flex-col mt-6'}>
+                        <label className={'text-md text-slate-900'} htmlFor="id-nav">Навигатор</label>
+                        <input
+                            className={'w-28 h-6 px-1 rounded bg-white mt-2 border-blue-300 shadow-form-sh focus:outline-none'}
+                            type="text"
+                            id={'id-nav'}
+                            readOnly
+                            placeholder={'- - -'}
+                            value={Store.vehiclePageLocation ? Store.currentVehicle.NAV_ID : (Store.currentRequest.VehicleId ? Store.currentRequest.VehicleId :  '- - -')}
+                        />
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 });
 

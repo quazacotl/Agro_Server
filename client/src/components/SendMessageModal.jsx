@@ -66,12 +66,6 @@ const SendMessageModal = observer(() => {
         }
     }, [])
 
-    const hideModal = (e) => {
-        if(e.target === e.currentTarget) {
-            Store.setIsShowSendMessageModal(false)
-        }
-    }
-
     const onChangeText = (e) => {
         formState.setMessageText(e.target.value)
     }
@@ -136,36 +130,36 @@ const SendMessageModal = observer(() => {
     })
 
     return (
-        <div
-            onMouseDown={hideModal}
-            className={'absolute left-0 w-screen h-screen flex bg-neutral-700/50'}
-            style={{top: Store.offsetY}}
-        >
-            <div className={'w-[600px] min-h-[400px] p-4 m-auto rounded-xl border border-amber-400 bg-gray-50'}>
-                <h2 className={'text-lg text-sky-600 ml-3'}>Адресат: {Store.currentRequest.SentFromName ? Store.currentRequest.SentFromName : <span className={'text-red-600'}>Не выбран адресат!</span>}</h2>
-                <textarea
-                    placeholder={'Текст сообщения'}
-                    className={'w-full h-2/3 min-h-[200px] mt-3 text-lg resize-none shadow-form-sh focus:outline-none p-3 rounded-xl border border-blue-400'}
-                    name={'outlook-text'}
-                    autoFocus
-                    value={formState.messageText}
-                    onChange={onChangeText}
-                />
-                <div className={'flex mt-3 gap-8'}>
-                    <div className={'flex grow flex-col'}>
-                        <h2 className={'text-lg text-center'}>Прикрепить акт</h2>
-                        <ul>
-                            {<Acts/>}
-                        </ul>
-                    </div>
-                    <button
-                        onClick={sendOutlookAnswer}
-                        className={'w-32 h-24 m-auto rounded-lg text-white uppercase font-medium shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}>
-                        Отправить письмо
-                    </button>
+        // <div
+        //     onMouseDown={hideModal}
+        //     className={'absolute left-0 w-screen h-screen flex bg-neutral-700/50'}
+        //     style={{top: Store.offsetY}}
+        // >
+        //     <div className={'w-[600px] min-h-[400px] p-4 m-auto rounded-xl border border-amber-400 bg-gray-50'}>
+        <>
+            <h2 className={'text-lg text-sky-600 ml-3'}>Адресат: {Store.currentRequest.SentFromName ? Store.currentRequest.SentFromName : <span className={'text-red-600'}>Не выбран адресат!</span>}</h2>
+            <textarea
+                placeholder={'Текст сообщения'}
+                className={'w-full h-2/3 min-h-[200px] mt-3 text-lg resize-none shadow-form-sh focus:outline-none p-3 rounded-xl border border-blue-400'}
+                name={'outlook-text'}
+                autoFocus
+                value={formState.messageText}
+                onChange={onChangeText}
+            />
+            <div className={'flex mt-3 gap-8'}>
+                <div className={'flex grow flex-col'}>
+                    <h2 className={'text-lg text-center'}>Прикрепить акт</h2>
+                    <ul>
+                        {<Acts/>}
+                    </ul>
                 </div>
+                <button
+                    onClick={sendOutlookAnswer}
+                    className={'w-32 h-24 m-auto rounded-lg text-white uppercase font-medium shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}>
+                    Отправить письмо
+                </button>
             </div>
-        </div>
+        </>
     );
 });
 

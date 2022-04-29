@@ -14,6 +14,13 @@ import {CSSTransition } from "react-transition-group";
 import RequestCreationModal from "./components/RequestCreationModal";
 import StatisticPage from "./pages/StatisticPage";
 import MapPage from "./pages/MapPage";
+import ModalWrapper from "./components/ModalWrapper";
+import AddCarlistModal from "./components/AddCarlistModal";
+import {AnimatePresence} from "framer-motion";
+import CheckVehicleStatusModal from "./components/CheckVehicleStatusModal";
+import RequestEditModal from "./components/RequestEditModal";
+import AddFileModal from "./components/AddFileModal";
+import SendMessageModal from "./components/SendMessageModal";
 
 
 const App = observer(() => {
@@ -56,7 +63,26 @@ const App = observer(() => {
         <Route path="/statistic" element={<StatisticPage/>}/>
         <Route path="/map" element={<MapPage/>}/>
       </Routes>
-        {Store.showRequestModal ? <RequestCreationModal/> : null}
+        <ModalWrapper isVisible={Store.showRequestModal} hideFunction={Store.setShowRequestModal}>
+            <RequestCreationModal/>
+        </ModalWrapper>
+        <ModalWrapper isVisible={Store.isShowCarlistModal} hideFunction={Store.setIsShowCarlistModal}>
+            <AddCarlistModal/>
+        </ModalWrapper>
+        <ModalWrapper isVisible={Store.isCheckStatusModalShow} hideFunction={Store.setIsCheckStatusModalShow}>
+            <CheckVehicleStatusModal/>
+        </ModalWrapper>
+        <ModalWrapper isVisible={Store.isShowEditRequestModal} hideFunction={Store.setIsShowEditRequestModal}>
+            <RequestEditModal/>
+        </ModalWrapper>
+        <ModalWrapper isVisible={Store.showAddFileModal} hideFunction={Store.setShowAddFileModal}>
+            <AddFileModal/>
+        </ModalWrapper>
+        <ModalWrapper isVisible={Store.isShowSendMessageModal} hideFunction={Store.setIsShowSendMessageModal}>
+            <SendMessageModal/>
+        </ModalWrapper>
+
+
         <CSSTransition
             in={Store.isShowNotification}
             timeout={{
@@ -74,7 +100,6 @@ const App = observer(() => {
                 {Store.notificationText}
             </div>
         </CSSTransition>
-
     </Router>
   );
 })

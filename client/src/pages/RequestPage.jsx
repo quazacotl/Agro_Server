@@ -26,11 +26,6 @@ const RequestPage = observer(() => {
             <RequestsControls/>
             <RequestsTable/>
             {Store.showContextMenu && <RequestContextMenu posX={Store.mouseX} posY={Store.mouseY}/>}
-            {Store.isCheckStatusModalShow && <CheckVehicleStatusModal/>}
-            {Store.isShowEditRequestModal && <RequestEditModal/>}
-            {Store.showAddFileModal && <AddFileModal/>}
-            {Store.isShowSendMessageModal && <SendMessageModal/>}
-            {Store.isShowCarlistModal && <AddCarlistModal/>}
             {Store.isBubbleContextShow && <BubbleContext/>}
         </div>
     )

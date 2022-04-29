@@ -31,7 +31,6 @@ const CheckVehicleStatusModal = observer(() => {
             {
                 Header: 'Техника',
                 accessor: 'NODE_NAME',
-
             },
             {
                 Header: 'Рег номер',
@@ -50,12 +49,6 @@ const CheckVehicleStatusModal = observer(() => {
         []
     )
 
-    const hideModal = (e) => {
-        if(e.target === e.currentTarget) {
-            Store.setIsCheckStatusModalShow(false)
-        }
-    }
-
     const {
         getTableProps,
         getTableBodyProps,
@@ -71,12 +64,12 @@ const CheckVehicleStatusModal = observer(() => {
 
     const TableView = () => {
         return (
-            <table className="request-table rounded-xl overflow-hidden selection:bg-cyan-200 position:relative border-collapse mx-auto my-5 border-hidde mx-5 my-5 w-3/5 bg-white" {...getTableProps()}>
+            <table className="request-table rounded-xl overflow-hidden selection:bg-cyan-200 position:relative border-collapse mx-auto border-hidden bg-white" {...getTableProps()}>
                 <thead className="bg-indigo-100">
                 {headerGroups.map(headerGroup => (
                         <tr  {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                                    <th className="text-slate-700 text-lg h-11" {...column.getHeaderProps()}>
+                                    <th className="text-slate-700 text-lg h-11 px-6" {...column.getHeaderProps()}>
                                         {column.render('Header')}
                                     </th>
                                 ))}
@@ -107,13 +100,9 @@ const CheckVehicleStatusModal = observer(() => {
     }
 
     return (
-        <div
-            onMouseDown={hideModal}
-            className={'absolute left-0 w-screen h-screen flex justify-center items-center bg-neutral-700/50'}
-            style={{top: Store.offsetY}}
-        >
+        <>
             {Store.checkStatusLoading ? <Loading/> : <TableView/>}
-        </div>
+        </>
     );
 });
 

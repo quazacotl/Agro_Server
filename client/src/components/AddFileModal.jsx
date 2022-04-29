@@ -57,12 +57,6 @@ const AddFileModal = observer(() => {
     }, [useMemo(() => formState.previousTares, []), useMemo(() => formState.previousActs, []) ])
 
 
-    const hideModal = (e) => {
-        if(e.target === e.currentTarget) {
-            Store.setShowAddFileModal(false)
-        }
-    }
-
     const onChangeRadio = e => {
         formState.changeActType(e.target.value)
     }
@@ -161,80 +155,73 @@ const AddFileModal = observer(() => {
 
 
     return (
-        <div
-            onMouseDown={hideModal}
-            className={'absolute left-0 w-screen h-screen flex justify-center items-center bg-neutral-700/50'}
-            style={{top: Store.offsetY}}
-        >
-            <div className={'p-2 xl:p-4 bg-blue-50 rounded-xl border border-amber-400 select-none'}>
-                <h2 className={'text-center text-lg xl:text-xl' }>Тип заявки</h2>
-                <div className={'flex justify-center w-[540px] xl:w-[600px] gap-1 md:gap-2 xl:gap-3 p-2 xl:p-4 flex-wrap mt-3 bg-gray-50 border border-blue-500/50 rounded-xl'}>
-                    {actTypes.map(item => {
-                        return (
-                            <div
-                                key={item.id}
-                                className={'flex w-40 xl:w-44  bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}
+        <>
+            <h2 className={'text-center text-lg xl:text-xl' }>Тип заявки</h2>
+            <div className={'flex justify-center w-[540px] xl:w-[600px] gap-1 md:gap-2 xl:gap-3 p-2 xl:p-4 flex-wrap mt-3 bg-gray-50 border border-blue-500/50 rounded-xl'}>
+                {actTypes.map(item => {
+                    return (
+                        <div
+                            key={item.id}
+                            className={'flex w-40 xl:w-44  bg-white relative items-center border border-dotted border-amber-400 rounded-xl'}
+                        >
+                            <label
+                                className={'py-1 px-1 xl:py-2 xl:px-2 grow text-md xl:text-lg'}
+                                htmlFor={item.id}
                             >
-                                <label
-                                    className={'py-1 px-1 xl:py-2 xl:px-2 grow text-md xl:text-lg'}
-                                    htmlFor={item.id}
-                                >
-                                    {item.name}
-                                </label>
-                                <input
-                                    className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'}
-                                    onChange={onChangeRadio}
-                                    type="radio"
-                                    id={item.id}
-                                    name={'acttype'}
-                                    value={item.id}
-                                />
-                            </div>
-                        )
-                    })}
-                </div>
-                <div className={'flex gap-4 mt-3'}>
-                    <MyDropzone
-                        text={'Загрузить акт'}
-                        actType={formState.actType}
-                        actfile={formState.actfile}
-                        changeActFile={formState.changeActFile}
-                        dropType={'act'}
-                        updateFiles={updateFiles}
-                    />
-                    <div className={'flex grow flex-col'}>
-                        <h2 className={'text-lg text-center'}>Загруженные акты</h2>
-                        <div>
-                            {formState.previousActs.length > 0 ?
-                                <PreviousActs formState={formState}/> :
-                                <div className={'text-center text-orange-400 mt-6'}>Пока нет загруженных актов</div>
-                            }
+                                {item.name}
+                            </label>
+                            <input
+                                className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'}
+                                onChange={onChangeRadio}
+                                type="radio"
+                                id={item.id}
+                                name={'acttype'}
+                                value={item.id}
+                            />
                         </div>
-                    </div>
-                </div>
-                <div className={'flex gap-4 mt-3'}>
-                    <MyDropzone
-                        text={'Загрузить тарировку'}
-                        actType={formState.actType}
-                        tarefile={formState.tareFile}
-                        changeTareFile={formState.changeTareFile}
-                        dropType={'tare'}
-                        updateFiles={updateFiles}
-                    />
-                    <div className={'flex grow flex-col'}>
-                        <h2 className={'text-lg text-center'}>Загруженные тарировки</h2>
-                        <div>
-                            {formState.previousTares.length > 0 ?
-                                <PreviousTares formState={formState}/> :
-                                <div className={'text-center text-orange-400 mt-6'}>Пока нет загруженных тарировок</div>
-                            }
-                        </div>
-                    </div>
-                </div>
-
+                    )
+                })}
             </div>
-        </div>
-    );
-});
+            <div className={'flex gap-4 mt-3'}>
+                <MyDropzone
+                    text={'Загрузить акт'}
+                    actType={formState.actType}
+                    actfile={formState.actfile}
+                    changeActFile={formState.changeActFile}
+                    dropType={'act'}
+                    updateFiles={updateFiles}
+                />
+                <div className={'flex grow flex-col'}>
+                    <h2 className={'text-lg text-center'}>Загруженные акты</h2>
+                    <div>
+                        {formState.previousActs.length > 0 ?
+                            <PreviousActs formState={formState}/> :
+                            <div className={'text-center text-orange-400 mt-6'}>Пока нет загруженных актов</div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div className={'flex gap-4 mt-3'}>
+                <MyDropzone
+                    text={'Загрузить тарировку'}
+                    actType={formState.actType}
+                    tarefile={formState.tareFile}
+                    changeTareFile={formState.changeTareFile}
+                    dropType={'tare'}
+                    updateFiles={updateFiles}
+                />
+                <div className={'flex grow flex-col'}>
+                    <h2 className={'text-lg text-center'}>Загруженные тарировки</h2>
+                    <div>
+                        {formState.previousTares.length > 0 ?
+                            <PreviousTares formState={formState}/> :
+                            <div className={'text-center text-orange-400 mt-6'}>Пока нет загруженных тарировок</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+})
 
-export default AddFileModal;
+export default AddFileModal

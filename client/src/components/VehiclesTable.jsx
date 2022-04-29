@@ -257,7 +257,7 @@ const VehiclesTable = observer(() => {
             {loadingView}
             {errView}
             {view}
-            {Store.isShowCarlistModal ? <AddCarlistModal/> : null}
+            {/*{Store.isShowCarlistModal ? <AddCarlistModal/> : null}*/}
         </div>
     )
 })

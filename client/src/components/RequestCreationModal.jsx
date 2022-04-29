@@ -67,14 +67,6 @@ const RequestCreationModal = observer(() => {
     }, [])
 
 
-
-    const hideModal = (e) => {
-        if(e.target === e.currentTarget) {
-            Store.setShowRequestModal(false)
-        }
-    }
-
-
     const setReqChosenType = (e) => {
         Store.setReqChosenType(e.target.value)
         if (Store.currentVehicle) {
@@ -217,98 +209,94 @@ const RequestCreationModal = observer(() => {
     }
 
     return (
-        <div onMouseDown={hideModal} className={'absolute top-0 left-0 w-screen h-screen flex bg-neutral-700/50'}>
-            <div className={'flex m-auto p-6 bg-blue-50 rounded-xl transition-all'}>
-                <div className={'flex flex-col'}>
-                    {Store.vehiclePageLocation ? <CurrentVehicle/> : null}
-                    <div className="flex gap-6 text-stone-900 w-full mt-5">
-                        <form className="flex flex-col gap-4">
-                            <div className={'flex flex-col gap-2'}>
-                                <label className={'text-xl'} htmlFor="executor1">Исполнители</label>
-                                <div className={'flex justify-between items-center'}>
-                                    <select
-                                        defaultValue={'DEFAULT'}
-                                        className={'w-[80%] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300   focus:outline-offset-0 focus:outline-amber-400'}
-                                        name="executor1"
-                                        id="executor1"
-                                        onChange={e => setReqChosenExecutor(e, 1)}
-                                    >
-                                        <option
-                                            disabled={Store.currentVehicle && Store.currentVehicle.navId ? !execState.execData : false}
-                                            value="DEFAULT" >
-                                            -- выбрать исполнителя --
-                                        </option>
-                                        {execState.execData
-                                            ?
-                                            execState.execData.map(item => (
-                                            <option className={'font-mono'} key={item._id} value={item.name}>{`${item.name}${Array(28 - item.name.length).fill('\xa0').join('')}~${item.distance} км`}</option>
-                                            ))
-                                            :
-                                            Store.currentExecutors.map(item => (
-                                                <option key={item._id} value={item.name}>{item.name}</option>
-                                            ))
-                                        }
-                                    </select>
-                                    <button
-                                        onClick={onPlusExecutor}
-                                        disabled={execState.isAddExecutor || Store.reqChosenExecutors.length === 0}
-                                        className={'w-[10%] h-full rounded-lg bg-white shadow-form-sh  hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
-                                        <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
-                                            <HiPlus/>
-                                        </IconContext.Provider>
-                                    </button>
-                                </div>
-                                {execState.isAddExecutor ? <Executor2View/> : null}
-                            </div>
-                            <div className={'flex flex-col gap-2'}>
-                                <label className={'text-xl'} htmlFor="type">Тип заявки</label>
-                                <select
-                                    defaultValue={'DEFAULT'}
-                                    className={'rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
-                                    name="type"
-                                    id="type"
-                                    onChange={setReqChosenType}
-                                >
-                                    <option disabled value="DEFAULT"> -- выбрать тип заявки -- </option>
-                                    {Store.currentRequestTypes.map(item => (
-                                        <option key={item._id} value={item.description}>{item.description}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            {Store.currentVehicle ? null : <RegionSelectView/>}
-                            <div className={'flex flex-col gap-2'}>
-                                <h2 className={'text-xl'}>Прислал письмо</h2>
-                                <div className={'rounded-lg h-[32px] py-1 px-2 rounded-lg shadow-form-sh py-1 text-md border-stone-300 bg-white'}>
-                                    {Store.reqChosenMail ?
-                                        `${Store.reqChosenMail.senderName}, ${new Date(Store.reqChosenMail.sentDate).toLocaleString()}` :
-                                        <h2> -- выберите письмо --</h2>}
-                                </div>
-                            </div>
-                        </form>
-                        <div className={'relative'}>
-                            <h2 className={'text-center text-slate-900 text-xl'}>Последние письма</h2>
-                            <MailView height={245}/>
+        <div className={'flex flex-col'}>
+            {Store.vehiclePageLocation ? <CurrentVehicle/> : null}
+            <div className="flex gap-6 text-stone-900 w-full mt-5">
+                <form className="flex flex-col gap-4">
+                    <div className={'flex flex-col gap-2'}>
+                        <label className={'text-xl'} htmlFor="executor1">Исполнители</label>
+                        <div className={'flex justify-between items-center'}>
+                            <select
+                                defaultValue={'DEFAULT'}
+                                className={'w-[80%] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300   focus:outline-offset-0 focus:outline-amber-400'}
+                                name="executor1"
+                                id="executor1"
+                                onChange={e => setReqChosenExecutor(e, 1)}
+                            >
+                                <option
+                                    disabled={Store.currentVehicle && Store.currentVehicle.navId ? !execState.execData : false}
+                                    value="DEFAULT" >
+                                    -- выбрать исполнителя --
+                                </option>
+                                {execState.execData
+                                    ?
+                                    execState.execData.map(item => (
+                                    <option className={'font-mono'} key={item._id} value={item.name}>{`${item.name}${Array(28 - item.name.length).fill('\xa0').join('')}~${item.distance} км`}</option>
+                                    ))
+                                    :
+                                    Store.currentExecutors.map(item => (
+                                        <option key={item._id} value={item.name}>{item.name}</option>
+                                    ))
+                                }
+                            </select>
+                            <button
+                                onClick={onPlusExecutor}
+                                disabled={execState.isAddExecutor || Store.reqChosenExecutors.length === 0}
+                                className={'w-[10%] h-full rounded-lg bg-white shadow-form-sh  hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
+                                <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
+                                    <HiPlus/>
+                                </IconContext.Provider>
+                            </button>
+                        </div>
+                        {execState.isAddExecutor ? <Executor2View/> : null}
+                    </div>
+                    <div className={'flex flex-col gap-2'}>
+                        <label className={'text-xl'} htmlFor="type">Тип заявки</label>
+                        <select
+                            defaultValue={'DEFAULT'}
+                            className={'rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
+                            name="type"
+                            id="type"
+                            onChange={setReqChosenType}
+                        >
+                            <option disabled value="DEFAULT"> -- выбрать тип заявки -- </option>
+                            {Store.currentRequestTypes.map(item => (
+                                <option key={item._id} value={item.description}>{item.description}</option>
+                            ))}
+                        </select>
+                    </div>
+                    {Store.currentVehicle ? null : <RegionSelectView/>}
+                    <div className={'flex flex-col gap-2'}>
+                        <h2 className={'text-xl'}>Прислал письмо</h2>
+                        <div className={'rounded-lg h-[32px] py-1 px-2 rounded-lg shadow-form-sh py-1 text-md border-stone-300 bg-white'}>
+                            {Store.reqChosenMail ?
+                                `${Store.reqChosenMail.senderName}, ${new Date(Store.reqChosenMail.sentDate).toLocaleString()}` :
+                                <h2> -- выберите письмо --</h2>}
                         </div>
                     </div>
-                    {Store.previousRequestsData.length > 0 ? <PreviousRequests/> : null}
-                    <div className={'flex mt-6 gap-16'}>
-                        <div className={'flex flex-col w-full'}>
-                            <label className={'text-xl'} htmlFor="comment">Комментарий</label>
-                            <input
-                                value={Store.reqChosenComment}
-                                type="text"
-                                name={'comment'}
-                                id={'comment'}
-                                className={'rounded-lg mt-2 h-[32px] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
-                                onChange={setReqChosenComment}
-                            />
-                        </div>
-                        <button
-                            onClick={saveRequest}
-                            className={'h-full bg-button-gradient font-semibold shadow-form-sh  rounded-lg text-center text-lg text-white px-2 py-2 shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}
-                        >Создать заявку</button>
-                    </div>
+                </form>
+                <div className={'relative'}>
+                    <h2 className={'text-center text-slate-900 text-xl'}>Последние письма</h2>
+                    <MailView height={245}/>
                 </div>
+            </div>
+            {Store.previousRequestsData.length > 0 ? <PreviousRequests/> : null}
+            <div className={'flex mt-6 gap-16'}>
+                <div className={'flex flex-col w-full'}>
+                    <label className={'text-xl'} htmlFor="comment">Комментарий</label>
+                    <input
+                        value={Store.reqChosenComment}
+                        type="text"
+                        name={'comment'}
+                        id={'comment'}
+                        className={'rounded-lg mt-2 h-[32px] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
+                        onChange={setReqChosenComment}
+                    />
+                </div>
+                <button
+                    onClick={saveRequest}
+                    className={'h-full bg-button-gradient font-semibold shadow-form-sh  rounded-lg text-center text-lg text-white px-2 py-2 shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}
+                >Создать заявку</button>
             </div>
             {Store.isBubbleContextShow ? <BubbleContext/> : null}
         </div>

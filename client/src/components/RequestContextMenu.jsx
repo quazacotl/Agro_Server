@@ -53,7 +53,7 @@ const RequestContextMenu = observer((props) => {
 
     const onEdit = async () => {
         Store.setContextMenu(false)
-        Store.setShowEditRequestModal(true)
+        Store.setIsShowEditRequestModal(true)
     }
 
     const onDelete = async () => {

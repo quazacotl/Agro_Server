@@ -263,7 +263,7 @@ class Store {
         this.offsetY = window.pageYOffset
     }
 
-    setShowEditRequestModal = bool => {
+    setIsShowEditRequestModal = bool => {
         this.isShowEditRequestModal = bool
     }
 
