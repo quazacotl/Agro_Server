@@ -3,6 +3,7 @@ import UserModel from '../models/user.js'
 import RequestModel from '../models/request.js'
 import RegionModel from "../models/region.js"
 import RequestTypes from "../models/requestsTypes.js"
+import BaseModel from "../models/bases.js"
 import { DateTime } from "luxon"
 
 export const getAllRequests = async function (req, res) {
@@ -433,4 +434,14 @@ export const getExecId = async function (req, res) {
         res.status(500).json({message: `Ошибка монго сервера: ${e}`})
     }
 }
+export const getBases = async function (req, res) {
+    try {
+        const bases = await BaseModel.find()
+        res.status(200).json(bases)
+    }
+    catch (e) {
+        res.status(500).json({message: `Ошибка монго сервера: ${e}`})
+    }
+}
+
 

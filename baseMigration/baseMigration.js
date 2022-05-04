@@ -128,3 +128,19 @@ export function copyActs() {
         .then(() => console.log('Acts copied'))
         .catch(e => console.log(e))
 }
+
+const getBases = async () => {
+    const bases = await oraConnection.execute(`select ABS.AGRO_BASES_V.BASES_NAME, POLYGON_ID, MINLAT, MINLON, MAXLAT, MAXLON from agro_bases_polygon_v RIGHT JOIN ABS.AGRO_BASES_V on ABS.AGRO_BASES_V.BASE_ID = agro_bases_polygon_v.BASES_ID`)
+    bases.rows.map(item => {
+
+        if (item.MAXLON && (!item.BASES_NAME.match(/площадка/i) && !item.BASES_NAME.match(/врем/i) && !item.BASES_NAME.match(/стоянка/i))) {
+            const newBase = new BaseModel( {
+                name: item.BASES_NAME,
+                oraId: item.POLYGON_ID,
+                lat: (item.MAXLAT - item.MINLAT) / 2 + item.MINLAT,
+                lon: (item.MAXLON - item.MINLON) / 2 + item.MINLON
+            });
+            newBase.save()
+        }
+    })
+}

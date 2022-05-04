@@ -175,7 +175,7 @@ const VehiclesTable = observer(() => {
                 >
                     {row.cells.map((cell, i) => {
                         return (
-                            <div key={i} className="p-2 border" {...cell.getCellProps()}>
+                            <div key={i} className="p-2 border line-clamp-1" {...cell.getCellProps()}>
                                 {cell.render('Cell')}
                             </div>
                         )

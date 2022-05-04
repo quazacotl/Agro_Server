@@ -9,7 +9,7 @@ import {
     getVorRequests, getVorUnexecutedRequests,
     getAllExecutors, getAllRegions, getAllRequestTypes, writeNewRequest, getCurrentUsers, getRequestsByOraId,
     editRequest, closeRequest, getActNames,
-    getAct, getTare, getTareNames, deleteRequest, searchRequests, getStatistics, updateRequest, getExecId, getAllUnexecutedRequestsWithId
+    getAct, getTare, getTareNames, deleteRequest, searchRequests, getStatistics, updateRequest, getExecId, getAllUnexecutedRequestsWithId, getBases
 } from '../controllers/mongoControllers.js'
 
 const mongoRouter = Router()
@@ -86,6 +86,8 @@ mongoRouter.post('/get-statistics', getStatistics)
 mongoRouter.post('/update-request', updateRequest)
 
 mongoRouter.get('/executors-id', getExecId)
+
+mongoRouter.get('/get-bases', getBases)
 
 
 

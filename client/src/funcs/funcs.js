@@ -12,7 +12,7 @@ export const dateFromIsoToLocal = date => {
 // Окрашивание рядов в таблице, в зависимости от времени последнего пакета
 export const getClassesForRow = (row, currentVehicle=null) => {
     let classes = "text-center last:rounded-b-xl"
-    if (currentVehicle && currentVehicle.NAV_ID === row.values.NAV_ID && currentVehicle.ATTR_VALUE === row.values.ATTR_VALUE && Store.showContextMenu) {
+    if (currentVehicle && currentVehicle.NAV_ID === row.values.NAV_ID && currentVehicle.ATTR_VALUE === row.values.ATTR_VALUE && currentVehicle.REG_NOM === row.values.REG_NOM && Store.showVehiclesContextMenu) {
         return `${classes} bg-purple-500 text-white`
     } else {
         if (!row.values.LAST_DATE) return `${classes} bg-gray-100 text-stone-900`

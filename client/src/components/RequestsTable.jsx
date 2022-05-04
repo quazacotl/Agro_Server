@@ -245,12 +245,13 @@ const RequestsTable = observer(() => {
 
     const getRowClasses = (currentRequest, row) => {
         let baseClasses = 'text-center break-all line-clamp-1 text-sm cursor-pointer last:rounded-b-xl'
-        if (currentRequest && currentRequest._id === row.values._id && Store.showContextMenu) {
+        if (currentRequest && currentRequest._id === row.values._id && Store.showRequestContextMenu) {
             baseClasses = `${baseClasses} bg-amber-300`
         } else if (row.values.ExecuteDate) {
             baseClasses = `${baseClasses} bg-green-300`
         }
         return `${baseClasses} bg-gray-50`
+
     }
 
     const onCheckStatus = async (e, rowValues) => {
@@ -276,23 +277,23 @@ const RequestsTable = observer(() => {
                 }
                 Store.setCheckStatusLoading(false)
                 if (res.length === 0) {
-                    Store.setContextMenu(false);
+                    Store.setShowRequestContextMenu(false);
                     Store.setIsCheckStatusModalShow(false)
                     Store.setNotificationText('Не удалось найти техники с заданным номером')
                     Store.showNotification()
                 } else {
                     Store.setFoundVehiclesByRegNom(res)
-                    Store.setContextMenu(false);
+                    Store.setShowRequestContextMenu(false);
                 }
             }
             catch (e) {
-                Store.setContextMenu(false);
+                Store.setShowRequestContextMenu(false);
                 Store.setNotificationText('База данных не отвечает')
                 Store.showNotification()
             }
         }
         else {
-            Store.setContextMenu(false);
+            Store.setShowRequestContextMenu(false);
             Store.setNotificationText('Это не техника! ъуъ!')
             Store.showNotification()
         }
@@ -334,7 +335,6 @@ const RequestsTable = observer(() => {
 
 
     const onRightClick = async (e, rowValue) => {
-        console.log(rowValue)
         e.preventDefault()
         await Store.setOffsetY()
         await Store.setCurrentRequest(rowValue)
