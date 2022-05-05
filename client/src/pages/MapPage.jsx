@@ -5,8 +5,6 @@ import {useEffect} from "react"
 import useGetDistance from "../hooks/useGetDistance"
 import { FcAutomotive, FcLowPriority } from "react-icons/fc"
 import {IconContext} from "react-icons"
-import { motion } from "framer-motion"
-import {pageMotion} from "../funcs/funcs"
 
 const MapPage = observer(() => {
     const {getCoords} = useGetDistance()
@@ -73,15 +71,8 @@ const MapPage = observer(() => {
     }, [])
 
     return (
-        <motion.div
-            className={'flex flex-col h-[950px] relative'}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={pageMotion()}
-        >
+        <div className={'flex flex-col h-[950px] relative'}>
             <div className={'w-[90%] h-[80%] mx-auto mt-10 rounded-3xl overflow-hidden cursor-pointer bg-amber-400'}>
-
                 <Map defaultCenter={[52.1352, 37.6666]} defaultZoom={7} attribution={false}>
                     {mapState.basesData && mapState.basesData.map(item => (
                         <GeoJson
@@ -156,7 +147,7 @@ const MapPage = observer(() => {
 
                 </Map>
             </div>
-        </motion.div>
+        </div>
     )
 })
 
