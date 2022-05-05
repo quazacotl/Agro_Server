@@ -14,13 +14,16 @@ const RequestPage = observer(() => {
 
     const closeContextMenu = (e) => {
         e.stopPropagation()
-        if (e.target.tagName !== 'LI') Store.setShowRequestContextMenu(false)
+        if (e.target.tagName !== 'LI') {
+            Store.setShowRequestContextMenu(false)
+            Store.setIsConfirmation(false)
+        }
     }
 
 
     return (
         <motion.div
-            className={'flex flex-col h-full relative'}
+            className={'flex flex-col h-full relative overflow-x-hidden'}
             onClick={e => closeContextMenu(e)}
             initial="initial"
             animate="animate"
@@ -30,6 +33,7 @@ const RequestPage = observer(() => {
             <RequestsControls/>
             <RequestsTable/>
             {Store.isBubbleContextShow && <BubbleContext/>}
+
         </motion.div>
     )
     

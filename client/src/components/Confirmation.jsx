@@ -28,27 +28,30 @@ const Confirmation = observer(({isVisible}) => {
     }),[])
 
     const onYesClick = async () => {
-        if (Store.confirmationType === 'delete') {
-            Store.setShowRequestContextMenu(false)
-            const res = await deleteRequest({id: Store.currentRequest._id})
-            Store.setNotificationText(res.message)
-            Store.showNotification()
-            await updateAfterRequestEdit()
-            Store.setConfirmationType('')
-            Store.setIsConfirmation(false)
-        } else if (Store.confirmationType === 'close') {
-            try {
-                const res = await closeRequest({id: Store.currentRequest._id, Auditor: Store.currentUser});
+        switch (Store.confirmationType) {
+            case 'delete':
                 Store.setShowRequestContextMenu(false)
+                const res = await deleteRequest({id: Store.currentRequest._id})
+                Store.setNotificationText(res.message)
+                Store.showNotification()
                 await updateAfterRequestEdit()
-                Store.setNotificationText(res.message);
-                Store.showNotification();
                 Store.setConfirmationType('')
                 Store.setIsConfirmation(false)
-
-            } catch (e) {
-                console.log(e)
-            }
+                break
+            case 'close':
+                try {
+                    const res = await closeRequest({id: Store.currentRequest._id, Auditor: Store.currentUser});
+                    Store.setShowRequestContextMenu(false)
+                    await updateAfterRequestEdit()
+                    Store.setNotificationText(res.message);
+                    Store.showNotification();
+                    Store.setConfirmationType('')
+                    Store.setIsConfirmation(false)
+                } catch (e) {
+                    console.log(e)
+                }
+                break
+            default: return
         }
     }
 

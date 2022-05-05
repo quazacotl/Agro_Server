@@ -73,6 +73,7 @@ const App = observer(() => {
         {Store.showRequestContextMenu && <RequestContextMenu posX={Store.mouseX} posY={Store.mouseY}/>}
         {Store.showVehiclesContextMenu && <ContextMenu posX={Store.mouseX} posY={Store.mouseY}/>}
         <Confirmation isVisible={Store.isConfirmation}/>
+
         <CSSTransition
             in={Store.isShowNotification}
             timeout={{
