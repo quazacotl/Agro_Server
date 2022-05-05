@@ -49,6 +49,10 @@ class Store {
     checkStatusLoading = false
     searchInputValue = ''
 
+    //confirmation state
+    isConfirmation = false
+    confirmationType = ''
+
     //statistics state
     dateFrom = null
     dateTill = null
@@ -311,6 +315,15 @@ class Store {
     }
     setIsLoadingStat(bool) {
         this.isLoadingStat = bool
+    }
+
+
+    setIsConfirmation(bool) {
+        this.isConfirmation = bool
+    }
+
+    setConfirmationType(type) {
+        this.confirmationType = type
     }
 }
 

@@ -26,6 +26,10 @@ module.exports = {
       },
       backgroundSize: {
         '200p': '200% auto'
+      },
+      spacing: {
+        'confirm-h': 'calc(100vh - 218px) ',
+        'confirm-w': 'calc(100vw - 207px) ',
       }
     },
   },

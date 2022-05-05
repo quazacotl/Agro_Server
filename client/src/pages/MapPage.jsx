@@ -104,8 +104,8 @@ const MapPage = observer(() => {
                             }}
                             styleCallback={(feature, hover) =>
                                 hover
-                                    ? { fill: '#93c0d099', strokeWidth: '2', stroke: "white", r: "8"}
-                                    : { fill: '#d4e6ec99', strokeWidth: '1', stroke: "white", r: "8"}
+                                    ? {fill: '#93c0d099', strokeWidth: '2', stroke: "white", r: "8"}
+                                    : {fill: '#d4e6ec99', strokeWidth: '1', stroke: "white", r: "8"}
                             }
                         />
                     ))}

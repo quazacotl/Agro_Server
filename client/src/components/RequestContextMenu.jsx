@@ -24,7 +24,7 @@ const RequestContextMenu = observer((props) => {
         return () => Store.setCurrentRequest(null)
     }, [])
 
-    const {closeRequest, deleteRequest} = useMongoService()
+    const {closeRequest} = useMongoService()
     const {updateAfterRequestEdit} = useUpdateAfterEdit()
 
     const copyText = async () => {
@@ -37,15 +37,8 @@ const RequestContextMenu = observer((props) => {
     }
 
     const onCloseRequest = async () => {
-        try {
-            const res = await closeRequest({id: Store.currentRequest._id, Auditor: Store.currentUser});
-            Store.setShowRequestContextMenu(false)
-            await updateAfterRequestEdit()
-            Store.setNotificationText(res.message);
-            Store.showNotification();
-        } catch (e) {
-            console.log(e)
-        }
+        Store.setIsConfirmation(true)
+        Store.setConfirmationType('close')
     }
 
     const onEdit = async () => {
@@ -54,11 +47,8 @@ const RequestContextMenu = observer((props) => {
     }
 
     const onDelete = async () => {
-        Store.setShowRequestContextMenu(false)
-        const res = await deleteRequest({id: Store.currentRequest._id})
-        Store.setNotificationText(res.message)
-        Store.showNotification()
-        await updateAfterRequestEdit()
+        Store.setIsConfirmation(true)
+        Store.setConfirmationType('delete')
     }
 
     const onAddFile = async () => {

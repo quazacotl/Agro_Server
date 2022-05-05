@@ -15,6 +15,7 @@ import AnimatedRoutes from "./components/AnimatedRoutes"
 import MenuTabs from "./components/MenuTabs"
 import RequestContextMenu from "./components/RequestContextMenu"
 import ContextMenu from "./components/ContextMenu"
+import Confirmation from "./components/Confirmation";
 
 
 const App = observer(() => {
@@ -71,7 +72,7 @@ const App = observer(() => {
         </ModalWrapper>
         {Store.showRequestContextMenu && <RequestContextMenu posX={Store.mouseX} posY={Store.mouseY}/>}
         {Store.showVehiclesContextMenu && <ContextMenu posX={Store.mouseX} posY={Store.mouseY}/>}
-
+        <Confirmation isVisible={Store.isConfirmation}/>
         <CSSTransition
             in={Store.isShowNotification}
             timeout={{
