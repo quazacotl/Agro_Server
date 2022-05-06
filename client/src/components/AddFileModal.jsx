@@ -156,7 +156,11 @@ const AddFileModal = observer(() => {
 
     return (
         <>
-            <h2 className={'text-center text-lg xl:text-xl' }>Тип заявки</h2>
+            <div className={'flex justify-center gap-8'}>
+                <div className={'text-lg text-blue-500'}>{Store.currentRequest ? Store.currentRequest.VehicleType : ''}</div>
+                <div className={'text-lg text-blue-500'}>{Store.currentRequest ? Store.currentRequest.RequestType : ''}</div>
+            </div>
+            <h2 className={'text-center text-lg xl:text-xl mt-3'}>Тип заявки</h2>
             <div className={'flex justify-center w-[540px] xl:w-[600px] gap-1 md:gap-2 xl:gap-3 p-2 xl:p-4 flex-wrap mt-3 bg-gray-50 border border-blue-500/50 rounded-xl'}>
                 {actTypes.map(item => {
                     return (

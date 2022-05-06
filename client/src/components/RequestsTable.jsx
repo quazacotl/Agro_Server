@@ -335,6 +335,7 @@ const RequestsTable = observer(() => {
 
 
     const onRightClick = async (e, rowValue) => {
+        console.log(Store.currentRequest)
         e.preventDefault()
         await Store.setOffsetY()
         await Store.setCurrentRequest(rowValue)
