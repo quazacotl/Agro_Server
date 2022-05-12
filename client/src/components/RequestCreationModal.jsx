@@ -10,7 +10,7 @@ import PreviousRequests from "./PreviousRequests"
 import BubbleContext from "./BubbleContext"
 import Store from "../state/Store"
 import {dateFromIsoToLocal} from "../funcs/funcs"
-import {regions} from "../interfaces/interfaces"
+import {regionsEnum} from "../interfaces/interfaces"
 
 
 
@@ -137,7 +137,7 @@ const RequestCreationModal = observer(() => {
         Store.setShowRequestModal(false)
         const allUnexReq = await getAllUnexecutedRequests()
         Store.setRequestsData(allUnexReq)
-        Store.setCurrentRegionSelected(regions.all)
+        Store.setCurrentRegionSelected(regionsEnum.all)
         Store.setNotificationText('Заявка создана')
         Store.showNotification()
     }

@@ -1,5 +1,5 @@
 import Store from "../state/Store";
-import {regions} from "../interfaces/interfaces";
+import {regionsEnum, sortTypesEnum} from "../interfaces/interfaces";
 import {observer} from "mobx-react-lite"
 import useMongoService from "../services/useMongoService";
 import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
@@ -46,15 +46,15 @@ const RequestsControls = observer(() => {
                     id="region-select"
                     defaultValue={Store.currentRegionSelected}
                 >
-                    <option value={regions.all}>Все заявки</option>
-                    <option value={regions.vor}>Воронеж</option>
-                    <option value={regions.ore}>Орёл</option>
-                    <option value={regions.kur}>Курск</option>
-                    <option value={regions.lip}>Липецк</option>
-                    <option value={regions.bel}>Белгород</option>
-                    <option value={regions.tul}>Тула</option>
-                    <option value={regions.vorreg}>Воронеж, Липецк, Белгород</option>
-                    <option value={regions.orereg}>Орёл, Тула</option>
+                    <option value={regionsEnum.all}>Все заявки</option>
+                    <option value={regionsEnum.vor}>Воронеж</option>
+                    <option value={regionsEnum.ore}>Орёл</option>
+                    <option value={regionsEnum.kur}>Курск</option>
+                    <option value={regionsEnum.lip}>Липецк</option>
+                    <option value={regionsEnum.bel}>Белгород</option>
+                    <option value={regionsEnum.tul}>Тула</option>
+                    <option value={regionsEnum.vorreg}>Воронеж, Липецк, Белгород</option>
+                    <option value={regionsEnum.orereg}>Орёл, Тула</option>
                 </select>
             </div>
             <div className={'flex flex-col'}>
@@ -78,9 +78,9 @@ const RequestsControls = observer(() => {
                     id="sort-by"
                     defaultValue={Store.sortBy}
                 >
-                    <option value={'date'}>По дате</option>
-                    <option value={'ObjName'}>По хозяйству</option>
-                    <option value={'RequestType'}>По типу</option>
+                    <option value={sortTypesEnum.date}>По дате</option>
+                    <option value={sortTypesEnum.base}>По хозяйству</option>
+                    <option value={sortTypesEnum.type}>По типу</option>
                 </select>
             </div>
             <div className={'flex self-end mb-2 gap-8'}>

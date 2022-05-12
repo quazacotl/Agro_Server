@@ -1,4 +1,4 @@
-import {regions} from "../interfaces/interfaces";
+import {regionsEnum} from "../interfaces/interfaces";
 import Store from "../state/Store";
 import useMongoService from "../services/useMongoService";
 import {sortRequest} from "../funcs/funcs";
@@ -44,23 +44,23 @@ const useUpdateAfterEdit = () => {
             Store.setRequestsData(res)
         } else {
             switch (Store.currentRegionSelected) {
-                case regions.all: makeRequest(getAllRequests, getAllUnexecutedRequests)
+                case regionsEnum.all: makeRequest(getAllRequests, getAllUnexecutedRequests)
                     break
-                case regions.kur: makeRequest(getKurRequests, getKurUnexecutedRequests)
+                case regionsEnum.kur: makeRequest(getKurRequests, getKurUnexecutedRequests)
                     break
-                case regions.vor: makeRequest(getVorRequests, getVorUnexecutedRequests)
+                case regionsEnum.vor: makeRequest(getVorRequests, getVorUnexecutedRequests)
                     break
-                case regions.ore: makeRequest(getOreRequests, getOreUnexecutedRequests)
+                case regionsEnum.ore: makeRequest(getOreRequests, getOreUnexecutedRequests)
                     break
-                case regions.tul: makeRequest(getTulRequests, getTulUnexecutedRequests)
+                case regionsEnum.tul: makeRequest(getTulRequests, getTulUnexecutedRequests)
                     break
-                case regions.bel: makeRequest(getBelRequests, getBelUnexecutedRequests)
+                case regionsEnum.bel: makeRequest(getBelRequests, getBelUnexecutedRequests)
                     break
-                case regions.lip: makeRequest(getLipRequests, getLipUnexecutedRequests)
+                case regionsEnum.lip: makeRequest(getLipRequests, getLipUnexecutedRequests)
                     break
-                case regions.orereg: makeRequest(getOreRegRequests, getOreRegUnexecutedRequests)
+                case regionsEnum.orereg: makeRequest(getOreRegRequests, getOreRegUnexecutedRequests)
                     break
-                case regions.vorreg: makeRequest(getVorRegRequests, getVorRegUnexecutedRequests)
+                case regionsEnum.vorreg: makeRequest(getVorRegRequests, getVorRegUnexecutedRequests)
                     break
                 default: makeRequest(getAllRequests, getAllUnexecutedRequests)
             }

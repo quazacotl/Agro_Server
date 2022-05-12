@@ -20,6 +20,7 @@ const StatisticControls = observer(() => {
             }
             try {
                 const res = await getStatistics(body)
+                console.log(res)
                 Store.setCurrentStat(res)
                 Store.setIsLoadingStat(false)
             } catch (e) {
@@ -40,6 +41,7 @@ const StatisticControls = observer(() => {
             }
             try {
                 const res = await getStatistics(body)
+                console.log(res)
                 Store.setCurrentStat(res)
                 Store.setIsLoadingStat(false)
             } catch (e) {
