@@ -157,7 +157,7 @@ const AddCarlistModal = observer(() => {
                             id={'id-nav'}
                             readOnly
                             placeholder={'- - -'}
-                            value={Store.vehiclePageLocation ? Store.currentVehicle?.NAV_ID : (Store.currentRequest?.VehicleId ? Store.currentRequest.VehicleId :  '- - -')}
+                            value={Store.vehiclePageLocation && Store.currentVehicle?.NAV_ID ? Store.currentVehicle?.NAV_ID : (Store.currentRequest?.VehicleId ? Store.currentRequest.VehicleId :  '- - -')}
                         />
                     </div>
                 </div>

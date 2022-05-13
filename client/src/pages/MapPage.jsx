@@ -9,7 +9,7 @@ import { motion } from "framer-motion"
 import {pageMotion} from "../funcs/funcs"
 
 const MapPage = observer(() => {
-    const {getCoords} = useGetDistance()
+    const {getCoordsForRequests, getCoordsForExecs} = useGetDistance()
     const {getAllUnexecutedRequestsWithId, getExecId, getBases} = useMongoService()
 
     const mapState = useLocalObservable(() => ({
@@ -41,13 +41,14 @@ const MapPage = observer(() => {
 
     const updateExecCoords = async () => {
         const execData = await getExecId()
-        const execDataWithCoords = await getCoords(execData)
+                const execDataWithCoords = await getCoordsForExecs(execData)
+
         mapState.setExecData(execDataWithCoords)
     }
 
     const updateRequestCoords = async () => {
         const unexRequests = await getAllUnexecutedRequestsWithId()
-        const unexRequestsWithCoords = await getCoords(unexRequests)
+        const unexRequestsWithCoords = await getCoordsForRequests(unexRequests)
         mapState.setRequestsData(unexRequestsWithCoords)
     }
 

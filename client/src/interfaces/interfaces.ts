@@ -110,19 +110,23 @@ export interface RequestDataInterface {
     isExecuted: boolean
     mailChangeKey: string | null
     mailId: string | null
+    lat?: number
+    lon?: number
 }
+
 
 export interface TableDataInterface {
     OBJ_NAME: string
-    BASES_NAME: string
+    BASES_NAME: string | null
     REGION: string
     NODE_NAME: string
     TRANSP_ID: number
     REG_NOM: string
-    ATTR_VALUE: string
-    NAV_ID: number
-    LAST_LAT: number
-    LAST_LON: number
+    ATTR_VALUE: string | null
+    NAV_ID: number | null
+    LAST_LAT: number | null
+    LAST_LON: number | null
+    LAST_DATE: Date | null
 }
 
 
