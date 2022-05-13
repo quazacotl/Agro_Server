@@ -21,7 +21,7 @@ const RequestsControls = observer(() => {
             const res = await searchRequests({regNum: event.currentTarget.value})
             Store.setRequestsData(res)
         } else if (Store.searchInputValue.length < 3) {
-            updateAfterRequestEdit()
+            await updateAfterRequestEdit()
         }
     }
 

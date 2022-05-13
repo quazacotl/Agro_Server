@@ -60,16 +60,42 @@ export enum sortTypesEnum {
     type = 'RequestType'
 }
 
+export interface UncutRequestDataInterface {
+    _id: string
+    Acts: string[]
+    Auditor: executors | null
+    BaseName: string | null
+    CreateDate: Date
+    Creator: executors
+    Description: string | null
+    ExecuteDate: Date | undefined
+    Executor: executors[] | null
+    ObjName: string | null
+    PlannedDate: Date | undefined
+    Region: executors | null
+    RequestType: requestTypes | null
+    SentFromDate: Date | undefined
+    SentFromEmail: string | null
+    VehicleId: number | null
+    VehicleOraId: number
+    VehicleRegNum: string | null
+    VehicleType: string | null
+    VehicleVin: string | null
+    isExecuted: boolean
+    mailChangeKey: string | null
+    mailId: string | null
+}
+
 export interface RequestDataInterface {
     _id: string
     Acts: string[]
-    Auditor: string[] | null
+    Auditor: string | null
     BaseName: string | null
     CreateDate: Date
     Creator: string
     Description: string | null
     ExecuteDate: Date | undefined
-    Executor: string[]
+    Executor: string[] | null
     ObjName: string | null
     PlannedDate: Date | undefined
     Region: string | null
@@ -137,12 +163,6 @@ export interface requestTypes {
     description: string
 }
 
-export interface lastMails {
-    id: string
-    changeKey: string
-    senderEmail: string
-    senderName: string
-    sentDate: Date
-    subject: string
+export interface responseType {
+    message: string
 }
-

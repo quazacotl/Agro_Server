@@ -1,7 +1,7 @@
 import Store from "../state/Store";
 import {observer, useLocalObservable} from "mobx-react-lite"
 import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
-import {useEffect} from "react";
+import {ChangeEvent, useEffect} from "react";
 
 
 const AddCarlistModal = observer(() => {
@@ -9,23 +9,23 @@ const AddCarlistModal = observer(() => {
 
     const carlistState = useLocalObservable(() => ({
         valueInput: '',
-        setValueInput(value) {
+        setValueInput(value: string) {
             this.valueInput = value
         },
         idInput: '',
-        setIdInput(value) {
+        setIdInput(value: string) {
             this.idInput = value
         },
         textAreaInput: '',
-        setTextAreaInput(text) {
+        setTextAreaInput(text: string) {
             this.textAreaInput = text
         },
         resultAreaInput: '',
-        setResultAreaInput(text) {
+        setResultAreaInput(text: string) {
             this.resultAreaInput = text
         },
         error: false,
-        setError(bool) {
+        setError(bool: boolean) {
             this.error = bool
         }
     }))
@@ -35,13 +35,8 @@ const AddCarlistModal = observer(() => {
         return () => carlistState.setError(false)
     },[])
 
-    // const hideModal = (e) => {
-    //     if(e.target === e.currentTarget) {
-    //         Store.setIsShowCarlistModal(false)
-    //     }
-    // }
 
-    const convertTare = (tareList, tareString) => {
+    const convertTare = (tareList: string[], tareString: string): string => {
         if (tareList[tareList.length - 1] === '0') {
             for (let i = 1; i < tareList.length; i = i + 2) {
                 if (tareList[i] === '0') {
@@ -59,9 +54,9 @@ const AddCarlistModal = observer(() => {
         }
     }
 
-    const onChange = (value) => {
-        carlistState.setTextAreaInput(value)
-        if (value === '') {
+    const onChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        carlistState.setTextAreaInput(event.currentTarget.value)
+        if (event.currentTarget.value === '') {
             carlistState.setError(false)
             carlistState.setResultAreaInput('')
             carlistState.setValueInput('- - -')
@@ -69,28 +64,33 @@ const AddCarlistModal = observer(() => {
             carlistState.setError(false)
             try {
                 const re = /[\n]+/
-                let tares = value.trim().split(re)
-                let tare1list = []
-                let tare2list = []
+                let tares = event.currentTarget.value.trim().split(re)
+                let tare1list: string[] = []
+                let tare2list: string[] = []
                 tares.forEach(item => {
                     if (item.startsWith('\t\t')) {
-                        const list = item.match(/[\d]+/g)
+                        const list: any = item.match(/[\d]+/g)
+                        console.log(list)
                         tare2list.push(list[0])
                         tare2list.push(list[1])
                     } else if (item.endsWith('\t\t')) {
                         const list = item.match(/[\d]+/g)
-                        tare1list.push(list[0])
-                        tare1list.push(list[1])
+                        if (list) {
+                            tare1list.push(list[0]);
+                            tare1list.push(list[1])
+                        }
                     } else {
                         const list = item.match(/[\d]+/g)
-                        if (list.length > 2) {
+                        if (list && list.length > 2) {
                             tare1list.push(list[0])
                             tare1list.push(list[1])
                             tare2list.push(list[2])
                             tare2list.push(list[3])
                         } else {
-                            tare1list.push(list[0])
-                            tare1list.push(list[1])
+                            if (list) {
+                                tare1list.push(list[0]);
+                                tare1list.push(list[1])
+                            }
                         }
                     }
                 })
@@ -100,10 +100,10 @@ const AddCarlistModal = observer(() => {
 
                 if (tare2list.length > 0) {
                     carlistState.setResultAreaInput(convertTare(tare1list,'LLS1Tare=') + '\n' + convertTare(tare2list,'LLS2Tare='))
-                    carlistState.setValueInput(+tare1list[1] + +tare2list[1])
+                    carlistState.setValueInput(String(+tare1list[1] + +tare2list[1]))
                 } else {
                     carlistState.setResultAreaInput(convertTare(tare1list,'LLS1Tare='))
-                    carlistState.setValueInput(+tare1list[1])
+                    carlistState.setValueInput(tare1list[1])
                 }
             } catch (e) {
                 carlistState.setError(true)
@@ -118,13 +118,16 @@ const AddCarlistModal = observer(() => {
 
     return (
         <>
-            <h2 className={'text-center text-lg font-semibold text-teal-600'}>Выбранная техника: {Store.currentRequest ? Store.currentRequest.VehicleRegNum : Store.currentVehicle.REG_NOM}</h2>
+            <h2
+                className={'text-center text-lg font-semibold text-teal-600'}
+            >
+                Выбранная техника: {Store.currentRequest ? Store.currentRequest.VehicleRegNum : (Store.currentVehicle ? Store.currentVehicle.REG_NOM : null)}</h2>
             <div className={'flex mt-6'}>
                 <textarea
                     className={textAreaClasses}
                     placeholder={'Вставить данные'}
                     value={carlistState.textAreaInput}
-                    onChange={(e) => onChange(e.currentTarget.value)}
+                    onChange={(e) => onChange(e)}
                     >
                 </textarea>
                 <textarea
@@ -154,7 +157,7 @@ const AddCarlistModal = observer(() => {
                             id={'id-nav'}
                             readOnly
                             placeholder={'- - -'}
-                            value={Store.vehiclePageLocation ? Store.currentVehicle.NAV_ID : (Store.currentRequest.VehicleId ? Store.currentRequest.VehicleId :  '- - -')}
+                            value={Store.vehiclePageLocation ? Store.currentVehicle?.NAV_ID : (Store.currentRequest?.VehicleId ? Store.currentRequest.VehicleId :  '- - -')}
                         />
                     </div>
                 </div>

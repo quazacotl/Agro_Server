@@ -99,12 +99,10 @@ const tareStorage = multer.diskStorage({
 
 const uploadActMult = multer({ storage: actStorage })
 const uploadTareMult = multer({ storage: tareStorage })
-// const uploadCarlistMult = multer({ dest: 'uploads/temp/' })
 
 mongoRouter.post('/upload-act', uploadActMult.single('act'), uploadAct)
 
 mongoRouter.post('/upload-tare', uploadTareMult.single('tare'), uploadTare)
 
-// mongoRouter.post('/upload-carlist', uploadCarlistMult.single('carlist'), uploadCarlist)
 
 export default mongoRouter
