@@ -170,3 +170,23 @@ export interface requestTypes {
 export interface responseType {
     message: string
 }
+
+export interface getBases{
+    lat: number
+    lon: number
+    name: string
+    _id: string
+}
+
+export interface getExecs extends getBases{
+    distance: number
+}
+
+export interface execData {
+    name: string
+    _id: string
+    navId: number
+    distance?: number
+    lat?: number
+    lon?: number
+}

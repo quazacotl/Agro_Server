@@ -1,4 +1,4 @@
-import {regionsEnum} from "../interfaces/interfaces";
+import {regionsEnum, RequestDataInterface} from "../interfaces/interfaces";
 import Store from "../state/Store";
 import useMongoService from "../services/useMongoService";
 import {sortRequest} from "../funcs/funcs";
@@ -26,7 +26,7 @@ const useUpdateAfterEdit = () => {
         getVorRegUnexecutedRequests,
     } = useMongoService()
 
-    const makeRequest = async (generalRequestFn, partialRequestFn) => {
+    const makeRequest = async (generalRequestFn: ()=>Promise<RequestDataInterface[]>, partialRequestFn: ()=>Promise<RequestDataInterface[]>) => {
         if (Store.isShowUnexecuted) {
             const res = await generalRequestFn()
             Store.setRequestsData(res)
@@ -38,34 +38,33 @@ const useUpdateAfterEdit = () => {
         }
     }
 
-    const updateAfterRequestEdit = async () => {
+    const updateAfterRequestEdit = async (): Promise<void> => {
         if (Store.searchInputValue.length > 2) {
             const res = await searchRequests({regNum: Store.searchInputValue})
             Store.setRequestsData(res)
         } else {
             switch (Store.currentRegionSelected) {
-                case regionsEnum.all: makeRequest(getAllRequests, getAllUnexecutedRequests)
+                case regionsEnum.all: await makeRequest(getAllRequests, getAllUnexecutedRequests)
                     break
-                case regionsEnum.kur: makeRequest(getKurRequests, getKurUnexecutedRequests)
+                case regionsEnum.kur: await makeRequest(getKurRequests, getKurUnexecutedRequests)
                     break
-                case regionsEnum.vor: makeRequest(getVorRequests, getVorUnexecutedRequests)
+                case regionsEnum.vor: await makeRequest(getVorRequests, getVorUnexecutedRequests)
                     break
-                case regionsEnum.ore: makeRequest(getOreRequests, getOreUnexecutedRequests)
+                case regionsEnum.ore: await makeRequest(getOreRequests, getOreUnexecutedRequests)
                     break
-                case regionsEnum.tul: makeRequest(getTulRequests, getTulUnexecutedRequests)
+                case regionsEnum.tul: await makeRequest(getTulRequests, getTulUnexecutedRequests)
                     break
-                case regionsEnum.bel: makeRequest(getBelRequests, getBelUnexecutedRequests)
+                case regionsEnum.bel: await makeRequest(getBelRequests, getBelUnexecutedRequests)
                     break
-                case regionsEnum.lip: makeRequest(getLipRequests, getLipUnexecutedRequests)
+                case regionsEnum.lip: await makeRequest(getLipRequests, getLipUnexecutedRequests)
                     break
-                case regionsEnum.orereg: makeRequest(getOreRegRequests, getOreRegUnexecutedRequests)
+                case regionsEnum.orereg: await makeRequest(getOreRegRequests, getOreRegUnexecutedRequests)
                     break
-                case regionsEnum.vorreg: makeRequest(getVorRegRequests, getVorRegUnexecutedRequests)
+                case regionsEnum.vorreg: await makeRequest(getVorRegRequests, getVorRegUnexecutedRequests)
                     break
-                default: makeRequest(getAllRequests, getAllUnexecutedRequests)
+                default: await makeRequest(getAllRequests, getAllUnexecutedRequests)
             }
         }
-
     }
 
     return {updateAfterRequestEdit}

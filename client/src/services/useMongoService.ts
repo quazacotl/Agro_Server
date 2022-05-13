@@ -5,7 +5,7 @@ import {
     RequestDataInterface,
     requestTypes,
     responseType, Statistics,
-    UncutRequestDataInterface
+    UncutRequestDataInterface, getExecs, getBases, execData
 } from "../interfaces/interfaces";
 
 
@@ -46,16 +46,7 @@ interface updateRequestBody {
     id: number
 }
 
-interface getBases{
-    lat: number
-    lon: number
-    name: string
-    _id: string
-}
 
-interface getExecs extends getBases{
-    distance: number
-}
 
 
 const useMongoService = () => {
@@ -268,8 +259,9 @@ const useMongoService = () => {
     }
 
 
-    const getExecId = async (): Promise<getExecs[]> => {
+    const getExecId = async (): Promise<execData[]> => {
         const res =  await axios.get(`${Config.baseRoute}/executors-id`)
+        console.log(res.data)
         return res.data
     }
 

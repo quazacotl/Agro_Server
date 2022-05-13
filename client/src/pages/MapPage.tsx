@@ -7,17 +7,33 @@ import {FcAutomotive, FcHome, FcLowPriority} from "react-icons/fc"
 import {IconContext} from "react-icons"
 import { motion } from "framer-motion"
 import {pageMotion} from "../funcs/funcs"
+import {execData, getBases, RequestDataInterface} from "../interfaces/interfaces";
 
 const MapPage = observer(() => {
     const {getCoordsForRequests, getCoordsForExecs} = useGetDistance()
     const {getAllUnexecutedRequestsWithId, getExecId, getBases} = useMongoService()
+
+    interface localState {
+        execData: execData[] | null
+        setExecData: (value: execData[] | null) => void
+        activeExecutor: string | null
+        setActiveExecutor: (id: string | null) => void
+        requestsData: RequestDataInterface[] | null
+        setRequestsData: (data: RequestDataInterface[] | null) => void
+        activeRequest: string | null
+        setActiveRequest: (id: string | null) => void
+        basesData: getBases[] | null
+        setBasesData: (data: getBases[] | null) => void
+        activeBase: getBases | null
+        setActiveBase: (base: getBases | null) => void
+    }
 
     const mapState = useLocalObservable(() => ({
         execData: null,
         setExecData(value) {
             this.execData = value
         },
-        activeExecutor: false,
+        activeExecutor: null,
         setActiveExecutor(id) {
             this.activeExecutor = id
         },
@@ -25,7 +41,7 @@ const MapPage = observer(() => {
         setRequestsData(data) {
             this.requestsData = data
         },
-        activeRequest: false,
+        activeRequest: null,
         setActiveRequest(id) {
             this.activeRequest = id
         },
@@ -37,12 +53,11 @@ const MapPage = observer(() => {
         setActiveBase(base) {
             this.activeBase = base
         }
-    }))
+    } as localState))
 
-    const updateExecCoords = async () => {
+    const updateExecCoords = async (): Promise<void> => {
         const execData = await getExecId()
-                const execDataWithCoords = await getCoordsForExecs(execData)
-
+        const execDataWithCoords = await getCoordsForExecs(execData)
         mapState.setExecData(execDataWithCoords)
     }
 
@@ -73,6 +88,8 @@ const MapPage = observer(() => {
         }
     }, [])
 
+    // @ts-ignore
+    // @ts-ignore
     return (
         <motion.div
             key='map'
@@ -84,7 +101,7 @@ const MapPage = observer(() => {
             <div className={'w-[90%] h-[80%] mx-auto mt-10 rounded-3xl overflow-hidden cursor-pointer bg-amber-400'}>
                 <Map defaultCenter={[52.1352, 37.6666]} defaultZoom={7} attribution={false}>
                     {mapState.basesData && mapState.basesData.map(item => (
-                        <Overlay key={item._id}  color anchor={[item.lat, item.lon]}>
+                        <Overlay key={item._id} anchor={[item.lat, item.lon]}>
                             <div>
                                 <h3 className={'h-5 font-sm'}>{mapState.activeBase && item._id === mapState.activeBase._id ? item.name : ''}</h3>
 
@@ -99,7 +116,7 @@ const MapPage = observer(() => {
                         </Overlay>
                     ))}
                     {mapState.execData && mapState.execData.map(item => (
-                        <Overlay key={item._id}  color anchor={[item.lat, item.lon]}>
+                        <Overlay key={item._id} anchor={[item.lat!, item.lon!]}>
                             <div>
                                 <h3 className={'h-5 font-sm'}>{mapState.activeExecutor === item._id ? item.name : ''}</h3>
 
@@ -114,7 +131,7 @@ const MapPage = observer(() => {
                         </Overlay>
                     ))}
                     {mapState.requestsData && mapState.requestsData.map(item => (
-                        <Overlay key={item._id} color anchor={[item.lat, item.lon]}>
+                        <Overlay key={item._id} anchor={[item.lat!, item.lon!]}>
                             <div>
                                 <h3 className={'h-5 font-sm'}>{mapState.activeRequest === item._id ? `${item.VehicleRegNum} ${item.Description}` : ''}</h3>
                                 <IconContext.Provider  value={{className: 'text-2xl'}}>

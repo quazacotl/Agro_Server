@@ -1,16 +1,7 @@
 import axios from "axios";
 import {Config} from "../config";
-import {RequestDataInterface} from "../interfaces/interfaces";
+import {RequestDataInterface, execData} from "../interfaces/interfaces";
 
-
-interface execData {
-    name: string
-    _id: string
-    navId: number
-    distance?: number
-    lat?: number
-    lon?: number
-}
 
 interface vehicleCoords {
     lat: number
