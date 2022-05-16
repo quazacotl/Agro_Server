@@ -3,9 +3,14 @@ import {observer} from "mobx-react-lite";
 import {AnimatePresence, motion} from "framer-motion";
 import {useMemo} from "react";
 
+interface modalWrapperProps {
+    isVisible: boolean
+    hideFunction: (prop: boolean) => void
+    children: React.ReactNode
+}
 
-const ModalWrapper = observer(({isVisible, hideFunction, children}) => {
-    const hideModal = (e) => {
+const ModalWrapper = observer(({isVisible, hideFunction, children}: modalWrapperProps) => {
+    const hideModal = (e: React.MouseEvent<HTMLDivElement>) => {
         if(e.target === e.currentTarget) {
             hideFunction(false)
         }

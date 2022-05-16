@@ -75,6 +75,7 @@ export interface UncutRequestDataInterface {
     Region: executors | null
     RequestType: requestTypes | null
     SentFromDate: Date | undefined
+    SentFromName: string | null
     SentFromEmail: string | null
     VehicleId: number | null
     VehicleOraId: number
@@ -101,6 +102,7 @@ export interface RequestDataInterface {
     Region: string | null
     RequestType: string | null
     SentFromDate: Date | undefined
+    SentFromName: string | null
     SentFromEmail: string | null
     VehicleId: number | null
     VehicleOraId: number

@@ -15,9 +15,12 @@ import {
 import {IconContext} from "react-icons";
 import {calculatePosition} from "../funcs/funcs";
 
+interface RequestContextMenuProps {
+    posX: number | null
+    posY: number | null
+}
 
-
-const RequestContextMenu = observer((props) => {
+const RequestContextMenu = observer((props: RequestContextMenuProps) => {
 
     useEffect(() => {
         if (Store.isShowEditRequestModal )
@@ -63,11 +66,11 @@ const RequestContextMenu = observer((props) => {
     }
 
     const onSendMessage = async () => {
-        if (Store.currentRequest.SentFromName) {
+        if (Store.currentRequest?.SentFromName) {
             Store.setShowRequestContextMenu(false)
             Store.setIsShowSendMessageModal(true)
-            await closeRequest({id: Store.currentRequest._id, Auditor: Store.currentUser})
-            updateAfterRequestEdit()
+            await closeRequest({id: Store.currentRequest._id, auditor: Store.currentUser})
+            await updateAfterRequestEdit()
         } else {
             Store.setShowRequestContextMenu(false)
             Store.setNotificationText('Не указан адресат в заявке')
@@ -77,14 +80,14 @@ const RequestContextMenu = observer((props) => {
     }
 
     const onTextSms = async () => {
-        if (Store.currentRequest.VehicleRegNum) {
+        if (Store.currentRequest?.VehicleRegNum) {
             copy(`${Store.currentRequest.BaseName} ${Store.currentRequest.VehicleType} ${Store.currentRequest.VehicleRegNum} ${Store.currentRequest.Description}`)
             Store.setShowRequestContextMenu(false)
             Store.setNotificationText('Скопировано')
             Store.showNotification()
         } else {
             Store.setShowRequestContextMenu(false)
-            copy(`${Store.currentRequest.Description}`)
+            copy(`${Store.currentRequest?.Description}`)
             Store.setNotificationText('Скопировано')
             Store.showNotification()
         }
@@ -157,7 +160,7 @@ const RequestContextMenu = observer((props) => {
                     Текст смс
                 </li>
 
-                {Store.currentRequest.VehicleRegNum ? <AddCarlistMenuItem/> : null}
+                {Store.currentRequest?.VehicleRegNum ? <AddCarlistMenuItem/> : null}
                 <li
                     className={'px-4 py-1 flex items-center border-b border-b-amber-300 hover:bg-blue-50  cursor-pointer'}
                     onClick={onEdit}
@@ -177,7 +180,7 @@ const RequestContextMenu = observer((props) => {
                     Прикрепить файл
                 </li>
                 {Store.selectedText.length > 0 ? <CopyContextMenuItem/> : null}
-                {!Store.currentRequest.isExecuted ? <CloseRequestMenuItem/> : null}
+                {!Store.currentRequest?.isExecuted ? <CloseRequestMenuItem/> : null}
                 <li
                     onClick={onDelete}
                     className={'px-4 py-1 flex items-center hover:bg-blue-50 hover:rounded-b-xl cursor-pointer'}

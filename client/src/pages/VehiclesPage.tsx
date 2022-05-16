@@ -20,16 +20,16 @@ const VehiclesPage = observer(() => {
     const classes = Store.showRequestModal ? 'flex flex-col h-full relative overflow-hidden selection:bg-cyan-200 selection:text-stone-800' : 'flex flex-col relative h-full selection:bg-cyan-200 selection:text-stone-800'
 
 
-    const closeContextMenu = (e) => {
+    const closeContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation()
-        if (e.target.tagName !== 'LI') Store.setShowVehiclesContextMenu(false)
+        if ((e.target as HTMLDivElement).tagName !== 'LI') Store.setShowVehiclesContextMenu(false)
     }
 
 
     return (
         <motion.div
             className={classes}
-            onClick={e => closeContextMenu(e)}
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => closeContextMenu(e)}
             initial="initial"
             animate="animate"
             exit="exit"

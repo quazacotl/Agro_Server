@@ -5,7 +5,11 @@ import Store from "../state/Store";
 import useMongoService from "../services/useMongoService";
 import useUpdateAfterEdit from "../hooks/useUpdateAfterRequstEdit";
 
-const Confirmation = observer(({isVisible}) => {
+interface confirmationProps {
+    isVisible: boolean
+}
+
+const Confirmation = observer(({isVisible}: confirmationProps) => {
     const {closeRequest, deleteRequest} = useMongoService()
     const {updateAfterRequestEdit} = useUpdateAfterEdit()
 
@@ -31,7 +35,7 @@ const Confirmation = observer(({isVisible}) => {
         switch (Store.confirmationType) {
             case 'delete':
                 Store.setShowRequestContextMenu(false)
-                const res = await deleteRequest({id: Store.currentRequest._id})
+                const res = await deleteRequest({id: Store.currentRequest?._id!})
                 Store.setNotificationText(res.message)
                 Store.showNotification()
                 await updateAfterRequestEdit()
@@ -40,7 +44,7 @@ const Confirmation = observer(({isVisible}) => {
                 break
             case 'close':
                 try {
-                    const res = await closeRequest({id: Store.currentRequest._id, Auditor: Store.currentUser});
+                    const res = await closeRequest({id: Store.currentRequest?._id!, auditor: Store.currentUser});
                     Store.setShowRequestContextMenu(false)
                     await updateAfterRequestEdit()
                     Store.setNotificationText(res.message);

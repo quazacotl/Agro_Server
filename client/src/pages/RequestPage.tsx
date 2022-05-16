@@ -12,9 +12,9 @@ import {useEffect} from "react"
 const RequestPage = observer(() => {
     useEffect(() => () => Store.setShowRequestContextMenu(false),[])
 
-    const closeContextMenu = (e) => {
+    const closeContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation()
-        if (e.target.tagName !== 'LI') {
+        if ((e.target as HTMLDivElement).tagName !== 'LI') {
             Store.setShowRequestContextMenu(false)
             Store.setIsConfirmation(false)
         }
@@ -24,7 +24,7 @@ const RequestPage = observer(() => {
     return (
         <motion.div
             className={'flex flex-col h-full relative overflow-x-hidden'}
-            onClick={e => closeContextMenu(e)}
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => closeContextMenu(e)}
             initial="initial"
             animate="animate"
             exit="exit"

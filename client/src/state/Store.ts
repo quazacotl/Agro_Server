@@ -229,7 +229,7 @@ class Store {
         this.currentVehicle = data
     }
 
-    setCurrentRequest = (data: RequestDataInterface) => {
+    setCurrentRequest = (data: RequestDataInterface | null) => {
         this.currentRequest = data
     }
 
@@ -312,13 +312,13 @@ class Store {
     }
 
     //statistics
-    setDateFrom(date: Date) {
+    setDateFrom(date: Date | null) {
         this.dateFrom = date
     }
-    setDateTill(date: Date) {
+    setDateTill(date: Date | null) {
         this.dateTill = date
     }
-    setCurrentStat(stat: Statistics) {
+    setCurrentStat(stat: Statistics | null) {
         this.currentStat = stat
     }
     setIsLoadingStat(bool: boolean) {

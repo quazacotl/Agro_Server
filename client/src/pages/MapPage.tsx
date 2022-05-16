@@ -88,8 +88,6 @@ const MapPage = observer(() => {
         }
     }, [])
 
-    // @ts-ignore
-    // @ts-ignore
     return (
         <motion.div
             key='map'
@@ -140,11 +138,9 @@ const MapPage = observer(() => {
                                         onMouseLeave={() => mapState.setActiveRequest(null)}
                                     />
                                 </IconContext.Provider>
-
                             </div>
                         </Overlay>
                     ))}
-
                 </Map>
             </div>
         </motion.div>
