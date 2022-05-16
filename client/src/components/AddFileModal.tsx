@@ -1,5 +1,5 @@
 import {observer, useLocalObservable } from "mobx-react-lite";
-import {useCallback, useEffect, useMemo} from "react";
+import {useEffect, useMemo} from "react";
 import Store from "../state/Store";
 import useMongoService from "../services/useMongoService";
 import fileDownload from 'js-file-download'
@@ -11,9 +11,22 @@ const AddFileModal = observer(() => {
     const { getActNames, getAct, getTare, getTareNames} = useMongoService()
     useLockBodyScroll()
 
+    interface addFileState {
+        actfile: string | null
+        changeActFile: (file: string | null)=> void
+        tareFile: string | null
+        changeTareFile: (file: string | null)=> void
+        actType: string | null
+        changeActType: (type: string | null)=> void
+        previousActs: string[]
+        setPreviousActs: (data: string[])=> void
+        previousTares: string[]
+        setPreviousTares: (data: string[])=> void
+    }
+
     const formState = useLocalObservable(() => ({
         actfile: null,
-        changeActFile(file) {
+        changeActFile(file: string) {
             this.actfile = file
         },
         tareFile: null,
@@ -32,15 +45,17 @@ const AddFileModal = observer(() => {
         setPreviousTares(data) {
             this.previousTares = data
         }
-    }))
+    } as addFileState))
 
-    const updateFiles = useCallback(async () => {
+    const updateFiles = async () => {
+        if (Store.currentRequest && Store.currentRequest._id) {
             const actNames = await getActNames({id: Store.currentRequest._id})
             const tareNames = await getTareNames({id: Store.currentRequest._id})
             await formState.setPreviousActs(actNames)
             await formState.setPreviousTares(tareNames)
-        }, []
-    )
+        }
+    }
+
 
     useEffect(() => {
         (async () => {await updateFiles()})()
@@ -49,31 +64,49 @@ const AddFileModal = observer(() => {
 
     useEffect(() => {
         (async () => {
-            const actNames = await getActNames({id: Store.currentRequest._id})
-            const tareNames = await getTareNames({id: Store.currentRequest._id})
-            await formState.setPreviousActs(actNames)
-            await formState.setPreviousTares(tareNames)
+            if (Store.currentRequest && Store.currentRequest._id) {
+                const actNames = await getActNames({id: Store.currentRequest._id})
+                const tareNames = await getTareNames({id: Store.currentRequest._id})
+                await formState.setPreviousActs(actNames)
+                await formState.setPreviousTares(tareNames)
+            }
         })()
     }, [useMemo(() => formState.previousTares, []), useMemo(() => formState.previousActs, []) ])
 
 
-    const onChangeRadio = e => {
+    const onChangeRadio = (e: React.ChangeEvent<HTMLInputElement>) => {
         formState.changeActType(e.target.value)
     }
 
-    const onActOpen = async (fileName) => {
+    const onActOpen = async (fileName: string) => {
         const res = await getAct({name: fileName})
-        fileDownload(res.data, fileName.match('[^\\/]+$'))
+        const name = fileName.match('[^\\/]+$')
+        if (name) {
+            fileDownload(res.data, name[0])
+        }
     }
 
-    const onTareOpen = async (fileName) => {
+    const onTareOpen = async (fileName: string) => {
         const res = await getTare({name: fileName})
-        fileDownload(res.data, fileName.match('[^\\/]+$'))
+        const name = fileName.match('[^\\/]+$')
+        if (name) {
+            fileDownload(res.data, name[0])
+        }
     }
 
-    const PreviousActs = (props) => {
+    interface PreviousActsProps {
+        formState: addFileState
+    }
+
+    const PreviousActs = (props: PreviousActsProps) => {
         const filenames = props.formState.previousActs.map((fileName, i) => {
-            return <h3 key={i} className={'cursor-pointer text-sky-700 text-center'} onDoubleClick={() => onActOpen(fileName)}>{fileName.match('[^\\/]+$')}</h3>
+            return <h3
+                key={i}
+                className={'cursor-pointer text-sky-700 text-center'}
+                onDoubleClick={() => onActOpen(fileName)}
+            >
+                {fileName.match('[^\\/]+$')}
+            </h3>
         })
         return (
             <>
@@ -82,9 +115,15 @@ const AddFileModal = observer(() => {
         )
     }
 
-    const PreviousTares = (props) => {
+    const PreviousTares = (props: PreviousActsProps) => {
         const filenames = props.formState.previousTares.map((fileName, i) => {
-            return <h3 key={i} className={'cursor-pointer text-sky-700 text-center'} onDoubleClick={() => onTareOpen(fileName)}>{fileName.match('[^\\/]+$')}</h3>
+            return <h3
+                key={i}
+                className={'cursor-pointer text-sky-700 text-center'}
+                onDoubleClick={() => onTareOpen(fileName)}
+            >
+                {fileName.match('[^\\/]+$')}
+            </h3>
         })
         return (
             <>
@@ -176,7 +215,7 @@ const AddFileModal = observer(() => {
                             </label>
                             <input
                                 className={'absolute right-4 text-amber-300 focus:ring-0 focus:ring-offset-0'}
-                                onChange={onChangeRadio}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>)=> onChangeRadio(e)}
                                 type="radio"
                                 id={item.id}
                                 name={'acttype'}

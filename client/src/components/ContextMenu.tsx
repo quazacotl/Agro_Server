@@ -6,8 +6,12 @@ import {FaGoogle, FaYandex} from "react-icons/fa";
 import {calculatePosition} from "../funcs/funcs";
 import copy from 'copy-to-clipboard'
 
+interface ContextMenuProps {
+    posX: number | null
+    posY: number | null
+}
 
-const ContextMenu = (props) => {
+const ContextMenu = (props: ContextMenuProps) => {
     const [isShowAddMenu, setIsShowAddMenu] = useState(false)
 
     const onMakeRequest = () => {
@@ -16,7 +20,7 @@ const ContextMenu = (props) => {
     }
 
     const copyYaCoords = async () => {
-        const coordString = `http://maps.yandex.ru/?text=${Store.currentVehicle.LAST_LAT},${Store.currentVehicle.LAST_LON}&1=map`
+        const coordString = `http://maps.yandex.ru/?text=${Store.currentVehicle?.LAST_LAT},${Store.currentVehicle?.LAST_LON}&1=map`
         copy(coordString)
         Store.setShowVehiclesContextMenu(false)
         Store.setNotificationText('Координаты yandex скопированы')
@@ -24,7 +28,7 @@ const ContextMenu = (props) => {
     }
 
     const copyGooCoords = async () => {
-        const coordString = `http://maps.google.com/?q=${Store.currentVehicle.LAST_LAT},${Store.currentVehicle.LAST_LON}`
+        const coordString = `http://maps.google.com/?q=${Store.currentVehicle?.LAST_LAT},${Store.currentVehicle?.LAST_LON}`
         Store.setShowVehiclesContextMenu(false)
         copy(coordString)
         Store.setNotificationText('Координаты google скопированы')
@@ -85,7 +89,7 @@ const ContextMenu = (props) => {
         )
     }
 
-    const handleHover = (bool) => {
+    const handleHover = (bool: boolean) => {
         setIsShowAddMenu(bool)
     }
 

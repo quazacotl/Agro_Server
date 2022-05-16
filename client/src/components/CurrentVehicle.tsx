@@ -1,6 +1,11 @@
 import {observer} from "mobx-react-lite";
+import {RequestDataInterface} from "../interfaces/interfaces";
 
-const CurrentVehicle = observer((currentRequest) => {
+interface CurrentRequestProps{
+    currentRequest: RequestDataInterface
+}
+
+const CurrentVehicle = observer(({currentRequest}: CurrentRequestProps) => {
     if (currentRequest && currentRequest.VehicleId) {
         return (
             <div className={'mb-6'}>

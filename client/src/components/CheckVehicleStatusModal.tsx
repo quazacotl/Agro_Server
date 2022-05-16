@@ -1,10 +1,11 @@
 import Store from "../state/Store";
 import { useEffect, useMemo} from "react";
 import {observer} from "mobx-react-lite";
-import {useTable} from "react-table";
+import {Column, useTable} from "react-table";
 import {dateFromIsoToLocal, getClassesForRow} from "../funcs/funcs";
 import Loading from "./Loading";
 import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
+import {TableDataInterface} from "../interfaces/interfaces";
 
 const CheckVehicleStatusModal = observer(() => {
     useLockBodyScroll()
@@ -18,7 +19,7 @@ const CheckVehicleStatusModal = observer(() => {
 
     const data = useMemo(() => Store.foundVehiclesByRegNom, [Store.foundVehiclesByRegNom])
 
-    const columns = useMemo(
+    const columns = useMemo<Column<TableDataInterface>[]>(
         () => [
             {
                 Header: 'База',

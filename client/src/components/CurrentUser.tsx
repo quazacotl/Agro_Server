@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 
 const CurrentUser = observer(() => {
 
-    const setCurrentUser = e => {
+    const setCurrentUser = (e: React.ChangeEvent<HTMLSelectElement>) => {
         Store.setCurrentUser(e.target.value)
     }
 
@@ -15,7 +15,7 @@ const CurrentUser = observer(() => {
                 className={'rounded-lg w-46 py-1 text-lg focus:border-none focus:ring-0 focus:ring-offset-0'}
                 name="curr-user"
                 id="curr-user"
-                onChange={setCurrentUser}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCurrentUser(e)}
             >
                 {Store.currentUsers ? Store.currentUsers.map(item => (
                     <option

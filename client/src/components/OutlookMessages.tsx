@@ -1,7 +1,7 @@
 import {observer} from "mobx-react-lite";
 import Store from "../state/Store";
 import {useCallback, useEffect, useMemo} from "react";
-import { FixedSizeList } from 'react-window'
+import { FixedSizeList } from 'react-window';
 import {useTable, useBlockLayout} from "react-table";
 import Loading from "./Loading";
 import useOutlookService from "../services/useOutlookService";
