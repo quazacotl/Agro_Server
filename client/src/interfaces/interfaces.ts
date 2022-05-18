@@ -78,7 +78,7 @@ export interface UncutRequestDataInterface {
     SentFromName: string | null
     SentFromEmail: string | null
     VehicleId: number | null
-    VehicleOraId: number
+    VehicleOraId: number | null
     VehicleRegNum: string | null
     VehicleType: string | null
     VehicleVin: string | null
@@ -87,33 +87,46 @@ export interface UncutRequestDataInterface {
     mailId: string | null
 }
 
-export interface RequestDataInterface {
-    _id: string
-    Acts: string[]
-    Auditor: string | null
+export interface NewRequestDataInterface {
     BaseName: string | null
-    CreateDate: Date
     Creator: string
     Description: string | null
-    ExecuteDate: Date | undefined
     Executor: string[] | null
     ObjName: string | null
-    PlannedDate: Date | undefined
     Region: string | null
     RequestType: string | null
     SentFromDate: Date | undefined
     SentFromName: string | null
     SentFromEmail: string | null
     VehicleId: number | null
-    VehicleOraId: number
+    VehicleOraId: number | null
     VehicleRegNum: string | null
     VehicleType: string | null
     VehicleVin: string | null
     isExecuted: boolean
-    mailChangeKey: string | null
-    mailId: string | null
+}
+
+export interface RequestDataInterface extends NewRequestDataInterface {
+    _id: string
+    Acts: string[]
+    Auditor: string | null
+    CreateDate: Date
+    ExecuteDate: Date | undefined
+    PlannedDate: Date | undefined
     lat?: number
     lon?: number
+}
+
+export interface EditedRequestDataInterface {
+    id: string
+    Description: string | null
+    Executor: string[] | null
+    Region: string | null
+    RequestType: string | null
+    SentFromDate: Date | undefined
+    SentFromName: string | null
+    SentFromEmail: string | null
+    PlannedDate: Date | undefined
 }
 
 
@@ -132,11 +145,14 @@ export interface TableDataInterface {
 }
 
 
-export interface outlookMessagesInterface {
-    senderName: string
-    sentDate: Date
+export interface shortOutlookMessagesInterface {
+    senderName: string | null
+    sentDate: Date | undefined
+    senderEmail: string | null
+}
+
+export interface outlookMessagesInterface extends shortOutlookMessagesInterface{
     subject: string
-    senderEmail: string
     id: string
     changeKey: string
 }

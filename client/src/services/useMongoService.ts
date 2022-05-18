@@ -5,7 +5,7 @@ import {
     RequestDataInterface,
     requestTypes,
     responseType, Statistics,
-    UncutRequestDataInterface, getExecs, getBases, execData
+    UncutRequestDataInterface, getBases, execData, NewRequestDataInterface, EditedRequestDataInterface
 } from "../interfaces/interfaces";
 
 
@@ -197,7 +197,7 @@ const useMongoService = () => {
         return res.data
     }
 
-    const writeNewRequest = async (body: RequestDataInterface): Promise<responseType> => {
+    const writeNewRequest = async (body: NewRequestDataInterface): Promise<responseType> => {
         const res =  await axios.post(`${Config.baseRoute}/request-write`, body )
         return res.data
     }
@@ -208,7 +208,7 @@ const useMongoService = () => {
         return transformRequestData(res.data)
     }
 
-    const editRequest = async (body: RequestDataInterface): Promise<responseType> => {
+    const editRequest = async (body: EditedRequestDataInterface): Promise<responseType> => {
         const res =  await axios.post(`${Config.baseRoute}/request-edit`, body)
         return res.data
     }
@@ -261,7 +261,6 @@ const useMongoService = () => {
 
     const getExecId = async (): Promise<execData[]> => {
         const res =  await axios.get(`${Config.baseRoute}/executors-id`)
-        console.log(res.data)
         return res.data
     }
 

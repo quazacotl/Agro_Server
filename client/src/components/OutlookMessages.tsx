@@ -2,12 +2,17 @@ import {observer} from "mobx-react-lite";
 import Store from "../state/Store";
 import {useCallback, useEffect, useMemo} from "react";
 import { FixedSizeList } from 'react-window';
-import {useTable, useBlockLayout} from "react-table";
+import {useTable, useBlockLayout, Column} from "react-table";
 import Loading from "./Loading";
 import useOutlookService from "../services/useOutlookService";
 import {dateFromIsoToLocal} from "../funcs/funcs";
+import {outlookMessagesInterface} from "../interfaces/interfaces";
 
-const MailView = observer((props) => {
+interface MailViewProps {
+    height: number
+}
+
+const MailView = observer((props: MailViewProps) => {
     const {getLastMails} = useOutlookService()
 
     const updateMails = async () => {
@@ -29,15 +34,9 @@ const MailView = observer((props) => {
     const data = useMemo(() => Store.lastMails, [Store.lastMails])
 
 
-    const setReqChosenMail = (value) => {
-        Store.setReqChosenMail({
-            changeKey: value.changeKey,
-            id: value.id,
-            senderEmail: value.senderEmail,
-            senderName: value.senderName,
-            sentDate: value.sentDate,
-            subject: value.subject
-        })
+    const setReqChosenMail = (value: outlookMessagesInterface): void => {
+        const { senderEmail, senderName, sentDate} = value
+        Store.setReqChosenMail({ senderEmail, senderName, sentDate})
     }
 
 
@@ -46,9 +45,9 @@ const MailView = observer((props) => {
             <button
                 disabled={Store.mailsLoading}
                 className={'text-lg text-sky-600 disabled:text-stone-500 hover:text-amber-500'}
-                onClick={() => {
+                onClick={async () => {
                     Store.increaseMailOffset(10)
-                    updateMails()
+                    await updateMails()
                 }}
             >
                 &dArr; Сдедующие &dArr;
@@ -61,9 +60,9 @@ const MailView = observer((props) => {
             <button
                 disabled={Store.mailsLoading || Store.mailOffset === 0}
                 className={'text-lg text-sky-600 disabled:text-stone-500 hover:text-amber-500'}
-                onClick={() => {
+                onClick={async () => {
                     Store.increaseMailOffset(-10)
-                    updateMails()
+                    await updateMails()
                 }}
             >
                 &uArr; Предыдущие &uArr;
@@ -71,7 +70,7 @@ const MailView = observer((props) => {
         )
     })
 
-    const columns = useMemo(
+    const columns = useMemo<Column<outlookMessagesInterface>[]>(
         () => [
 
                 {
@@ -95,21 +94,13 @@ const MailView = observer((props) => {
                 {
                     Header: 'Адрес почты',
                     accessor: 'senderEmail'
-                },
-                {
-                    Header: 'ID',
-                    accessor: 'id'
-                },
-                {
-                    Header: 'ChangeKey',
-                    accessor: 'changeKey'
                 }
            ],
         []
     )
 
 
-    const initialState = { hiddenColumns: ['senderEmail', 'id', 'changeKey'] };
+    const initialState = { hiddenColumns: ['senderEmail'] };
 
 
     const {
@@ -135,19 +126,18 @@ const MailView = observer((props) => {
         ({ index, style }) => {
             const row = rows[index]
             prepareRow(row)
+
             return (
                 <div
                     {...row.getRowProps({
                         style,
                     })}
                     className={'text-center text-black hover:bg-cyan-100 bg-white cursor-pointer'}
-                    onClick={() => {
-                        setReqChosenMail(row.values)
-                    }}
+                    onClick={() => setReqChosenMail(row.values as outlookMessagesInterface)}
                 >
-                    {row.cells.map((cell, i) => {
+                    {row.cells.map((cell) => {
                         return (
-                            <div  key={i} {...cell.getCellProps()} className="p-1 line-clamp-1 border">
+                            <div {...cell.getCellProps()} className="p-1 line-clamp-1 border">
                                 {cell.render('Cell')}
                             </div>
                         )
@@ -189,10 +179,10 @@ const MailView = observer((props) => {
     return (
         <div  className="table-auto rounded-xl overflow-hidden table-fixed position:relative border-collapse mx-auto border-hidden bg-gray-100 shadow-form-sh mt-2" {...getTableProps()}>
             <div className="bg-amber-200/80 text-center text-slate-900 text-lg py-1">
-                {headerGroups.map((headerGroup, i) => (
-                        <div key={i}  {...headerGroup.getHeaderGroupProps()} >
-                            {headerGroup.headers.map((column, i) => (
-                                    <div key={i}  {...column.getHeaderProps()}>
+                {headerGroups.map((headerGroup) => (
+                        <div {...headerGroup.getHeaderGroupProps()} >
+                            {headerGroup.headers.map((column) => (
+                                    <div {...column.getHeaderProps()}>
                                         {column.render('Header')}
                                     </div>
                                 ))}

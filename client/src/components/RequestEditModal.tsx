@@ -14,7 +14,8 @@ import {Config} from "../config"
 import Store from "../state/Store"
 import "react-datepicker/dist/react-datepicker.css"
 import MailView from "./OutlookMessages"
-import CurrentVehicle from "./CurrentVehicle";
+import CurrentVehicle from "./CurrentVehicle"
+import {execData} from "../interfaces/interfaces"
 
 
 registerLocale("ru", ru)
@@ -24,21 +25,26 @@ const RequestEditModal = observer(() => {
     const [isMultipleExecutors, setIsMultipleExecutors] = useState(false)
     const {updateAfterRequestEdit} = useUpdateAfterEdit()
     const {getDistance} = useGetDistance()
-    const {editRequest, getExecId} = useMongoService(false)
+    const {editRequest, getExecId} = useMongoService()
     useLockBodyScroll()
 
     // Здесь храним исполнителей, отсортированных по близости
+    interface execState {
+        execData: execData[] | null
+        setExecData: (data: execData[] | null) => void
+    }
+
     const execState = useLocalObservable(() => ({
             execData: null,
             setExecData(data) {
                 this.execData = data
             }
-        })
+        } as execState)
     )
 
     useEffect(() => {
         (async () => {
-            if (Store.currentRequest.SentFromName) {
+            if (Store.currentRequest?.SentFromName) {
                 const chosenMail = {
                     senderName: Store.currentRequest.SentFromName,
                     senderEmail: Store.currentRequest.SentFromEmail,
@@ -46,12 +52,12 @@ const RequestEditModal = observer(() => {
                 }
                 Store.setReqChosenMail(chosenMail)
             }
-            if (Store.currentRequest.VehicleId) {
+            if (Store.currentRequest?.VehicleId) {
                 const execData = await getExecId();
                 const vehicles = await axios.post(`${Config.baseRoute}/vehicles-id`, {id: String(Store.currentRequest.VehicleId)})
                 const vehicle = vehicles.data[0]
                 const coords = await getDistance(execData, {lat: vehicle.LAST_LAT, lon: vehicle.LAST_LON})
-                coords.sort((a, b) => a.distance - b.distance)
+                coords.sort((a, b) => a.distance! - b.distance!)
                 execState.setExecData(coords)
             }
         })()
@@ -63,52 +69,67 @@ const RequestEditModal = observer(() => {
 
 
     // Изменить значения инпутов заявки
-    const setRequestField = (e, field) => {
-        Store.setCurrentRequest({
-            ...Store.currentRequest,
-            [field]: e.target.value
-        })
+    const setRequestField = (e:  React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement> , field: string) => {
+        if (Store.currentRequest) {
+            Store.setCurrentRequest({
+                ...Store.currentRequest,
+                [field]: e.target.value
+            });
+        }
+
     }
 
-    const onChangeDate = (date) => {
-        Store.setCurrentRequest({
-            ...Store.currentRequest,
-            PlannedDate: date
-        })
+    const onChangeDate = (date:Date |  null) => {
+        if (Store.currentRequest && date) {
+            Store.setCurrentRequest({
+                ...Store.currentRequest,
+                PlannedDate: date
+            })
+        }
+
     }
 
-    const onReset = (e) => {
+    const onReset = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        Store.setCurrentRequest({
-            ...Store.currentRequest,
-            PlannedDate: null
-        })
+        if (Store.currentRequest) {
+            Store.setCurrentRequest({
+                ...Store.currentRequest,
+                PlannedDate: undefined
+            })
+        }
+
     }
 
-    const onSetDate = (e, date) => {
+    const onSetDate = (e: React.MouseEvent<HTMLButtonElement>, date: Date) => {
         e.preventDefault()
-        Store.setCurrentRequest({
-            ...Store.currentRequest,
-            PlannedDate: date
-        })
+        if (Store.currentRequest) {
+            Store.setCurrentRequest({
+                ...Store.currentRequest,
+                PlannedDate: date
+            })
+        }
+
     }
 
-    const onMinusExecutor = (e) => {
+    const onMinusExecutor = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         setIsMultipleExecutors(false)
-        Store.setCurrentRequest({
-            ...Store.currentRequest,
-            Executor: [Store.currentRequest.Executor[0]]
-        })
+        if (Store.currentRequest && Store.currentRequest.Executor) {
+            Store.setCurrentRequest({
+                ...Store.currentRequest,
+                Executor: [Store.currentRequest.Executor[0]]
+            })
+        }
+
     }
 
-    const onPlusExecutor = (e) => {
+    const onPlusExecutor = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         setIsMultipleExecutors(true)
     }
 
-    const onChangeExecutor = (e, number) => {
-        if (Store.currentRequest.Executor) {
+    const onChangeExecutor = (e: React.ChangeEvent<HTMLSelectElement>, number: number) => {
+        if (Store.currentRequest?.Executor) {
             switch (Store.currentRequest.Executor.length) {
                 case 0:
                     Store.setCurrentRequest({
@@ -145,35 +166,39 @@ const RequestEditModal = observer(() => {
                     }
             }
         } else {
-            Store.setCurrentRequest({
-                ...Store.currentRequest,
-                Executor: [e.target.value]
-            });
+            if (Store.currentRequest) {
+                Store.setCurrentRequest({
+                    ...Store.currentRequest,
+                    Executor: [e.target.value]
+                });
+            }
+
         }
 
     }
 
     // Сохранить изменённую заявку
-    const editMongoRequest = async (e) => {
+    const editMongoRequest = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        let editedRequest = {
-            id: Store.currentRequest._id,
-            Executor: Store.currentRequest.Executor,
-            Description: Store.currentRequest.Description,
-            RequestType: Store.currentRequest.RequestType,
-            Region: Store.currentRequest.Region,
-            PlannedDate: Store.currentRequest.PlannedDate,
-            SentFromName: Store.reqChosenMail ? Store.reqChosenMail.senderName : null,
-            SentFromEmail: Store.reqChosenMail ? Store.reqChosenMail.senderEmail : null,
-            SentFromDate: Store.reqChosenMail ? Store.reqChosenMail.sentDate : null,
-            mailId: Store.reqChosenMail ? Store.reqChosenMail.id : null,
-            mailChangeKey: Store.reqChosenMail ? Store.reqChosenMail.changeKey : null,
+        if (Store.currentRequest) {
+            let editedRequest = {
+                id: Store.currentRequest._id,
+                Executor: Store.currentRequest.Executor,
+                Description: Store.currentRequest.Description,
+                RequestType: Store.currentRequest.RequestType,
+                Region: Store.currentRequest.Region,
+                PlannedDate: Store.currentRequest.PlannedDate,
+                SentFromName: Store.reqChosenMail ? Store.reqChosenMail.senderName : null,
+                SentFromEmail: Store.reqChosenMail ? Store.reqChosenMail.senderEmail : null,
+                SentFromDate: Store.reqChosenMail ? Store.reqChosenMail.sentDate : undefined,
+            };
+            await editRequest(editedRequest)
+            Store.setIsShowEditRequestModal(false)
+            await updateAfterRequestEdit()
+            Store.setNotificationText('Заявка отредактирована')
+            Store.showNotification()
         }
-        await editRequest(editedRequest)
-        Store.setIsShowEditRequestModal(false)
-        await updateAfterRequestEdit()
-        Store.setNotificationText('Заявка отредактирована')
-        Store.showNotification()
+
     }
 
 
@@ -181,11 +206,11 @@ const RequestEditModal = observer(() => {
         return (
             <div className={'flex justify-between items-center mt-5'}>
                 <select
-                    defaultValue={Store.currentRequest.Executor && Store.currentRequest.Executor.length > 1 ? Store.currentRequest.Executor[1] : 'DEFAULT'}
+                    defaultValue={Store.currentRequest?.Executor && Store.currentRequest.Executor.length > 1 ? Store.currentRequest.Executor[1] : 'DEFAULT'}
                     className={'w-[80%] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                     name="executor2"
                     id="executor2"
-                    onChange={e => onChangeExecutor(e, 2)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChangeExecutor(e, 2)}
                 >
                     <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
                     {execState.execData
@@ -200,7 +225,7 @@ const RequestEditModal = observer(() => {
                     }
                 </select>
                 <button
-                    onClick={(e) => onMinusExecutor(e)}
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => onMinusExecutor(e)}
                     className={'w-[10%] h-full rounded-lg bg-white shadow-form-sh  hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
                     <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
                         <HiMinus/>
@@ -220,7 +245,7 @@ const RequestEditModal = observer(() => {
                             <label className={'text-xl'} htmlFor="executor">Исполнитель</label>
                             <div className={'flex justify-between items-center'}>
                                 <select
-                                    defaultValue={Store.currentRequest.Executor && Store.currentRequest.Executor.length > 0 ? Store.currentRequest.Executor[0] : "DEFAULT"}
+                                    defaultValue={Store.currentRequest?.Executor && Store.currentRequest.Executor.length > 0 ? Store.currentRequest.Executor[0] : "DEFAULT"}
                                     className={'w-[80%] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                                     name="executor"
                                     id="executor"
@@ -241,23 +266,23 @@ const RequestEditModal = observer(() => {
                                 </select>
                                 <button
                                     onClick={(e) => onPlusExecutor(e)}
-                                    disabled={Store.currentRequest.Executor < 1 || isMultipleExecutors}
+                                    disabled={(Store.currentRequest && Store.currentRequest.Executor && Store.currentRequest.Executor.length < 1) || isMultipleExecutors}
                                     className={'w-[10%] h-full rounded-lg bg-white shadow-form-sh  hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
                                     <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
                                         <HiPlus/>
                                     </IconContext.Provider>
                                 </button>
                             </div>
-                            {isMultipleExecutors || (Store.currentRequest.Executor && Store.currentRequest.Executor.length > 1) ? <Executor2View/> : null}
+                            {isMultipleExecutors || (Store.currentRequest?.Executor && Store.currentRequest.Executor.length > 1) ? <Executor2View/> : null}
                         </div>
                         <div className={'flex flex-col w-[400px] gap-2'}>
                             <label className={'text-xl'} htmlFor="type">Тип заявки</label>
                             <select
-                                defaultValue={Store.currentRequest.RequestType}
+                                defaultValue={Store.currentRequest?.RequestType ? Store.currentRequest.RequestType : ''}
                                 className={'rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                                 name="type"
                                 id="type"
-                                onChange={(e) => setRequestField(e, 'RequestType')}
+                                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setRequestField(e, 'RequestType')}
                             >
                                 <option disabled value="DEFAULT"> -- выбрать тип заявки -- </option>
                                 {Store.currentRequestTypes.map(item => (
@@ -268,7 +293,7 @@ const RequestEditModal = observer(() => {
                         <div className={'flex flex-col w-[400px] gap-2'}>
                             <label className={'text-xl'} htmlFor="region">Регион</label>
                             <select
-                                defaultValue={Store.currentRequest.Region}
+                                defaultValue={Store.currentRequest?.Region ? Store.currentRequest.Region : ''}
                                 className={'rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                                 name="region"
                                 id="region"
@@ -285,7 +310,7 @@ const RequestEditModal = observer(() => {
                             <h2 className={'text-xl'}>Дата исполнения</h2>
                             <DatePicker
                                 className={'w-full rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
-                                selected={Store.currentRequest.PlannedDate ? new Date(Store.currentRequest.PlannedDate) : ''}
+                                selected={Store.currentRequest?.PlannedDate ? new Date(Store.currentRequest.PlannedDate) : new Date(Date.now())}
                                 onChange={(date) => {onChangeDate(date)}}
                                 dateFormat="dd.MM.yy"
                                 locale="ru"
@@ -295,19 +320,19 @@ const RequestEditModal = observer(() => {
                             <div className={'flex items-center mt-2'}>
                                 <button
                                     className={' w-20 px-1 py-0.5 mr-3 rounded bg-orange-400 text-sm text-white active:bg-orange-600 shadow-form-sh'}
-                                    onClick={(e) => onSetDate(e, DateTime.now().toJSDate())}
+                                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => onSetDate(e, DateTime.now().toJSDate())}
                                 >
                                     Сегодня
                                 </button>
                                 <button
                                     className={'w-20 px-1 py-0.5 mr-3 rounded bg-orange-400 text-sm text-white active:bg-orange-600 shadow-form-sh'}
-                                    onClick={(e) => onSetDate(e, DateTime.now().plus({days: 1}).toJSDate())}
+                                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => onSetDate(e, DateTime.now().plus({days: 1}).toJSDate())}
                                 >
                                     Завтра
                                 </button>
                                 <button
                                     className={'w-20 px-1 py-0.5 rounded bg-pink-400 text-sm text-white active:bg-orange-600 shadow-form-sh'}
-                                    onClick={(e) => onReset(e)}
+                                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => onReset(e)}
                                 >
                                     Сбросить
                                 </button>
@@ -316,7 +341,7 @@ const RequestEditModal = observer(() => {
                         <div className={'flex flex-col w-[400px] gap-2'}>
                             <h2 className={'text-xl'}>Прислал письмо</h2>
                             <div className={'rounded-lg h-[32px] py-1 px-2 shadow-form-sh  text-md border-stone-300 bg-white line-clamp-1'}>
-                                {Store.reqChosenMail ?
+                                {Store.reqChosenMail && Store.reqChosenMail.sentDate ?
                                     `${Store.reqChosenMail.senderName}, ${new Date(Store.reqChosenMail.sentDate).toLocaleString()}` :
                                     <h2> -- выберите письмо --</h2>}
                             </div>
@@ -332,17 +357,17 @@ const RequestEditModal = observer(() => {
                     <div className={'flex flex-col w-full'}>
                         <label className={'text-xl'} htmlFor="comment">Комментарий</label>
                         <input
-                            value={Store.currentRequest.Description}
+                            value={Store.currentRequest?.Description ? Store.currentRequest.Description : ''}
                             type="text"
                             name={'comment'}
                             id={'comment'}
                             className={'rounded-lg h-[40px] mt-2 shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
-                            onChange={(e) => setRequestField(e, 'Description')}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRequestField(e, 'Description')}
 
                         />
                     </div>
                     <button
-                        onClick={editMongoRequest}
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>)=> editMongoRequest(e)}
                         className={'h-full shadow-form-sh  rounded-lg text-center text-lg text-white px-2 py-2 shadow-shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}
                     >Редактировать заявку</button>
                 </div>

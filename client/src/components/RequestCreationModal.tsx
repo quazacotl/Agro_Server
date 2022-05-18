@@ -10,15 +10,22 @@ import PreviousRequests from "./PreviousRequests"
 import BubbleContext from "./BubbleContext"
 import Store from "../state/Store"
 import {dateFromIsoToLocal} from "../funcs/funcs"
-import {regionsEnum} from "../interfaces/interfaces"
+import {regionsEnum, execData} from "../interfaces/interfaces"
 
 
 
 const RequestCreationModal = observer(() => {
     useLockBodyScroll()
 
-    const {writeNewRequest, getAllUnexecutedRequests, getRequestsByOraId, getExecId} = useMongoService(false)
+    const {writeNewRequest, getAllUnexecutedRequests, getRequestsByOraId, getExecId} = useMongoService()
     const {getDistance} = useGetDistance()
+
+    interface execState {
+        execData: execData[] | null
+        setExecData: (data: execData[] | null)=>void
+        isAddExecutor: boolean
+        setIsAddExecutor: (bool: boolean)=>void
+    }
 
     const execState = useLocalObservable(() => ({
             execData: null,
@@ -29,19 +36,24 @@ const RequestCreationModal = observer(() => {
             setIsAddExecutor(bool)  {
                 this.isAddExecutor = bool
             }
-        })
+        } as execState)
     )
 
     const setPreviousRequests = async () => {
-        const previousRequests = await getRequestsByOraId({oraId: Store.currentVehicle.TRANSP_ID})
-        await Store.setPreviousRequestsData(previousRequests)
+        if (Store.currentVehicle?.TRANSP_ID) {
+            const previousRequests = await getRequestsByOraId({oraId: Store.currentVehicle.TRANSP_ID})
+            await Store.setPreviousRequestsData(previousRequests)
+        }
     }
 
     const setNearestExecs = async () => {
         const execData = await getExecId()
-        const coords = await getDistance(execData, {lat: Store.currentVehicle.LAST_LAT, lon: Store.currentVehicle.LAST_LON})
-        coords.sort((a, b) => a.distance - b.distance)
-        execState.setExecData(coords)
+        if (Store.currentVehicle?.LAST_LAT && Store.currentVehicle?.LAST_LON) {
+            const coords = await getDistance(execData, {lat: Store.currentVehicle.LAST_LAT, lon: Store.currentVehicle.LAST_LON})
+            coords.sort((a, b) => a.distance! - b.distance!)
+            execState.setExecData(coords)
+        }
+
     }
 
     const clearData = () => {
@@ -49,7 +61,7 @@ const RequestCreationModal = observer(() => {
         Store.setReqChosenMail(null)
         Store.setReqChosenComment('')
         Store.setReqChosenExecutors([])
-        Store.setReqChosenRegion(null)
+        Store.setReqChosenRegion('')
         Store.setPreviousRequestsData([])
         Store.setCurrentVehicle(null)
         execState.setExecData(null)
@@ -67,7 +79,7 @@ const RequestCreationModal = observer(() => {
     }, [])
 
 
-    const setReqChosenType = (e) => {
+    const setReqChosenType = (e: React.ChangeEvent<HTMLSelectElement>) => {
         Store.setReqChosenType(e.target.value)
         if (Store.currentVehicle) {
             switch (e.target.value) {
@@ -82,11 +94,11 @@ const RequestCreationModal = observer(() => {
         }
     }
 
-    const setReqChosenRegion = (e) => {
+    const setReqChosenRegion = (e: React.ChangeEvent<HTMLSelectElement>) => {
         Store.setReqChosenRegion(e.target.value)
     }
 
-    const setReqChosenExecutor = (e, number) => {
+    const setReqChosenExecutor = (e: React.ChangeEvent<HTMLSelectElement>, number: number) => {
         switch (Store.reqChosenExecutors.length) {
             case 0:
                 Store.setReqChosenExecutors([e.target.value])
@@ -101,12 +113,12 @@ const RequestCreationModal = observer(() => {
         }
     }
 
-    const setReqChosenComment = (e) => {
+    const setReqChosenComment = (e: React.ChangeEvent<HTMLInputElement>) => {
         Store.setReqChosenComment(e.target.value)
     }
 
     const saveRequest = async () => {
-        let executors = []
+        let executors: string[] = []
         if (Store.reqChosenExecutors) {
             Store.reqChosenExecutors.forEach(item => {
                 executors.push(item)
@@ -119,9 +131,7 @@ const RequestCreationModal = observer(() => {
             Description: Store.reqChosenComment,
             SentFromName: Store.reqChosenMail ? Store.reqChosenMail.senderName : null,
             SentFromEmail: Store.reqChosenMail ? Store.reqChosenMail.senderEmail : null,
-            SentFromDate: Store.reqChosenMail ? Store.reqChosenMail.sentDate : null,
-            mailId: Store.reqChosenMail ? Store.reqChosenMail.id : null,
-            mailChangeKey: Store.reqChosenMail ? Store.reqChosenMail.changeKey : null,
+            SentFromDate: Store.reqChosenMail ? Store.reqChosenMail.sentDate : undefined,
             Region: Store.currentVehicle ? Store.currentVehicle.REGION : Store.reqChosenRegion,
             RequestType: Store.reqChosenType,
             ObjName: Store.currentVehicle ? Store.currentVehicle.OBJ_NAME : null,
@@ -132,7 +142,6 @@ const RequestCreationModal = observer(() => {
             VehicleVin: Store.currentVehicle ? Store.currentVehicle.ATTR_VALUE : null,
             VehicleOraId: Store.currentVehicle ? Store.currentVehicle.TRANSP_ID : null,
         }
-        console.log(newRequest)
         await writeNewRequest(newRequest)
         Store.setShowRequestModal(false)
         const allUnexReq = await getAllUnexecutedRequests()
@@ -157,7 +166,7 @@ const RequestCreationModal = observer(() => {
                     </div>
                 </div>
             )
-        }
+        } else return null
     })
 
     const RegionSelectView = observer(() => {
@@ -204,7 +213,7 @@ const RequestCreationModal = observer(() => {
         )
     })
 
-    const onPlusExecutor = (e) => {
+    const onPlusExecutor = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         execState.setIsAddExecutor(true)
     }
@@ -225,7 +234,7 @@ const RequestCreationModal = observer(() => {
                                 onChange={e => setReqChosenExecutor(e, 1)}
                             >
                                 <option
-                                    disabled={Store.currentVehicle && Store.currentVehicle.navId ? !execState.execData : false}
+                                    disabled={Store.currentVehicle && Store.currentVehicle.NAV_ID ? !execState.execData : false}
                                     value="DEFAULT" >
                                     -- выбрать исполнителя --
                                 </option>
@@ -241,7 +250,7 @@ const RequestCreationModal = observer(() => {
                                 }
                             </select>
                             <button
-                                onClick={onPlusExecutor}
+                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => onPlusExecutor(e)}
                                 disabled={execState.isAddExecutor || Store.reqChosenExecutors.length === 0}
                                 className={'w-[10%] h-full rounded-lg bg-white shadow-form-sh  hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
                                 <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
@@ -258,7 +267,7 @@ const RequestCreationModal = observer(() => {
                             className={'rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                             name="type"
                             id="type"
-                            onChange={setReqChosenType}
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setReqChosenType(e)}
                         >
                             <option disabled value="DEFAULT"> -- выбрать тип заявки -- </option>
                             {Store.currentRequestTypes.map(item => (
@@ -270,7 +279,7 @@ const RequestCreationModal = observer(() => {
                     <div className={'flex flex-col gap-2'}>
                         <h2 className={'text-xl'}>Прислал письмо</h2>
                         <div className={'rounded-lg h-[32px] py-1 px-2 rounded-lg shadow-form-sh py-1 text-md border-stone-300 bg-white'}>
-                            {Store.reqChosenMail ?
+                            {Store.reqChosenMail && Store.reqChosenMail.sentDate ?
                                 `${Store.reqChosenMail.senderName}, ${new Date(Store.reqChosenMail.sentDate).toLocaleString()}` :
                                 <h2> -- выберите письмо --</h2>}
                         </div>
@@ -291,7 +300,7 @@ const RequestCreationModal = observer(() => {
                         name={'comment'}
                         id={'comment'}
                         className={'rounded-lg mt-2 h-[32px] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
-                        onChange={setReqChosenComment}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setReqChosenComment(e)}
                     />
                 </div>
                 <button

@@ -3,7 +3,7 @@ import { MouseEvent } from 'react'
 import {
     executors,
     outlookMessagesInterface, regions,
-    RequestDataInterface, requestTypes,
+    RequestDataInterface, requestTypes, shortOutlookMessagesInterface,
     Statistics,
     TableDataInterface, users
 } from "../interfaces/interfaces";
@@ -35,7 +35,7 @@ class Store {
     reqChosenType: string = ''
     reqChosenRegion: string = ''
     reqChosenComment: string = ''
-    reqChosenMail: outlookMessagesInterface | null = null
+    reqChosenMail: shortOutlookMessagesInterface | null = null
     currentUsers: users[] | null = null
     currentUser: string = 'Михайлов В.'
     currentVehicle: TableDataInterface | null = null
@@ -207,7 +207,7 @@ class Store {
         this.reqChosenComment = data
     }
 
-    setReqChosenMail = (data: outlookMessagesInterface) => {
+    setReqChosenMail = (data: shortOutlookMessagesInterface | null) => {
         this.reqChosenMail = data
     }
 
@@ -225,7 +225,7 @@ class Store {
     }
 
     // Выбранная техника
-    setCurrentVehicle = (data: TableDataInterface) => {
+    setCurrentVehicle = (data: TableDataInterface | null) => {
         this.currentVehicle = data
     }
 
