@@ -1,4 +1,4 @@
-import {oraConnection} from "../server.js";
+import {createOracleConnection, oraConnection} from "../server.js";
 
 const baseString = `SELECT ABS.BUD_AGRO_OBJS_V.OBJ_NAME, ABS.AGRO_BASES_V.BASES_NAME, 
   ABS.AGRO_TREES_V.NODE_NAME, ABS.AGRO_TRANSPORT_V.REG_NOM, TD.ATTR_VALUE, 
@@ -24,6 +24,7 @@ export const getVehiclesByRegNum = async function (req, res) {
         res.status(200).json(requests.rows)
     }
     catch (e) {
+        await createOracleConnection()
         res.status(500).json({message: `Ошибка сервера: ${e}`})
     }
 }
@@ -35,6 +36,7 @@ export const getVehiclesById = async function (req, res) {
         res.status(200).json(requests.rows)
     }
     catch (e) {
+        await createOracleConnection()
         res.status(500).json({message: `Ошибка сервера: ${e}`})
     }
 }
@@ -47,6 +49,7 @@ export const getVehiclesByVin = async function (req, res) {
         res.status(200).json(requests.rows)
     }
     catch (e) {
+        await createOracleConnection()
         res.status(500).json({message: `Ошибка сервера: ${e}`})
     }
 }
@@ -58,6 +61,7 @@ export const getVehiclesByOraId = async function (req, res) {
         res.status(200).json(requests.rows)
     }
     catch (e) {
+        await createOracleConnection()
         res.status(500).json({message: `Ошибка сервера: ${e}`})
     }
 }

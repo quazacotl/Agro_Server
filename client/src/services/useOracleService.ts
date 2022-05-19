@@ -21,7 +21,6 @@ const useOracleService = () => {
 
     const getVehiclesByOraId = async (id: number): Promise<TableDataInterface[]> => {
         const res =  await axios.post(`${Config.baseRoute}/vehicles-ora-id`, {id})
-        console.log(res.data)
         return res.data
     }
 
