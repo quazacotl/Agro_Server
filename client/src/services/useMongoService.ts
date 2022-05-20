@@ -63,7 +63,7 @@ const useMongoService = () => {
             return (
                 {
                     ...item,
-                    Creator: item.Creator.name,
+                    Creator: item.Creator ? item.Creator?.name : '',
                     Auditor: item.Auditor ? item.Auditor.name : null,
                     Executor: item.Executor ? executors : null,
                     Region: item.Region ? item.Region.name : null,
@@ -222,11 +222,6 @@ const useMongoService = () => {
         const res =  await axios.post(`${Config.baseRoute}/request-delete`, body)
         return res.data
     }
-
-    // const addFile = async (body) => {
-    //     const res =  await axios.post(`${Config.baseRoute}/add-file`, body)
-    //     return res.data
-    // }
 
     const getActNames = async (body: getFileNamesBody): Promise <string[]> => {
         const res =  await axios.post(`${Config.baseRoute}/get-act-names`, body)

@@ -94,7 +94,7 @@ const RequestEditModal = observer(() => {
         if (Store.currentRequest) {
             Store.setCurrentRequest({
                 ...Store.currentRequest,
-                PlannedDate: undefined
+                PlannedDate: null
             })
         }
 
@@ -310,7 +310,7 @@ const RequestEditModal = observer(() => {
                             <h2 className={'text-xl'}>Дата исполнения</h2>
                             <DatePicker
                                 className={'w-full rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
-                                selected={Store.currentRequest?.PlannedDate ? new Date(Store.currentRequest.PlannedDate) : new Date(Date.now())}
+                                selected={Store.currentRequest?.PlannedDate ? new Date(Store.currentRequest.PlannedDate) : null}
                                 onChange={(date) => {onChangeDate(date)}}
                                 dateFormat="dd.MM.yy"
                                 locale="ru"

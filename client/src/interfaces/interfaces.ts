@@ -71,7 +71,7 @@ export interface UncutRequestDataInterface {
     ExecuteDate: Date | undefined
     Executor: executors[] | null
     ObjName: string | null
-    PlannedDate: Date | undefined
+    PlannedDate: Date | null
     Region: executors | null
     RequestType: requestTypes | null
     SentFromDate: Date | undefined
@@ -112,7 +112,7 @@ export interface RequestDataInterface extends NewRequestDataInterface {
     Auditor: string | null
     CreateDate: Date
     ExecuteDate: Date | undefined
-    PlannedDate: Date | undefined
+    PlannedDate: Date | null
     lat?: number
     lon?: number
 }
@@ -126,7 +126,7 @@ export interface EditedRequestDataInterface {
     SentFromDate: Date | undefined
     SentFromName: string | null
     SentFromEmail: string | null
-    PlannedDate: Date | undefined
+    PlannedDate: Date | null
 }
 
 

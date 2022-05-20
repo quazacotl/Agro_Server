@@ -8,7 +8,7 @@ import { DateTime } from "luxon"
 
 export const getAllRequests = async function (req, res) {
     try {
-       const requests = await RequestModel.find().limit(Number(process.env.REQUESTS_LIMIT)).sort(({ _id: -1 }))
+        const requests = await RequestModel.find().limit(Number(process.env.REQUESTS_LIMIT)).sort(({ _id: -1 }))
         res.status(200).json(requests)
     }
     catch (e) {
@@ -443,5 +443,4 @@ export const getBases = async function (req, res) {
         res.status(500).json({message: `Ошибка монго сервера: ${e}`})
     }
 }
-
 
