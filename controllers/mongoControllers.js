@@ -311,7 +311,7 @@ export const editRequest = async function (req, res) {
 
 export const closeRequest = async function (req, res) {
     try {
-        const Auditor = await UserModel.findOne({name: req.body.Auditor}).select('_id')
+        const Auditor = await UserModel.findOne({name: req.body.auditor}).select('_id')
         await RequestModel.findOneAndUpdate({_id: req.body.id}, {
             isExecuted: true,
             ExecuteDate: Date.now(),
