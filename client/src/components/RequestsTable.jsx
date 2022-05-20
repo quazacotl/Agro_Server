@@ -54,7 +54,7 @@ const RequestsTable = observer(() => {
                 width: 160,
                 Cell: ({value}) => {
                     if (Store.searchInputValue.length > 2) {
-                        value = reactStringReplace(value, Store.searchInputValue, (match, i) => <span key={i} className={'bg-cyan-300'}>{Store.searchInputValue}</span>)
+                        value = reactStringReplace(value, Store.searchInputValue, (match, i) => <span key={i} className={'bg-cyan-300 rounded'}>{Store.searchInputValue}</span>)
                     }
                     return value
                 }

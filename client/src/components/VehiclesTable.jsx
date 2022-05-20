@@ -88,7 +88,7 @@ const VehiclesTable = observer(() => {
                 width: 210,
                 Cell: ({value}) => {
                     if (Store.inputReg) {
-                        value = reactStringReplace(value, Store.inputReg, (match, i) => <span key={i} className={'bg-cyan-300'}>{Store.inputReg}</span>)
+                        value = reactStringReplace(value, Store.inputReg, (match, i) => <span key={i} className={'bg-cyan-300 rounded'}>{Store.inputReg}</span>)
                     }
                     return value
                 }
@@ -99,7 +99,7 @@ const VehiclesTable = observer(() => {
                 width: 230,
                 Cell: ({value}) => {
                     if (Store.inputVin) {
-                        value = reactStringReplace(value, Store.inputVin, (match, i) => <span key={i} className={'bg-cyan-300'}>{Store.inputVin}</span>)
+                        value = reactStringReplace(value, Store.inputVin, (match, i) => <span key={i} className={'bg-cyan-300 rounded'}>{Store.inputVin}</span>)
                     }
                     return value
                 }
@@ -110,7 +110,7 @@ const VehiclesTable = observer(() => {
                 width: 110,
                 Cell: ({value}) => {
                     if (Store.inputId) {
-                        value = reactStringReplace(String(value), Store.inputId, (match, i) => <span key={i} className={'bg-cyan-300'}>{Store.inputId}</span>)
+                        value = reactStringReplace(String(value), Store.inputId, (match, i) => <span key={i} className={'bg-cyan-300 rounded'}>{Store.inputId}</span>)
                     }
                     return value
                 }
