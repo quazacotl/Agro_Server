@@ -42,35 +42,29 @@ if (process.env.NODE_ENV === 'development') {
 
 export let oraConnection;
 
+try {
+    oraConnection = await oracledb.getConnection( {
+        user          : process.env.ORACLE_LOGIN,
+        password      : process.env.ORACLE_PASS,
+        connectString : process.env.ORACLE_CONNECT_STRING
+    });
+    console.log('OracleDB connected...')
 
-export const createOracleConnection = async () => {
-    try {
-        await oracledb.createPool({
-            user          : process.env.ORACLE_LOGIN,
-            password      : process.env.ORACLE_PASS,
-            connectString : process.env.ORACLE_CONNECT_STRING,
-            poolPingInterval: 60
-        })
-        oraConnection = await oracledb.getConnection();
-        console.log('OracleDB connected...')
 
-    } catch (err) {
-        console.error(err);
-    }
+} catch (err) {
+    console.error(err);
 }
 
-await createOracleConnection()
 
 
-
-// let interval = setInterval(() => {
-//     try {
-//         oraConnection.execute(`select 1 from dual`)
-//         console.log('knocked to base')
-//     } catch (e) {
-//         console.log(e)
-//     }
-// }, 300000)
+let interval = setInterval(() => {
+    try {
+        oraConnection.execute(`select 1 from dual`)
+        console.log('knocked to base')
+    } catch (e) {
+        console.log(e)
+    }
+}, 300000)
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
