@@ -36,6 +36,7 @@ class Store {
     reqChosenRegion: string = ''
     reqChosenComment: string = ''
     reqChosenMail: shortOutlookMessagesInterface | null = null
+    reqChosenDate: Date | null = null
     currentUsers: users[] | null = null
     currentUser: string = 'Михайлов В.'
     currentVehicle: TableDataInterface | null = null
@@ -209,6 +210,10 @@ class Store {
 
     setReqChosenMail = (data: shortOutlookMessagesInterface | null) => {
         this.reqChosenMail = data
+    }
+
+    setReqChosenDate = (data: Date | null) => {
+        this.reqChosenDate = data
     }
 
     setReqChosenExecutors = (array: string[]) => {

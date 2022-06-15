@@ -11,6 +11,8 @@ import BubbleContext from "./BubbleContext"
 import Store from "../state/Store"
 import {dateFromIsoToLocal} from "../funcs/funcs"
 import {regionsEnum, execData} from "../interfaces/interfaces"
+import DatePicker from "react-datepicker";
+import {DateTime} from "luxon";
 
 
 
@@ -62,6 +64,7 @@ const RequestCreationModal = observer(() => {
         Store.setReqChosenComment('')
         Store.setReqChosenExecutors([])
         Store.setReqChosenRegion('')
+        Store.setReqChosenDate(null)
         Store.setPreviousRequestsData([])
         Store.setCurrentVehicle(null)
         execState.setExecData(null)
@@ -141,6 +144,7 @@ const RequestCreationModal = observer(() => {
             VehicleId: Store.currentVehicle ? Store.currentVehicle.NAV_ID : null,
             VehicleVin: Store.currentVehicle ? Store.currentVehicle.ATTR_VALUE : null,
             VehicleOraId: Store.currentVehicle ? Store.currentVehicle.TRANSP_ID : null,
+            PlannedDate: Store.reqChosenDate
         }
         await writeNewRequest(newRequest)
         Store.setShowRequestModal(false)
@@ -284,10 +288,51 @@ const RequestCreationModal = observer(() => {
                                 <h2> -- выберите письмо --</h2>}
                         </div>
                     </div>
+                    <div className={'flex flex-col gap-2'}>
+                        <h2 className={'text-xl'}>Дата исполнения</h2>
+                        <DatePicker
+                            className={'w-full rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
+                            selected={Store.reqChosenDate}
+                            onChange={(date) => {Store.setReqChosenDate(date)}}
+                            dateFormat="dd.MM.yy"
+                            locale="ru"
+                            tabIndex={-1}
+                            placeholderText="Выбрать дату"
+                        />
+                        <div className={'flex items-center mt-2'}>
+                            <button
+                                className={' w-20 px-1 py-0.5 mr-3 rounded bg-orange-400 text-sm text-white active:bg-orange-600 shadow-form-sh'}
+                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                    e.preventDefault()
+                                    Store.setReqChosenDate(DateTime.now().toJSDate())
+                                }}
+                            >
+                                Сегодня
+                            </button>
+                            <button
+                                className={'w-20 px-1 py-0.5 mr-3 rounded bg-orange-400 text-sm text-white active:bg-orange-600 shadow-form-sh'}
+                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                    e.preventDefault()
+                                    Store.setReqChosenDate(DateTime.now().plus({days: 1}).toJSDate())
+                                }}
+                            >
+                                Завтра
+                            </button>
+                            <button
+                                className={'w-20 px-1 py-0.5 rounded bg-pink-400 text-sm text-white active:bg-orange-600 shadow-form-sh'}
+                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                    e.preventDefault()
+                                    Store.setReqChosenDate(null)
+                                }}
+                            >
+                                Сбросить
+                            </button>
+                        </div>
+                    </div>
                 </form>
                 <div className={'relative'}>
                     <h2 className={'text-center text-slate-900 text-xl'}>Последние письма</h2>
-                    <MailView height={245}/>
+                    <MailView height={350}/>
                 </div>
             </div>
             {Store.previousRequestsData.length > 0 ? <PreviousRequests/> : null}

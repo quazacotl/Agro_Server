@@ -16,7 +16,10 @@ const SendMessageModal = observer(() => {
     const formState = useLocalObservable(() => ({
         messageText: '',
         setMessageText(text) {
-            this.messageText = text
+            this.messageText =  text
+        },
+        editMessageText(text) {
+            this.messageText = this.messageText + text
         },
         acts: [],
         setActs(data) {
@@ -130,14 +133,9 @@ const SendMessageModal = observer(() => {
     })
 
     return (
-        // <div
-        //     onMouseDown={hideModal}
-        //     className={'absolute left-0 w-screen h-screen flex bg-neutral-700/50'}
-        //     style={{top: Store.offsetY}}
-        // >
-        //     <div className={'w-[600px] min-h-[400px] p-4 m-auto rounded-xl border border-amber-400 bg-gray-50'}>
         <>
             <h2 className={'text-lg text-sky-600 ml-3'}>Адресат: {Store.currentRequest.SentFromName ? Store.currentRequest.SentFromName : <span className={'text-red-600'}>Не выбран адресат!</span>}</h2>
+            <button className={'px-2 py-1 mx-1 rounded-lg bg-orange-400 text-white'} onClick={() => formState.editMessageText('Необходимо синхронизировать файлы в афтографе и перезапустить программу')}>Добавить текст</button>
             <textarea
                 placeholder={'Текст сообщения'}
                 className={'w-full h-2/3 min-h-[200px] mt-3 text-lg resize-none shadow-form-sh focus:outline-none p-3 rounded-xl border border-blue-400'}
