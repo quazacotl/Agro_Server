@@ -63,8 +63,8 @@ const useMongoService = () => {
             return (
                 {
                     ...item,
-                    Creator: item.Creator.name,
-                    Auditor: item.Auditor ? item.Auditor.name : null,
+                    Creator: item.Creator?.name,
+                    Auditor: item.Auditor ? item.Auditor?.name : null,
                     Executor: item.Executor ? executors : null,
                     Region: item.Region ? item.Region.name : null,
                     RequestType: item.RequestType ? item.RequestType.description : null,
