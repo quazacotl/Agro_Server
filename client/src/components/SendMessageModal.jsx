@@ -135,7 +135,10 @@ const SendMessageModal = observer(() => {
     return (
         <>
             <h2 className={'text-lg text-sky-600 ml-3'}>Адресат: {Store.currentRequest.SentFromName ? Store.currentRequest.SentFromName : <span className={'text-red-600'}>Не выбран адресат!</span>}</h2>
-            <button className={'px-2 py-1 mx-1 rounded-lg bg-orange-400 text-white'} onClick={() => formState.editMessageText('Необходимо синхронизировать файлы в афтографе и перезапустить программу')}>Добавить текст</button>
+            <div className={'flex gap-4 mt-2'}>
+                <button className={'px-2 py-1 rounded-lg bg-orange-400 text-white'} onClick={() => formState.editMessageText('Необходимо синхронизировать файлы в афтографе и перезапустить программу')}>Текст про автограф</button>
+                <button className={'px-2 py-1 rounded-lg bg-orange-400 text-white'} onClick={() => formState.editMessageText('Контрольный слив-залив показал расхождение в пределах допустимой нормы')}>Текст про тарировку</button>
+            </div>
             <textarea
                 placeholder={'Текст сообщения'}
                 className={'w-full h-2/3 min-h-[200px] mt-3 text-lg resize-none shadow-form-sh focus:outline-none p-3 rounded-xl border border-blue-400'}
