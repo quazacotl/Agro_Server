@@ -1,6 +1,6 @@
 import {useEffect} from "react"
 import {observer, useLocalObservable} from "mobx-react-lite"
-import { HiPlus } from "react-icons/hi"
+import {HiMinus, HiPlus} from "react-icons/hi"
 import {IconContext} from "react-icons"
 import {useLockBodyScroll} from "../hooks/useLockBodyScroll"
 import useMongoService from "../services/useMongoService"
@@ -193,34 +193,50 @@ const RequestCreationModal = observer(() => {
         )
     })
 
-    const Executor2View = observer(() => {
-        return (
-            <select
-                defaultValue={Store.reqChosenExecutors.length === 2 ? Store.reqChosenExecutors[1] : 'DEFAULT'}
-                className={'w-full mt-2 rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
-                name="executor2"
-                id="executor2"
-                onChange={e => setReqChosenExecutor(e, 2)}
-            >
-                <option disabled value={"DEFAULT"}> -- выбрать исполнителя -- </option>
-                {execState.execData
-                    ?
-                    execState.execData.map(item => (
-                        <option className={'font-mono'} key={item._id} value={item.name}>{`${item.name}${Array(38 - item.name.length).fill('\xa0').join('')}~${item.distance} км`}</option>
-                    ))
-                    :
-                    Store.currentExecutors.map(item => (
-                        <option key={item._id} value={item.name}>{item.name}</option>
-                    ))
-                }
-            </select>
-        )
-    })
-
     const onPlusExecutor = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         execState.setIsAddExecutor(true)
     }
+
+    const onMinusExecutor = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+        execState.setIsAddExecutor(false)
+    }
+
+    const Executor2View = observer(() => {
+        return (
+            <div className={'flex justify-between items-center mt-5'}>
+                <select
+                    defaultValue={Store.reqChosenExecutors.length === 2 ? Store.reqChosenExecutors[1] : 'DEFAULT'}
+                    className={'w-[80%] rounded-lg shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
+                    name="executor2"
+                    id="executor2"
+                    onChange={e => setReqChosenExecutor(e, 2)}
+                >
+                    <option disabled value={"DEFAULT"}> -- выбрать исполнителя -- </option>
+                    {execState.execData
+                        ?
+                        execState.execData.map(item => (
+                            <option className={'font-mono'} key={item._id} value={item.name}>{`${item.name}${Array(38 - item.name.length).fill('\xa0').join('')}~${item.distance} км`}</option>
+                        ))
+                        :
+                        Store.currentExecutors.map(item => (
+                            <option key={item._id} value={item.name}>{item.name}</option>
+                        ))
+                    }
+                </select>
+                <button
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => onMinusExecutor(e)}
+                    className={'w-[10%] h-full rounded-lg bg-white shadow-form-sh  hover:bg-amber-50 active:bg-green-300 active:shadow-none disabled:bg-stone-300 disabled:shadow-none'}>
+                    <IconContext.Provider value={{className: 'text-amber-500 text-xl m-auto'}}>
+                        <HiMinus/>
+                    </IconContext.Provider>
+                </button>
+            </div>
+        )
+    })
+
+
 
     return (
         <div className={'flex flex-col'}>
@@ -242,6 +258,7 @@ const RequestCreationModal = observer(() => {
                                     value="DEFAULT" >
                                     -- выбрать исполнителя --
                                 </option>
+                                <option value={''}>{'Сбросить'}</option>
                                 {execState.execData
                                     ?
                                     execState.execData.map(item => (
@@ -349,6 +366,7 @@ const RequestCreationModal = observer(() => {
                     />
                 </div>
                 <button
+                    type={'submit'}
                     onClick={saveRequest}
                     className={'h-full bg-button-gradient font-semibold shadow-form-sh  rounded-lg text-center text-lg text-white px-2 py-2 shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}
                 >Создать заявку</button>

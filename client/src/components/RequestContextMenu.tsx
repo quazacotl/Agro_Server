@@ -81,7 +81,7 @@ const RequestContextMenu = observer((props: RequestContextMenuProps) => {
 
     const onTextSms = async () => {
         if (Store.currentRequest?.VehicleRegNum) {
-            copy(`${Store.currentRequest.BaseName || Store.currentRequest.ObjName } ${Store.currentRequest.VehicleType} ${Store.currentRequest.VehicleRegNum} ${Store.currentRequest.Description}`)
+            copy(`${Store.currentRequest.ObjName ? Store.currentRequest.ObjName : null} ${Store.currentRequest.BaseName ? Store.currentRequest.BaseName : null}  ${Store.currentRequest.VehicleType} ${Store.currentRequest.VehicleRegNum} ${Store.currentRequest.Description}`)
             Store.setShowRequestContextMenu(false)
             Store.setNotificationText('Скопировано')
             Store.showNotification()

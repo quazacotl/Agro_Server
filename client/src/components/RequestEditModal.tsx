@@ -183,7 +183,7 @@ const RequestEditModal = observer(() => {
         if (Store.currentRequest) {
             let editedRequest = {
                 id: Store.currentRequest._id,
-                Executor: Store.currentRequest.Executor,
+                Executor: Store.currentRequest.Executor ? Store.currentRequest.Executor : null,
                 Description: Store.currentRequest.Description,
                 RequestType: Store.currentRequest.RequestType,
                 Region: Store.currentRequest.Region,
@@ -253,6 +253,7 @@ const RequestEditModal = observer(() => {
 
                                 >
                                     <option disabled value="DEFAULT" > -- выбрать исполнителя -- </option>
+                                    <option value={''}>{'Сбросить'}</option>
                                     {execState.execData
                                         ?
                                         execState.execData.map(item => (
@@ -363,10 +364,10 @@ const RequestEditModal = observer(() => {
                             id={'comment'}
                             className={'rounded-lg h-[40px] mt-2 shadow-form-sh py-1 text-md border-stone-300 focus:border-stone-300 focus:outline-offset-0 focus:outline-amber-400'}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRequestField(e, 'Description')}
-
                         />
                     </div>
                     <button
+                        type={'submit'}
                         onClick={(e: React.MouseEvent<HTMLButtonElement>)=> editMongoRequest(e)}
                         className={'h-full shadow-form-sh  rounded-lg text-center text-lg text-white px-2 py-2 shadow-shadow-form-sh bg-button-gradient active:bg-button-gradient-invert active:shadow-none focus:outline-none focus:shadow-input-focus'}
                     >Редактировать заявку</button>

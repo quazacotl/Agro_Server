@@ -33,7 +33,7 @@ const SendMessageModal = observer(() => {
 
     const setCurrentMessageText = () => {
         switch (Store.currentRequest.RequestType) {
-            case 'Весы': formState.setMessageText(`Ремонт на весах проведёны. Заявка закрыта.`)
+            case 'Весы': formState.setMessageText(`Ремонт на весах произведён. Заявка закрыта.`)
                 break
             case 'Установка Автограф+ДУТ': formState.setMessageText(`Работы по установке оборудования на технике ${Store.currentRequest.VehicleType} ${Store.currentRequest.VehicleRegNum} проведены. Заявка закрыта.`)
                 break
@@ -45,7 +45,7 @@ const SendMessageModal = observer(() => {
                 break
             case 'Установка системы учета зерна/удобрений': formState.setMessageText(`Работы по установке системы учёта на технике ${Store.currentRequest.VehicleType} ${Store.currentRequest.VehicleRegNum} проведены. Заявка закрыта.`)
                 break
-            case 'Планшеты': formState.setMessageText(`Работы проведены. Заявка закрыта.`)
+            case 'Планшеты': formState.setMessageText(`Работы на технике ${Store.currentRequest.VehicleType} ${Store.currentRequest.VehicleRegNum} проведены. Заявка закрыта.`)
                 break
             case 'Метеостанция': formState.setMessageText(`Работы на метеостанции завершены. Заявка закрыта.`)
                 break
@@ -136,7 +136,7 @@ const SendMessageModal = observer(() => {
         <>
             <h2 className={'text-lg text-sky-600 ml-3'}>Адресат: {Store.currentRequest.SentFromName ? Store.currentRequest.SentFromName : <span className={'text-red-600'}>Не выбран адресат!</span>}</h2>
             <div className={'flex gap-4 mt-2'}>
-                <button className={'px-2 py-1 rounded-lg bg-orange-400 text-white'} onClick={() => formState.editMessageText(` Необходимо синхронизировать файлы в афтографе и перезапустить программу.`)}>Текст про автограф</button>
+                <button className={'px-2 py-1 rounded-lg bg-orange-400 text-white'} onClick={() => formState.editMessageText(` Необходимо синхронизировать файлы в автографе и перезапустить программу.`)}>Текст про автограф</button>
                 <button className={'px-2 py-1 rounded-lg bg-orange-400 text-white'} onClick={() => formState.editMessageText(' Контрольный слив-залив показал расхождение в пределах допустимой нормы.')}>Текст про тарировку</button>
             </div>
             <textarea

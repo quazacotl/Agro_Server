@@ -2,7 +2,6 @@ import {observer, useLocalObservable } from "mobx-react-lite";
 import {useEffect, useMemo} from "react";
 import Store from "../state/Store";
 import useMongoService from "../services/useMongoService";
-import fileDownload from 'js-file-download'
 import MyDropzone from "./DropZone";
 import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
 
@@ -82,7 +81,11 @@ const AddFileModal = observer(() => {
         const res = await getAct({name: fileName})
         const name = fileName.match('[^\\/]+$')
         if (name) {
-            fileDownload(res.data, name[0])
+            let link = document.createElement('a');
+            link.href = URL.createObjectURL(res);
+            link.target = '_blank'
+            link.click();
+            URL.revokeObjectURL(link.href);
         }
     }
 
@@ -90,7 +93,11 @@ const AddFileModal = observer(() => {
         const res = await getTare({name: fileName})
         const name = fileName.match('[^\\/]+$')
         if (name) {
-            fileDownload(res.data, name[0])
+            let link = document.createElement('a');
+            link.download = name[0];
+            link.href = URL.createObjectURL(res);
+            link.click();
+            URL.revokeObjectURL(link.href);
         }
     }
 

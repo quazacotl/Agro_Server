@@ -2,6 +2,7 @@ import Store from "../state/Store";
 import {observer, useLocalObservable} from "mobx-react-lite"
 import {useLockBodyScroll} from "../hooks/useLockBodyScroll";
 import {ChangeEvent, useEffect} from "react";
+import copy from "copy-to-clipboard";
 
 
 const AddCarlistModal = observer(() => {
@@ -51,6 +52,14 @@ const AddCarlistModal = observer(() => {
         } else {
             carlistState.setError(true)
             return 'Ошибка во входящих данных!'
+        }
+    }
+
+    const copyResult = () => {
+        if (carlistState.resultAreaInput) {
+            copy(carlistState.resultAreaInput)
+            Store.setNotificationText('Скопировано')
+            Store.showNotification()
         }
     }
 
@@ -124,6 +133,7 @@ const AddCarlistModal = observer(() => {
                 Выбранная техника: {Store.currentRequest ? Store.currentRequest.VehicleRegNum : (Store.currentVehicle ? Store.currentVehicle.REG_NOM : null)}</h2>
             <div className={'flex mt-6'}>
                 <textarea
+                    autoFocus
                     className={textAreaClasses}
                     placeholder={'Вставить данные'}
                     value={carlistState.textAreaInput}
@@ -160,6 +170,13 @@ const AddCarlistModal = observer(() => {
                             value={Store.vehiclePageLocation && Store.currentVehicle?.NAV_ID ? Store.currentVehicle?.NAV_ID : (Store.currentRequest?.VehicleId ? Store.currentRequest.VehicleId :  '- - -')}
                         />
                     </div>
+                    <button
+                        disabled={!carlistState.resultAreaInput}
+                        className={'w-28 mt-6 p-1 text-stone-700 bg-amber-300 border border-blue-300 rounded border-blue-300 shadow-form-sh disabled:bg-gray-400 disabled:text-white active:bg-amber-200'}
+                        onClick={copyResult}
+                    >
+                        Скопировать результат
+                    </button>
                 </div>
             </div>
         </>
